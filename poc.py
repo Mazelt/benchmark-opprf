@@ -5,6 +5,10 @@ import subprocess
 import logging
 from datetime import date, datetime
 import sys
+import threading
+import time
+from queue import Queue
+import re
 
 logger = logging.getLogger('__name__')
 
@@ -28,7 +32,7 @@ class psi_type(enum.IntEnum):
 ##
 # Experiments Batch objects
 ##
-# Desktop-desktop variant
+# CHECK: Desktop-desktop variant
 ##
 ## Parsing of app and server
 ##
@@ -40,6 +44,78 @@ class psi_type(enum.IntEnum):
 ##
 # create plots
 ##
+
+
+re_success_result = re.compile(r"PSI circuit successfully executed. Result: (?P<result>\d+)")
+re_time_hashing = re.compile(r"Time for hashing (?P<hashing_t>\d+\.\d+) ms")
+re_time_oprf = re.compile(r"Time for OPRF (?P<oprf_t>\d+\.\d+) ms")
+re_time_poly = re.compile(r"Time for polynomials (?P<poly_t>\d+\.\d+) ms")
+re_time_poly_trans = re.compile(
+    r"Time for transmission of the polynomials (?P<poly_trans_t>\d+\.\d+) ms")
+re_time_aby = re.compile(
+    r"ABY timings: online time (?P<aby_online_t>\d+\.\d+) ms, setup time (?P<aby_setup_t>\d+\.\d+) ms, total time (?P<aby_total_t>\d+\.\d+) ms")
+re_time_total = re.compile(r"Total runtime: (?P<total_t>\d+\.\d+)ms")
+re_time_nobase = re.compile(
+    r"Total runtime w/o base OTs: (?P<nobase_t>\d+\.\d+)ms")
+
+def parse_output(s):
+    lines = s.split('\n')
+    data = {}
+    for l in lines:
+        m = re_success_result.match(l)
+        if m:
+            result = float(m.group(1))
+            logger.debug(f'Result: {result}')
+            data['result'] = result
+            continue
+        m = re_time_hashing.match(l)
+        if m:
+            hashing_t = float(m.group(1))
+            logger.debug(f'Hashing time in ms: {hashing_t}')
+            data['hashing'] = hashing_t
+            continue
+        m = re_time_oprf.match(l)
+        if m:
+            oprf_t = float(m.group(1))
+            logger.debug(f'OPRF time in ms: {oprf_t}')
+            data['oprf'] = oprf_t
+            continue
+        m = re_time_poly.match(l)
+        if m:
+            poly_t = float(m.group(1))
+            logger.debug(f"Polynomials time in ms: {poly_t}")
+            data['poly'] = poly_t
+            continue
+        m = re_time_poly_trans.match(l)
+        if m:
+            poly_trans_t = float(m.group(1))
+            logger.debug(f"Polynomials transmission time in ms: {poly_trans_t}")
+            data['poly_trans'] = poly_trans_t
+            continue
+        m = re_time_aby.match(l)
+        if m:
+            aby_online_t = float(m.group(1))
+            aby_setup_t = float(m.group(2))
+            aby_total_t = float(m.group(3))
+            logger.debug(f"Aby timings in ms: online {aby_online_t}, setup {aby_setup_t}, total {aby_total_t}")
+            data['aby_online'] = aby_online_t
+            data['aby_setup'] = aby_setup_t
+            data['aby_total'] = aby_total_t
+            continue
+        m = re_time_total.match(l)
+        if m:
+            total_t = float(m.group(1))
+            logger.debug(f"Total time in ms: {total_t}")
+            data['total'] = total_t
+            continue
+        m = re_time_nobase.match(l)
+        if m:
+            nobase_t = float(m.group(1))
+            logger.debug(f"Total time w/o base OTs in ms: {nobase_t}")
+            data['nobase'] = nobase_t
+            continue
+    return data
+
 
 class Parameters(object):
 
@@ -101,27 +177,27 @@ class Parameters(object):
 
 
 
-def desktop_wrapper(parameters, binary_path, role=SERVER):
+def desktop_wrapper(parameters, binary_path, out_queue, role=SERVER):
     assert(isinstance(parameters, Parameters))
-    logger.info(f'Running desktop wrapper for role: {"Server" if role == 0 else "Client"}')
-    parameters.fun_type = psi_type.PayloadABSum
+    assert(os.path.exists(binary_path))
+    srole = "Server" if role == 0 else "Client"
     args = parameters.getCommandlineArgs(role)
-    logger.info(f'  with args: {args}')
-    
+    logger.info(f'Running desktop wrapper for role: {srole} with args: {args}')
+    run_args = [binary_path]
+    run_args.extend(args)
+    process = subprocess.Popen(run_args, stdout=subprocess.PIPE, encoding='utf-8')
+    output = ''
+    while True:
+        output_line = process.stdout.readline()
+        if process.poll() is not None and output_line == '':
+            break
+        if output_line:
+            output += output_line
+            logger.info(f'{srole}   {output_line.strip()}')
+    out_queue.put(output)
 
 
-# desired_caps = dict(
-#     platformName='Android',
-#     orientation='PORTRAIT',
-#     platformVersion='9',
-#     automationName='uiautomator2',
-#     deviceName='4a1d7995',
-#     app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk'
-# )
 
-# driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-# el = driver.find_element_by_id('buttonclear')
-# el.click()
 
 def setup_logger(logpath, filename):
     exp_path = os.path.join(logpath, 'experiments')
@@ -146,6 +222,30 @@ if __name__ == '__main__':
     setup_logger('./logs', filename)
     logger.info("== New experiment! ===================")
     paras = Parameters()
-    desktop_wrapper(paras, BIN_PATH, role=SERVER)
-    desktop_wrapper(paras, BIN_PATH, role=CLIENT)
+    server_q = Queue()
+    client_q = Queue()
+    server_thread = threading.Thread(target=desktop_wrapper, args=(paras, BIN_PATH, server_q, SERVER))
+    client_thread = threading.Thread(target=desktop_wrapper, args=(paras, BIN_PATH, client_q, CLIENT))
+    server_thread.start()
+    client_thread.start()
+    server_thread.join()
+    client_thread.join()
+    server_output = server_q.get()
+    client_output = client_q.get()
+    print(parse_output(server_output))
+    print(parse_output(client_output))
     logger.info("== Experiment done! ==================")
+
+
+# desired_caps = dict(
+#     platformName='Android',
+#     orientation='PORTRAIT',
+#     platformVersion='9',
+#     automationName='uiautomator2',
+#     deviceName='4a1d7995',
+#     app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk'
+# )
+
+# driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+# el = driver.find_element_by_id('buttonclear')
+# el.click()

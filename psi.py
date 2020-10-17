@@ -19,7 +19,7 @@ class Psi_type(enum.IntEnum):
     PayloadABMulSumGT = 9
 
 
-class Parameters(object):
+class Parameters(dict):
 
     def __init__(self):
         self.client_neles = 4096
@@ -76,3 +76,5 @@ class Parameters(object):
             args.extend(['-y', self.fun_type.name])
 
         return args
+    
+    

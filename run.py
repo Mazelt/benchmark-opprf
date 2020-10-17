@@ -7,6 +7,8 @@ import sys
 import threading
 import time
 from queue import Queue
+import argparse
+import json
 
 
 # own libraries
@@ -22,12 +24,13 @@ batch = [{
     'parameters': Parameters()
     # todo? variable that is changed?
 },
-{
-    'setup': 'desktop-app',
-    'repeat': 1,
-    'parameters': Parameters()
-    # todo? variable that is changed?
-}]
+# {
+#     'setup': 'desktop-app',
+#     'repeat': 1,
+#     'parameters': Parameters()
+#     # todo? variable that is changed?
+# }
+]
 
 
 def run_batch():
@@ -38,14 +41,20 @@ def run_batch():
         repeat = b['repeat']
         del b['repeat']
         for i in range(repeat):
-            run_experiment(b, i)
+            run_data = run_experiment(b, i)
+            run_data['batch'] = batch_name
+            save_data(run_data)
     logger.info("Done with batch")
 
-def run_experiment(config, repeat):
+def run_experiment(config, repeat=None):
     logger.info("== New experiment! ===================")
     parser = Parser(logger)
+    data = {}
+    data['setup'] = config['setup']
+    if repeat != None:
+        data['repeat'] = repeat
     paras = config['parameters']
-    
+    data['parameters'] = vars(paras)
     server_q = Queue()
     client_q = Queue()
     
@@ -63,19 +72,21 @@ def run_experiment(config, repeat):
     client_thread.join()
     server_output = server_q.get()
     client_output = client_q.get()
-    print(parser.parse_output(server_output))
-    print(parser.parse_output(client_output))
+    data['s_output'] = parser.parse_output(server_output)
+    data['c_output'] = parser.parse_output(client_output)
     logger.info("== Experiment done! ==================")
+
+    return data
 
     
 ##
 # CHECK: Desktop-desktop variant
 # CHECK: Desktop-app variant
 # CHECK: Parsing of output
-# Experiment batching
+# CHECK: Experiment batching
+# CHECK: save data
 # Collect network traffic (extend protocol logs)
 # Collecting other information (energy?)
-# save data
 # create plots
 ##
 
@@ -134,7 +145,7 @@ def setup_logger(logpath, filename):
     os.makedirs(exp_path, exist_ok=True)
 
     logFormatter = logging.Formatter(
-        "%(asctime)s [%(module)-12.12s-%(funcName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+        "%(asctime)s [%(module)-8.8s-%(funcName)-12.12s] [%(levelname)-5.5s]  %(message)s")
 
     fileHandler = logging.FileHandler(f"{logpath}/{filename}")
     fileHandler.setFormatter(logFormatter)
@@ -146,17 +157,44 @@ def setup_logger(logpath, filename):
 
     logger.setLevel(logging.DEBUG)
 
+def save_data(data):
+    if 'batch' in data:
+        fname = f"Batch-{data['batch']}-Run-{data['repeat']}-{datetime.now().isoformat()}-Setup-{data['setup']}.json"  # add parameter of interest?
+        fname = os.path.join('./batchlogs/experiments', fname)
+    else:
+        fname = f"{datetime.now().isoformat()}-Setup-{data['setup']}.json"
+        fname = os.path.join('./logs/experiments', fname)
+    
+    if os.path.exists(fname):
+        logger.warn(f'Filename {fname} already exists!')
+        fname = fname + '.collision'
+    logger.info(f'Saving data to file {fname}.')
+    with open(fname, 'w') as fp:
+        json.dump(data, fp)
+
 
 if __name__ == '__main__':
-    filename = f"{date.today().isoformat()}.log"
-    setup_logger('./logs', filename)
-    # p = Parameters()
-    # p.fun_type = Psi_type.Sum
-    # p.overlap = 20
-    # conf = {
-    #     'setup': 'desktop-desktop',
-    #     'parameters': p
-    # }
-    run_batch()
-   
+    ap = argparse.ArgumentParser(description='Run opprf experiments.')
+    ap.add_argument('-b', '--batch', dest='batch_run', action='store_true')
+
+    args = ap.parse_args()
+
+    if args.batch_run:
+        filename = f"{date.today().isoformat()}.log"
+        setup_logger('./batchlogs', filename)
+        logger.info('This is a batch run')    
+        run_batch()
+    else:
+        filename = f"{date.today().isoformat()}.log"
+        setup_logger('./logs', filename)
+        p = Parameters()
+        p.fun_type = Psi_type.Sum
+        p.overlap = 20
+        conf = {
+            'setup': 'desktop-desktop',
+            'parameters': p
+        }
+        results = run_experiment(conf)
+        save_data(results)
+
 

@@ -14,7 +14,7 @@ logger = logging.getLogger('__name__')
 
 SERVER = 0
 CLIENT = 1
-SERVER_IP = "127.0.0.1"
+SERVER_IP = "192.168.178.100"
 BIN_PATH = '/home/marcel/repos/original-opprf/buildassociated/bin/psi_analytics_eurocrypt19_example'
 
 class psi_type(enum.IntEnum):
@@ -28,25 +28,21 @@ class psi_type(enum.IntEnum):
     PayloadABSumGT = 7
     PayloadABMulSum = 8
     PayloadABMulSumGT = 9
-
-##
-# Experiments Batch objects
+    
 ##
 # CHECK: Desktop-desktop variant
-##
-## Parsing of app and server
-##
-# Collect network traffic
-##
+# Desktop-app variant
+# CHECK: Parsing of output
+# Experiment batching
+# Collect network traffic (extend protocol logs)
 # Collecting other information (energy?)
-##
 # save data
-##
 # create plots
 ##
 
 
 re_success_result = re.compile(r"PSI circuit successfully executed. Result: (?P<result>\d+)")
+re_app_result = re.compile(r"PSI run returned: (?P<result>\d+)")
 re_time_hashing = re.compile(r"Time for hashing (?P<hashing_t>\d+\.\d+) ms")
 re_time_oprf = re.compile(r"Time for OPRF (?P<oprf_t>\d+\.\d+) ms")
 re_time_poly = re.compile(r"Time for polynomials (?P<poly_t>\d+\.\d+) ms")
@@ -64,7 +60,13 @@ def parse_output(s):
     for l in lines:
         m = re_success_result.match(l)
         if m:
-            result = float(m.group(1))
+            result = int(m.group(1))
+            logger.debug(f'Result: {result}')
+            data['result'] = result
+            continue
+        m = re_app_result.match(l)
+        if m:
+            result = int(m.group(1))
             logger.debug(f'Result: {result}')
             data['result'] = result
             continue
@@ -135,7 +137,7 @@ class Parameters(object):
         self.fun_type = psi_type.Analytics
         self.overlap = 100
 
-    def getEncodedContext(self, role):
+    def getEncodedContext(self, role=CLIENT):
         if (role == CLIENT):
             elements = str(self.client_neles) + ";" + str(self.server_neles)
         else:
@@ -175,14 +177,43 @@ class Parameters(object):
         return args
 
 
+def app_wrapper(parameters, out_queue, app_path=None):
+    encoded_context = parameters.getEncodedContext()
+    logger.info(f'Running app wrapper as client with context: {encoded_context}')
+
+    desired_caps = dict(
+        platformName='Android',
+        orientation='PORTRAIT',
+        platformVersion='9',
+        automationName='uiautomator2',
+        deviceName='4a1d7995',
+        app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk' if not app_path else app_path
+    )
+    logger.debug('Connecting to appium session.')
+    driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+    logger.debug('Cleaning up text in output field.')
+    output = driver.find_element_by_id('textViewOUTPUT')
+    output.set_text('')
+    logger.debug('Setting context (encoded).')
+    context_input = driver.find_element_by_id('editTextEncodedContext')
+    context_input.set_text(encoded_context)
+    logger.info('Starting run_psi on app with')
+    run_button = driver.find_element_by_id('buttonrun')
+    run_button.click()
+    time.sleep(1)
+    while (not run_button.is_enabled()):
+        time.sleep(5)
+    text_output = output.get_attribute('text')
+    logger.info(text_output)
+    out_queue.put(text_output)
 
 
 def desktop_wrapper(parameters, binary_path, out_queue, role=SERVER):
     assert(isinstance(parameters, Parameters))
     assert(os.path.exists(binary_path))
-    srole = "Server" if role == 0 else "Client"
+    srole = "server" if role == 0 else "client"
     args = parameters.getCommandlineArgs(role)
-    logger.info(f'Running desktop wrapper for role: {srole} with args: {args}')
+    logger.info(f'Running desktop wrapper as {srole} with args: {args}')
     run_args = [binary_path]
     run_args.extend(args)
     process = subprocess.Popen(run_args, stdout=subprocess.PIPE, encoding='utf-8')
@@ -222,10 +253,13 @@ if __name__ == '__main__':
     setup_logger('./logs', filename)
     logger.info("== New experiment! ===================")
     paras = Parameters()
+
     server_q = Queue()
+    # desktop_wrapper(paras, BIN_PATH, server_q, SERVER)
     client_q = Queue()
+    # app_wrapper(paras, client_q)
     server_thread = threading.Thread(target=desktop_wrapper, args=(paras, BIN_PATH, server_q, SERVER))
-    client_thread = threading.Thread(target=desktop_wrapper, args=(paras, BIN_PATH, client_q, CLIENT))
+    client_thread = threading.Thread(target=app_wrapper, args=(paras, client_q))
     server_thread.start()
     client_thread.start()
     server_thread.join()
@@ -237,15 +271,3 @@ if __name__ == '__main__':
     logger.info("== Experiment done! ==================")
 
 
-# desired_caps = dict(
-#     platformName='Android',
-#     orientation='PORTRAIT',
-#     platformVersion='9',
-#     automationName='uiautomator2',
-#     deviceName='4a1d7995',
-#     app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk'
-# )
-
-# driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
-# el = driver.find_element_by_id('buttonclear')
-# el.click()

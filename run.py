@@ -17,11 +17,14 @@ from psi import Parameters, Psi_type, SERVER, SERVER_IP, CLIENT, BIN_PATH
 
 logger = logging.getLogger('__name__')
 
-batch_name = 'develop'
+default_parameters = Parameters()
+mulsum = Parameters()
+mulsum.fun_type = Psi_type.PayloadABMulSum
+batch_name = 'mulsum'
 batch = [{
     'setup': 'desktop-desktop',
-    'repeat': 2,
-    'parameters': Parameters()
+    'repeat': 5,
+    'parameters': mulsum
     # todo? variable that is changed?
 },
 # {
@@ -85,7 +88,7 @@ def run_experiment(config, repeat=None):
 # CHECK: Parsing of output
 # CHECK: Experiment batching
 # CHECK: save data
-# Collect network traffic (extend protocol logs)
+# CHECK: Collect network traffic (extend protocol logs)
 # Collecting other information (energy?)
 # create plots
 ##
@@ -117,7 +120,7 @@ def app_wrapper(parameters, out_queue, app_path=None):
     while (not run_button.is_enabled()):
         time.sleep(5)
     text_output = output.get_attribute('text')
-    logger.info(text_output)
+    # logger.info(text_output)
     out_queue.put(text_output)
 
 
@@ -191,7 +194,7 @@ if __name__ == '__main__':
         p.fun_type = Psi_type.Sum
         p.overlap = 20
         conf = {
-            'setup': 'desktop-desktop',
+            'setup': 'desktop-app',
             'parameters': p
         }
         results = run_experiment(conf)

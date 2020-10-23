@@ -23,21 +23,21 @@ paras_n_12 = Parameters(preset='2_12')
 paras_n_16 = Parameters(preset='2_16')
 paras_n_20 = Parameters(preset='2_20')
 
-batch_name = 'BetaScalingElementsDA'
+batch_name = 'BetaScalingElementsDA_2'
 batch = [
 # {
 #     'setup': 'desktop-app',
-#     'repeat': 2,
+#     'repeat': 5,
 #     'parameters': paras_n_12
 # },
+# {
+#     'setup': 'desktop-app',
+#     'repeat': 5,
+#     'parameters': paras_n_16
+# }, 
 {
     'setup': 'desktop-app',
-    'repeat': 3,
-    'parameters': paras_n_16
-}, 
-{
-    'setup': 'desktop-app',
-    'repeat': 3,
+    'repeat': 5,
     'parameters': paras_n_20
 }
 # {
@@ -52,27 +52,48 @@ class FailedExperiment(Exception):
     pass
 
 
+def init_appium(app_path=None):
+    desired_caps = dict(
+        platformName='Android',
+        orientation='PORTRAIT',
+        platformVersion='9',
+        automationName='uiautomator2',
+        deviceName='4a1d7995',
+        # fullreset=True,
+        app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk' if app_path == None else app_path
+    )
+    logger.debug('Connecting to appium session.')
+    driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
+    return driver
+
+
 def run_batch():
     logger.info(f"Running a batch {batch_name}")
     logger.info(f"Batchjob contains {sum([b['repeat'] for b in batch])} runs.")
     for b in batch:
+        if b['setup'] == 'desktop-app':
+            driver = init_appium()
         logger.info(f"Running batch job: {b.items()}")
         repeat = b['repeat']
         del b['repeat']
         for i in range(repeat):
             try:
-                run_data = run_experiment(b, i)
+                run_data = run_experiment(driver, b, i)
             except FailedExperiment:
                 logger.error("Failed Experiment! Continueing...")
                 continue
             run_data['batch'] = batch_name
             save_data(run_data)
             logger.info(f"Waiting for experiment cooldown of {EXPERIMENT_COOLDOWN} s.")
+            if 'reset' in b and b[''] == True:
+                logger.info(f"Resetting app!")
+                driver.reset()
             time.sleep(EXPERIMENT_COOLDOWN)
+        driver.quit()
     logger.info("Done with batch")
     exit(0)
 
-def run_experiment(config, repeat=None):
+def run_experiment(driver, config, repeat=None):
     retry = 1
     while retry >= 0:
         try:
@@ -95,7 +116,7 @@ def run_experiment(config, repeat=None):
             if config['setup'] == 'desktop-desktop':
                 desktop_wrapper(paras, BIN_PATH, client_q, CLIENT)
             elif config['setup'] == 'desktop-app':
-                app_wrapper(paras, client_q)
+                app_wrapper(driver, paras, client_q)
             else:
                 logger.error(f"Unknown setup in experiment {config['setup']}")
                 exit(2)
@@ -129,21 +150,10 @@ def run_experiment(config, repeat=None):
 # create plots
 ##
 
-def app_wrapper(parameters, out_queue,app_path=None):
+def app_wrapper(driver, parameters, out_queue):
     encoded_context = parameters.getEncodedContext()
     logger.info(f'Running app wrapper as client with context: {encoded_context}')
 
-    desired_caps = dict(
-        platformName='Android',
-        orientation='PORTRAIT',
-        platformVersion='9',
-        automationName='uiautomator2',
-        deviceName='4a1d7995',
-        # fullreset=True,
-        app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk' if not app_path else app_path
-    )
-    logger.debug('Connecting to appium session.')
-    driver = webdriver.Remote('http://localhost:4723/wd/hub', desired_caps)
     logger.debug('Cleaning up text in output field.')
     output = driver.find_element_by_id('textViewOUTPUT')
     output.set_text('')
@@ -239,7 +249,10 @@ if __name__ == '__main__':
             'setup': 'desktop-app',
             'parameters': p
         }
-        results = run_experiment(conf)
+        if conf['setup'] == 'desktop-app':
+            driver = init_appium()
+        results = run_experiment(driver, conf)
         save_data(results)
+        driver.quit()
 
 

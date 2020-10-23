@@ -17,16 +17,29 @@ from psi import Parameters, Psi_type, SERVER, SERVER_IP, CLIENT, BIN_PATH
 
 logger = logging.getLogger('__name__')
 
-default_parameters = Parameters()
-mulsum = Parameters()
-mulsum.fun_type = Psi_type.PayloadABMulSum
-batch_name = 'mulsum'
-batch = [{
-    'setup': 'desktop-desktop',
-    'repeat': 5,
-    'parameters': mulsum
-    # todo? variable that is changed?
-},
+EXPERIMENT_COOLDOWN = 4
+
+paras_n_12 = Parameters(preset='2_12')
+paras_n_16 = Parameters(preset='2_16')
+paras_n_20 = Parameters(preset='2_20')
+
+batch_name = 'BetaScalingElementsDA'
+batch = [
+# {
+#     'setup': 'desktop-app',
+#     'repeat': 2,
+#     'parameters': paras_n_12
+# },
+{
+    'setup': 'desktop-app',
+    'repeat': 3,
+    'parameters': paras_n_16
+}, 
+{
+    'setup': 'desktop-app',
+    'repeat': 3,
+    'parameters': paras_n_20
+}
 # {
 #     'setup': 'desktop-app',
 #     'repeat': 1,
@@ -34,6 +47,9 @@ batch = [{
 #     # todo? variable that is changed?
 # }
 ]
+
+class FailedExperiment(Exception):
+    pass
 
 
 def run_batch():
@@ -44,41 +60,61 @@ def run_batch():
         repeat = b['repeat']
         del b['repeat']
         for i in range(repeat):
-            run_data = run_experiment(b, i)
+            try:
+                run_data = run_experiment(b, i)
+            except FailedExperiment:
+                logger.error("Failed Experiment! Continueing...")
+                continue
             run_data['batch'] = batch_name
             save_data(run_data)
+            logger.info(f"Waiting for experiment cooldown of {EXPERIMENT_COOLDOWN} s.")
+            time.sleep(EXPERIMENT_COOLDOWN)
     logger.info("Done with batch")
+    exit(0)
 
 def run_experiment(config, repeat=None):
-    logger.info("== New experiment! ===================")
-    parser = Parser(logger)
-    data = {}
-    data['setup'] = config['setup']
-    if repeat != None:
-        data['repeat'] = repeat
-    paras = config['parameters']
-    data['parameters'] = vars(paras)
-    server_q = Queue()
-    client_q = Queue()
-    
-    server_thread = threading.Thread(target=desktop_wrapper, args=(paras, BIN_PATH, server_q, SERVER))
-    if config['setup'] == 'desktop-desktop':
-        client_thread = threading.Thread(target=desktop_wrapper, args=(paras, BIN_PATH, client_q, CLIENT))
-    elif config['setup'] == 'desktop-app':
-        client_thread = threading.Thread(target=app_wrapper, args=(paras, client_q))
-    else:
-        logger.error(f"Unknown setup in experiment {config['setup']}")
-        exit(2)
-    server_thread.start()
-    client_thread.start()
-    server_thread.join()
-    client_thread.join()
-    server_output = server_q.get()
-    client_output = client_q.get()
-    data['s_output'] = parser.parse_output(server_output)
-    data['c_output'] = parser.parse_output(client_output)
-    logger.info("== Experiment done! ==================")
-
+    retry = 1
+    while retry >= 0:
+        try:
+            logger.info("== New experiment! ===================")
+            parser = Parser(logger)
+            data = {}
+            data['setup'] = config['setup']
+            if repeat != None:
+                data['repeat'] = repeat
+            paras = config['parameters']
+            data['parameters'] = vars(paras)
+            server_q = Queue()
+            client_q = Queue()
+            stop_thread = False
+            server_thread = threading.Thread(target=desktop_wrapper, args=(
+                paras, BIN_PATH, server_q, lambda: stop_thread, SERVER))
+            
+            server_thread.start()
+            
+            if config['setup'] == 'desktop-desktop':
+                desktop_wrapper(paras, BIN_PATH, client_q, CLIENT)
+            elif config['setup'] == 'desktop-app':
+                app_wrapper(paras, client_q)
+            else:
+                logger.error(f"Unknown setup in experiment {config['setup']}")
+                exit(2)
+            server_thread.join()
+            server_output = server_q.get()
+            client_output = client_q.get()
+            data['s_output'] = parser.parse_output(server_output)
+            data['c_output'] = parser.parse_output(client_output)
+            logger.info("== Experiment done! ==================")
+            retry =-1
+        except Exception as e:
+            logger.error(f"Caught execption {e}")
+            stop_thread = True
+            server_thread.join()
+            if retry > 0:
+                logger.info(f"Retrying!")
+                retry -= 1
+            else:
+                raise FailedExperiment()
     return data
 
     
@@ -93,7 +129,7 @@ def run_experiment(config, repeat=None):
 # create plots
 ##
 
-def app_wrapper(parameters, out_queue, app_path=None):
+def app_wrapper(parameters, out_queue,app_path=None):
     encoded_context = parameters.getEncodedContext()
     logger.info(f'Running app wrapper as client with context: {encoded_context}')
 
@@ -103,6 +139,7 @@ def app_wrapper(parameters, out_queue, app_path=None):
         platformVersion='9',
         automationName='uiautomator2',
         deviceName='4a1d7995',
+        # fullreset=True,
         app='/home/marcel/AndroidStudioProjects/OpprfPSI/app/build/outputs/apk/debug/app-debug.apk' if not app_path else app_path
     )
     logger.debug('Connecting to appium session.')
@@ -124,7 +161,7 @@ def app_wrapper(parameters, out_queue, app_path=None):
     out_queue.put(text_output)
 
 
-def desktop_wrapper(parameters, binary_path, out_queue, role=SERVER):
+def desktop_wrapper(parameters, binary_path, out_queue, stop, role=SERVER):
     assert(isinstance(parameters, Parameters))
     assert(os.path.exists(binary_path))
     srole = "server" if role == 0 else "client"
@@ -132,15 +169,20 @@ def desktop_wrapper(parameters, binary_path, out_queue, role=SERVER):
     logger.info(f'Running desktop wrapper as {srole} with args: {args}')
     run_args = [binary_path]
     run_args.extend(args)
-    process = subprocess.Popen(run_args, stdout=subprocess.PIPE, encoding='utf-8')
+    process = subprocess.Popen(run_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
     output = ''
     while True:
-        output_line = process.stdout.readline()
-        if process.poll() is not None and output_line == '':
+        time.sleep(1)
+        if stop():
+            process.kill()
             break
-        if output_line:
-            output += output_line
-            logger.info(f'{srole}   {output_line.strip()}')
+        if process.poll() is not None:
+            for line in process.stdout.readlines():
+                logger.info(f'{srole}   {line.strip()}')
+                output += line
+            for line in process.stderr.readlines():
+                logger.error(f'{srole}   {line.strip()}')
+            break
     out_queue.put(output)
 
 def setup_logger(logpath, filename):
@@ -187,11 +229,11 @@ if __name__ == '__main__':
         setup_logger('./batchlogs', filename)
         logger.info('This is a batch run')    
         run_batch()
+        exit(0)
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
         p = Parameters()
-        p.fun_type = Psi_type.Sum
         p.overlap = 20
         conf = {
             'setup': 'desktop-app',

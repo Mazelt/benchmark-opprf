@@ -3,7 +3,7 @@ import enum
 
 SERVER = 0
 CLIENT = 1
-SERVER_IP = "192.168.178.66"
+SERVER_IP = "192.168.0.2"
 BIN_PATH = '/home/marcel/repos/original-opprf/buildassociated/bin/psi_analytics_eurocrypt19_example'
 
 class Psi_type(enum.IntEnum):
@@ -21,21 +21,29 @@ class Psi_type(enum.IntEnum):
 
 class Parameters(dict):
 
-    def __init__(self):
-        self.client_neles = 4096
-        self.server_neles = 4096
-        self.bit_len = 61
-        self.epsilon = 2.4
+    def __init__(self, preset=None):
+        self.client_neles = 1024
+        self.server_neles = 1024
+        self.bit_len = 51
+        self.epsilon = 1.27
         self.server_ip = SERVER_IP
         self.port = 7777
         self.threads = 1
         self.threshold = 0
-        self.nmegabins = 16
-        self.poly_size = 975
+        self.nmegabins = 1
+        self.poly_size = 0  # todo: use formula to compute sub 1024 sized polys with statistical security.
         self.n_fun = 3
         self.payload_bl = 2
         self.fun_type = Psi_type.Analytics
-        self.overlap = 100
+        self.overlap = 25
+        if preset == '2_12':
+            self.preset2_12()
+        elif preset == '2_16':
+            self.preset2_16()
+        elif preset == '2_20':
+            self.preset2_20()
+        else:
+            raise f"unknonw preset {preset}"
 
     def getEncodedContext(self, role=CLIENT):
         if (role == CLIENT):
@@ -77,4 +85,24 @@ class Parameters(dict):
 
         return args
     
-    
+    def preset2_12(self):
+        self.client_neles = 4096
+        self.server_neles = 4096
+        self.bit_len = 53
+        self.nmegabins = 16
+        self.poly_size = 975
+
+
+    def preset2_16(self):
+        self.client_neles = 65536
+        self.server_neles = 65536
+        self.bit_len = 57
+        self.nmegabins = 248
+        self.poly_size = 1021
+
+    def preset2_20(self):
+        self.client_neles = 1048576
+        self.server_neles = 1048576
+        self.bit_len = 61
+        self.nmegabins = 4002
+        self.poly_size = 1024

@@ -1,0 +1,54 @@
+2020-10-23 12:13:36,308 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-23 12:13:36,309 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '20', '-y', 'Sum']
+2020-10-23 12:13:36,309 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as client with args: ['-r', '1', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '-y', 'Sum']
+2020-10-23 12:20:22,520 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-23 12:20:22,521 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '1', '-s', '3145728', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '20', '-y', 'Sum']
+2020-10-23 12:20:22,522 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as client with args: ['-r', '1', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '1', '-s', '3145728', '-f', '3', '--payload_a_bitlen', '2', '-y', 'Sum']
+2020-10-23 12:38:36,127 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-23 12:38:36,127 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '20', '-y', 'Sum']
+2020-10-23 12:38:36,129 [run     -app_wrapper ] [INFO ]  Running app wrapper as client with context: 1048576;1048576;61;1.27;192.168.0.2;7777;1;0;4002;1024;3;2;2
+2020-10-23 12:38:36,129 [run     -app_wrapper ] [DEBUG]  Connecting to appium session.
+2020-10-23 12:38:45,135 [run     -app_wrapper ] [DEBUG]  Cleaning up text in output field.
+2020-10-23 12:38:45,462 [run     -app_wrapper ] [DEBUG]  Setting context (encoded).
+2020-10-23 12:38:46,264 [run     -app_wrapper ] [INFO ]  Starting run_psi on app with
+2020-10-23 12:41:08,495 [run     -desktop_wrap] [INFO ]  server   PSI circuit successfully executed. Result: 209715
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Time for hashing 2076.99 ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Time for OPRF 13848.3 ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Time for polynomials 70300.9 ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Time for transmission of the polynomials 815.087 ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   ABY timings: online time 3877.67 ms, setup time 35911.3 ms, total time 39788.9 ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Total runtime: 141098ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Total runtime w/o base OTs: 140197ms
+2020-10-23 12:41:08,496 [run     -desktop_wrap] [INFO ]  server   Data for polynomials recv/sent 0 / 32784384 b
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   Data for oprf recv/sent 85228321 / 16944 b
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   ABY recv: online 30462736 bytes, setup 1299750046 bytes, total 1330212782 bytes
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   ABY sent: online 30462736 bytes, setup 1299750046 bytes, total 1330212782 bytes
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   Total recv: 1415441103 bytes
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   Total sent: 1363014110 bytes
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   Total recv w/o base OTs: 1415391074 b
+2020-10-23 12:41:08,497 [run     -desktop_wrap] [INFO ]  server   Total sent w/o base OTs: 1362947254 b
+2020-10-23 12:41:10,118 [parsing -parse_output] [DEBUG]  Result: 209715
+2020-10-23 12:41:10,118 [parsing -parse_output] [DEBUG]  Hashing time in ms: 2076.99
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  OPRF time in ms: 13848.3
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 70300.9
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 815.087
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 3877.67, setup 35911.3, total 39788.9
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 0/32784384
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 85228321/16944
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30462736, setup 1299750046, total 1330212782
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30462736, setup 1299750046, total 1330212782
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1415441103
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1363014110
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Result: 209715
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  Hashing time in ms: 1452.57
+2020-10-23 12:41:10,119 [parsing -parse_output] [DEBUG]  OPRF time in ms: 10819.4
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 12053.4
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 3874.71, setup 34201.2, total 38075.9
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 32784384/0
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 16944/85228321
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30462736, setup 1220057311, total 1250520047
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30462736, setup 1299750046, total 1330212782
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1283321375
+2020-10-23 12:41:10,120 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1415441103
+2020-10-23 12:41:10,120 [run     -run_experime] [INFO ]  == Experiment done! ==================
+2020-10-23 12:41:10,120 [run     -save_data   ] [INFO ]  Saving data to file ./logs/experiments/2020-10-23T12:41:10.120745-Setup-desktop-app.json.

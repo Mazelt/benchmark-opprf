@@ -4,6 +4,7 @@ import os.path
 import glob
 import json
 import argparse
+from psi import CLIENT, SERVER
 
 
 batch_name = "ScalingElementsDA_2"
@@ -28,10 +29,6 @@ def load_batch(pattern):
             if b:
                 batches.append({'parameters':b['parameters'], b['repeat']: {'s_output': b['s_output'], 'c_output': b['c_output']}})
     return batches
-    # list batch files that match a pattern
-    # later choose from them. now take them all.
-    # load batch
-    # return data object
 
 
 def get_s_c_mean_std(data, key):
@@ -101,16 +98,61 @@ def plot_total_time(data):
     plt.show()
 
 
-def plot_time_donut(data):
-    pass
+def plot_aby_time(data, online_only=True ,role=CLIENT):
+    set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
+        data, "aby_online_t")
+    if not online_only:
+        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_std(
+            data, "aby_setup_t")
+    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_std(
+    #     data, "aby_total_t")
+    x_pos = np.arange(len(set_sizes))
+    fig, ax = plt.subplots()
+    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color='g', align='center', alpha=0.5,
+                    ecolor='black', capsize=10)
+    if not online_only:
+        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color='b', align='center', alpha=0.5,
+                        ecolor='black', capsize=10, bottom=online)
+    ax.set_ylabel(f"Time in in ms")
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(set_sizes)
+    if online_only:
+        ax.set_title(
+            "Aby online phase timings for different set sizes. With std-error.")
+    else:
+        ax.set_title(
+            "Aby timings for different set sizes. With std-error."
+        )
+    ax.yaxis.grid(True)
+
+    if not online_only:
+        ax.legend((setup[0], online[0]), ('Setup-phase', 'Online-phase'))
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_time_pie(data, role=CLIENT):
+    # simple version with just one run.
+    output = 'c_output' if role == CLIENT else 's_output'
+    b = data[0]
+    hashing_t = b[0][output]['hashing_t']
+    oprf_t = b[0][output]['oprf_t']
+    poly_trans_t = b[0][output]['poly_trans_t']
+    poly_t = b[0][output]['poly_t']
+    aby_online_t = b[0][output]['aby_online_t']
+    aby_setup_t = b[0][output]['aby_setup_t']
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
+    ap.add_argument('--all', action='store_true')
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--total_t', action='store_true')
+    ap.add_argument('--aby_t', action='store_true')
     args = ap.parse_args()
     data = load_batch(batch_name)
-    if args.hash:
+    if args.all or args.hash:
         plot_hashing(data)
-    if args.total_t:
+    if args.all or args.total_t:
         plot_total_time(data)
+    if args.all or args.aby_t:
+        plot_aby_time(data)

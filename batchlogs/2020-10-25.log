@@ -2153,3 +2153,369 @@
 2020-10-25 11:33:02,941 [run     -save_data   ] [INFO ]  Saving data to file ./batchlogs/experiments/Batch-ScalingElementsDD_1-Run-9-2020-10-25T11:33:02.941380-Setup-desktop-desktop.json.
 2020-10-25 11:33:02,943 [run     -run_batch   ] [INFO ]  Waiting for experiment cooldown of 4 s.
 2020-10-25 11:33:06,947 [run     -run_batch   ] [INFO ]  Done with batch
+2020-10-25 11:54:30,347 [run     -<module>    ] [INFO ]  This is a batch run
+2020-10-25 11:54:30,347 [run     -run_batch   ] [INFO ]  Running a batch ScalingElementsDA_2
+2020-10-25 11:54:30,348 [run     -run_batch   ] [INFO ]  Batchjob contains 5 runs.
+2020-10-25 11:54:30,348 [run     -init_appium ] [DEBUG]  Connecting to appium session.
+2020-10-25 11:54:44,132 [run     -run_batch   ] [INFO ]  Running batch job: dict_items([('setup', 'desktop-app'), ('repeat', 5), ('parameters', {})])
+2020-10-25 11:54:44,132 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-25 11:54:44,133 [run     -app_wrapper ] [INFO ]  Running app wrapper as client with context: 1048576;1048576;61;1.27;192.168.0.2;7777;1;0;4002;1024;3;2;0
+2020-10-25 11:54:44,133 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '25']
+2020-10-25 11:54:44,133 [run     -app_wrapper ] [DEBUG]  Cleaning up text in output field.
+2020-10-25 11:54:44,525 [run     -app_wrapper ] [DEBUG]  Setting context (encoded).
+2020-10-25 11:54:45,235 [run     -app_wrapper ] [INFO ]  Starting run_psi on app with
+2020-10-25 11:57:34,309 [run     -app_wrapper ] [INFO ]  Setting encoded Context...
+Running PSI!
+PSI run returned: 0
+Time for hashing 1408.37 ms
+Time for OPRF 12399.4 ms
+Time for polynomials 12041.5 ms
+Time for transmission of the polynomials 91439 ms
+ABY timings: online time 1876.59 ms, setup time 31898 ms, total time 33774.6 ms
+Total runtime: 167298ms
+Total runtime w/o base OTs: 163680ms
+Data for polynomials recv/sent 32784384 / 0 b
+Data for oprf recv/sent 16944 / 85228321 b
+ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+ABY sent: online 30129577 bytes, setup 1278440356 bytes, total 1308569933 bytes
+Total recv: 1341371270 bytes
+Total sent: 1393798254 bytes
+Total recv w/o base OTs: 1341304414 b
+Total sent w/o base OTs: 1393748225 b
+
+2020-10-25 11:57:34,312 [run     -desktop_wrap] [INFO ]  server   PSI circuit successfully executed. Result: 0
+2020-10-25 11:57:34,312 [run     -desktop_wrap] [INFO ]  server   Time for hashing 2858.36 ms
+2020-10-25 11:57:34,312 [run     -desktop_wrap] [INFO ]  server   Time for OPRF 16176.9 ms
+2020-10-25 11:57:34,312 [run     -desktop_wrap] [INFO ]  server   Time for polynomials 100619 ms
+2020-10-25 11:57:34,312 [run     -desktop_wrap] [INFO ]  server   Time for transmission of the polynomials 785.395 ms
+2020-10-25 11:57:34,312 [run     -desktop_wrap] [INFO ]  server   ABY timings: online time 1916.9 ms, setup time 31907.8 ms, total time 33824.7 ms
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Total runtime: 167304ms
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Total runtime w/o base OTs: 165485ms
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Data for polynomials recv/sent 0 / 32784384 b
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Data for oprf recv/sent 85228321 / 16944 b
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   ABY sent: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Total recv: 1393798263 bytes
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Total sent: 1341371270 bytes
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Total recv w/o base OTs: 1393748234 b
+2020-10-25 11:57:34,313 [run     -desktop_wrap] [INFO ]  server   Total sent w/o base OTs: 1341304414 b
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  Hashing time in ms: 2858.36
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  OPRF time in ms: 16176.9
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 100619.0
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 785.395
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1916.9, setup 0.9, total 31907.8
+2020-10-25 11:57:34,314 [parsing -parse_output] [DEBUG]  Total time in ms: 167304.0
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 165485.0
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 0/32784384
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 85228321/16944
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1393798263
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1341371270
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Hashing time in ms: 1408.37
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  OPRF time in ms: 12399.4
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 12041.5
+2020-10-25 11:57:34,315 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 91439.0
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1876.59, setup 0.59, total 31898.0
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Total time in ms: 167298.0
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 163680.0
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 32784384/0
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 16944/85228321
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129577, setup 1278440356, total 1308569933
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1341371270
+2020-10-25 11:57:34,316 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1393798254
+2020-10-25 11:57:34,316 [run     -run_experime] [INFO ]  == Experiment done! ==================
+2020-10-25 11:57:34,316 [run     -save_data   ] [INFO ]  Saving data to file ./batchlogs/experiments/Batch-ScalingElementsDA_2-Run-0-2020-10-25T11:57:34.316913-Setup-desktop-app.json.
+2020-10-25 11:57:34,317 [run     -run_batch   ] [INFO ]  Waiting for experiment cooldown of 4 s.
+2020-10-25 11:57:38,321 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-25 11:57:38,323 [run     -app_wrapper ] [INFO ]  Running app wrapper as client with context: 1048576;1048576;61;1.27;192.168.0.2;7777;1;0;4002;1024;3;2;0
+2020-10-25 11:57:38,323 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '25']
+2020-10-25 11:57:38,324 [run     -app_wrapper ] [DEBUG]  Cleaning up text in output field.
+2020-10-25 11:57:38,653 [run     -app_wrapper ] [DEBUG]  Setting context (encoded).
+2020-10-25 11:57:39,435 [run     -app_wrapper ] [INFO ]  Starting run_psi on app with
+2020-10-25 12:00:27,513 [run     -desktop_wrap] [INFO ]  server   PSI circuit successfully executed. Result: 0
+2020-10-25 12:00:27,514 [run     -desktop_wrap] [INFO ]  server   Time for hashing 2851.93 ms
+2020-10-25 12:00:27,514 [run     -desktop_wrap] [INFO ]  server   Time for OPRF 15512.2 ms
+2020-10-25 12:00:27,514 [run     -desktop_wrap] [INFO ]  server   Time for polynomials 100709 ms
+2020-10-25 12:00:27,514 [run     -desktop_wrap] [INFO ]  server   Time for transmission of the polynomials 767.48 ms
+2020-10-25 12:00:27,514 [run     -desktop_wrap] [INFO ]  server   ABY timings: online time 1354.02 ms, setup time 32250.9 ms, total time 33604.9 ms
+2020-10-25 12:00:27,515 [run     -desktop_wrap] [INFO ]  server   Total runtime: 166604ms
+2020-10-25 12:00:27,515 [run     -desktop_wrap] [INFO ]  server   Total runtime w/o base OTs: 165514ms
+2020-10-25 12:00:27,515 [run     -desktop_wrap] [INFO ]  server   Data for polynomials recv/sent 0 / 32784384 b
+2020-10-25 12:00:27,515 [run     -desktop_wrap] [INFO ]  server   Data for oprf recv/sent 85228321 / 16944 b
+2020-10-25 12:00:27,515 [run     -desktop_wrap] [INFO ]  server   ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:00:27,516 [run     -desktop_wrap] [INFO ]  server   ABY sent: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:00:27,516 [run     -desktop_wrap] [INFO ]  server   Total recv: 1393798263 bytes
+2020-10-25 12:00:27,516 [run     -desktop_wrap] [INFO ]  server   Total sent: 1341371270 bytes
+2020-10-25 12:00:27,516 [run     -desktop_wrap] [INFO ]  server   Total recv w/o base OTs: 1393748234 b
+2020-10-25 12:00:27,516 [run     -desktop_wrap] [INFO ]  server   Total sent w/o base OTs: 1341304414 b
+2020-10-25 12:00:27,825 [run     -app_wrapper ] [INFO ]  Setting encoded Context...
+Running PSI!
+PSI run returned: 0
+Time for hashing 1460.78 ms
+Time for OPRF 11646.7 ms
+Time for polynomials 12046.2 ms
+Time for transmission of the polynomials 91410.4 ms
+ABY timings: online time 1320.44 ms, setup time 32334.9 ms, total time 33655.3 ms
+Total runtime: 166599ms
+Total runtime w/o base OTs: 163760ms
+Data for polynomials recv/sent 32784384 / 0 b
+Data for oprf recv/sent 16944 / 85228321 b
+ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+ABY sent: online 30129577 bytes, setup 1278440356 bytes, total 1308569933 bytes
+Total recv: 1341371270 bytes
+Total sent: 1393798254 bytes
+Total recv w/o base OTs: 1341304414 b
+Total sent w/o base OTs: 1393748225 b
+
+2020-10-25 12:00:27,826 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:00:27,826 [parsing -parse_output] [DEBUG]  Hashing time in ms: 2851.93
+2020-10-25 12:00:27,826 [parsing -parse_output] [DEBUG]  OPRF time in ms: 15512.2
+2020-10-25 12:00:27,826 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 100709.0
+2020-10-25 12:00:27,827 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 767.48
+2020-10-25 12:00:27,827 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1354.02, setup 0.02, total 32250.9
+2020-10-25 12:00:27,827 [parsing -parse_output] [DEBUG]  Total time in ms: 166604.0
+2020-10-25 12:00:27,827 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 165514.0
+2020-10-25 12:00:27,828 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 0/32784384
+2020-10-25 12:00:27,828 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 85228321/16944
+2020-10-25 12:00:27,828 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:00:27,828 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:00:27,828 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1393798263
+2020-10-25 12:00:27,829 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1341371270
+2020-10-25 12:00:27,829 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:00:27,829 [parsing -parse_output] [DEBUG]  Hashing time in ms: 1460.78
+2020-10-25 12:00:27,829 [parsing -parse_output] [DEBUG]  OPRF time in ms: 11646.7
+2020-10-25 12:00:27,829 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 12046.2
+2020-10-25 12:00:27,830 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 91410.4
+2020-10-25 12:00:27,830 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1320.44, setup 0.44, total 32334.9
+2020-10-25 12:00:27,830 [parsing -parse_output] [DEBUG]  Total time in ms: 166599.0
+2020-10-25 12:00:27,830 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 163760.0
+2020-10-25 12:00:27,831 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 32784384/0
+2020-10-25 12:00:27,831 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 16944/85228321
+2020-10-25 12:00:27,831 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:00:27,831 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129577, setup 1278440356, total 1308569933
+2020-10-25 12:00:27,831 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1341371270
+2020-10-25 12:00:27,832 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1393798254
+2020-10-25 12:00:27,832 [run     -run_experime] [INFO ]  == Experiment done! ==================
+2020-10-25 12:00:27,832 [run     -save_data   ] [INFO ]  Saving data to file ./batchlogs/experiments/Batch-ScalingElementsDA_2-Run-1-2020-10-25T12:00:27.832643-Setup-desktop-app.json.
+2020-10-25 12:00:27,833 [run     -run_batch   ] [INFO ]  Waiting for experiment cooldown of 4 s.
+2020-10-25 12:00:31,838 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-25 12:00:31,839 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '25']
+2020-10-25 12:00:31,840 [run     -app_wrapper ] [INFO ]  Running app wrapper as client with context: 1048576;1048576;61;1.27;192.168.0.2;7777;1;0;4002;1024;3;2;0
+2020-10-25 12:00:31,841 [run     -app_wrapper ] [DEBUG]  Cleaning up text in output field.
+2020-10-25 12:00:32,061 [run     -app_wrapper ] [DEBUG]  Setting context (encoded).
+2020-10-25 12:00:32,821 [run     -app_wrapper ] [INFO ]  Starting run_psi on app with
+2020-10-25 12:03:20,030 [run     -desktop_wrap] [INFO ]  server   PSI circuit successfully executed. Result: 0
+2020-10-25 12:03:20,031 [run     -desktop_wrap] [INFO ]  server   Time for hashing 2807.32 ms
+2020-10-25 12:03:20,031 [run     -desktop_wrap] [INFO ]  server   Time for OPRF 15706.2 ms
+2020-10-25 12:03:20,031 [run     -desktop_wrap] [INFO ]  server   Time for polynomials 100716 ms
+2020-10-25 12:03:20,031 [run     -desktop_wrap] [INFO ]  server   Time for transmission of the polynomials 751.097 ms
+2020-10-25 12:03:20,031 [run     -desktop_wrap] [INFO ]  server   ABY timings: online time 1622.61 ms, setup time 30842.2 ms, total time 32464.8 ms
+2020-10-25 12:03:20,032 [run     -desktop_wrap] [INFO ]  server   Total runtime: 165511ms
+2020-10-25 12:03:20,032 [run     -desktop_wrap] [INFO ]  server   Total runtime w/o base OTs: 164189ms
+2020-10-25 12:03:20,032 [run     -desktop_wrap] [INFO ]  server   Data for polynomials recv/sent 0 / 32784384 b
+2020-10-25 12:03:20,032 [run     -desktop_wrap] [INFO ]  server   Data for oprf recv/sent 85228321 / 16944 b
+2020-10-25 12:03:20,032 [run     -desktop_wrap] [INFO ]  server   ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:03:20,033 [run     -desktop_wrap] [INFO ]  server   ABY sent: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:03:20,033 [run     -desktop_wrap] [INFO ]  server   Total recv: 1393798263 bytes
+2020-10-25 12:03:20,033 [run     -desktop_wrap] [INFO ]  server   Total sent: 1341371270 bytes
+2020-10-25 12:03:20,033 [run     -desktop_wrap] [INFO ]  server   Total recv w/o base OTs: 1393748234 b
+2020-10-25 12:03:20,034 [run     -desktop_wrap] [INFO ]  server   Total sent w/o base OTs: 1341304414 b
+2020-10-25 12:03:21,187 [run     -app_wrapper ] [INFO ]  Setting encoded Context...
+Running PSI!
+PSI run returned: 0
+Time for hashing 1458.4 ms
+Time for OPRF 11817.9 ms
+Time for polynomials 12046.8 ms
+Time for transmission of the polynomials 91493.4 ms
+ABY timings: online time 1590.73 ms, setup time 30864.4 ms, total time 32455.2 ms
+Total runtime: 165505ms
+Total runtime w/o base OTs: 162479ms
+Data for polynomials recv/sent 32784384 / 0 b
+Data for oprf recv/sent 16944 / 85228321 b
+ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+ABY sent: online 30129577 bytes, setup 1278440356 bytes, total 1308569933 bytes
+Total recv: 1341371270 bytes
+Total sent: 1393798254 bytes
+Total recv w/o base OTs: 1341304414 b
+Total sent w/o base OTs: 1393748234 b
+
+2020-10-25 12:03:21,187 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:03:21,187 [parsing -parse_output] [DEBUG]  Hashing time in ms: 2807.32
+2020-10-25 12:03:21,187 [parsing -parse_output] [DEBUG]  OPRF time in ms: 15706.2
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 100716.0
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 751.097
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1622.61, setup 0.61, total 30842.2
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Total time in ms: 165511.0
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 164189.0
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 0/32784384
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 85228321/16944
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1393798263
+2020-10-25 12:03:21,188 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1341371270
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Hashing time in ms: 1458.4
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  OPRF time in ms: 11817.9
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 12046.8
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 91493.4
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1590.73, setup 0.73, total 30864.4
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Total time in ms: 165505.0
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 162479.0
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 32784384/0
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 16944/85228321
+2020-10-25 12:03:21,189 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:03:21,190 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129577, setup 1278440356, total 1308569933
+2020-10-25 12:03:21,190 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1341371270
+2020-10-25 12:03:21,190 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1393798254
+2020-10-25 12:03:21,190 [run     -run_experime] [INFO ]  == Experiment done! ==================
+2020-10-25 12:03:21,190 [run     -save_data   ] [INFO ]  Saving data to file ./batchlogs/experiments/Batch-ScalingElementsDA_2-Run-2-2020-10-25T12:03:21.190522-Setup-desktop-app.json.
+2020-10-25 12:03:21,191 [run     -run_batch   ] [INFO ]  Waiting for experiment cooldown of 4 s.
+2020-10-25 12:03:25,196 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-25 12:03:25,197 [run     -app_wrapper ] [INFO ]  Running app wrapper as client with context: 1048576;1048576;61;1.27;192.168.0.2;7777;1;0;4002;1024;3;2;0
+2020-10-25 12:03:25,197 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '25']
+2020-10-25 12:03:25,254 [run     -app_wrapper ] [DEBUG]  Cleaning up text in output field.
+2020-10-25 12:03:25,493 [run     -app_wrapper ] [DEBUG]  Setting context (encoded).
+2020-10-25 12:03:26,260 [run     -app_wrapper ] [INFO ]  Starting run_psi on app with
+2020-10-25 12:06:13,435 [run     -desktop_wrap] [INFO ]  server   PSI circuit successfully executed. Result: 0
+2020-10-25 12:06:13,436 [run     -desktop_wrap] [INFO ]  server   Time for hashing 2697.08 ms
+2020-10-25 12:06:13,436 [run     -desktop_wrap] [INFO ]  server   Time for OPRF 15774.3 ms
+2020-10-25 12:06:13,436 [run     -desktop_wrap] [INFO ]  server   Time for polynomials 100869 ms
+2020-10-25 12:06:13,437 [run     -desktop_wrap] [INFO ]  server   Time for transmission of the polynomials 606.712 ms
+2020-10-25 12:06:13,437 [run     -desktop_wrap] [INFO ]  server   ABY timings: online time 1347.01 ms, setup time 31339 ms, total time 32686 ms
+2020-10-25 12:06:13,437 [run     -desktop_wrap] [INFO ]  server   Total runtime: 165720ms
+2020-10-25 12:06:13,437 [run     -desktop_wrap] [INFO ]  server   Total runtime w/o base OTs: 164298ms
+2020-10-25 12:06:13,438 [run     -desktop_wrap] [INFO ]  server   Data for polynomials recv/sent 0 / 32784384 b
+2020-10-25 12:06:13,438 [run     -desktop_wrap] [INFO ]  server   Data for oprf recv/sent 85228321 / 16944 b
+2020-10-25 12:06:13,438 [run     -desktop_wrap] [INFO ]  server   ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:06:13,438 [run     -desktop_wrap] [INFO ]  server   ABY sent: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:06:13,439 [run     -desktop_wrap] [INFO ]  server   Total recv: 1393798263 bytes
+2020-10-25 12:06:13,439 [run     -desktop_wrap] [INFO ]  server   Total sent: 1341371270 bytes
+2020-10-25 12:06:13,439 [run     -desktop_wrap] [INFO ]  server   Total recv w/o base OTs: 1393748234 b
+2020-10-25 12:06:13,439 [run     -desktop_wrap] [INFO ]  server   Total sent w/o base OTs: 1341304414 b
+2020-10-25 12:06:14,593 [run     -app_wrapper ] [INFO ]  Setting encoded Context...
+Running PSI!
+PSI run returned: 0
+Time for hashing 1469.84 ms
+Time for OPRF 11733.4 ms
+Time for polynomials 12044.6 ms
+Time for transmission of the polynomials 91411 ms
+ABY timings: online time 1306.73 ms, setup time 31423.9 ms, total time 32730.6 ms
+Total runtime: 165715ms
+Total runtime w/o base OTs: 162781ms
+Data for polynomials recv/sent 32784384 / 0 b
+Data for oprf recv/sent 16944 / 85228321 b
+ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+ABY sent: online 30129577 bytes, setup 1278440356 bytes, total 1308569933 bytes
+Total recv: 1341371270 bytes
+Total sent: 1393798254 bytes
+Total recv w/o base OTs: 1341304414 b
+Total sent w/o base OTs: 1393748234 b
+
+2020-10-25 12:06:14,594 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:06:14,594 [parsing -parse_output] [DEBUG]  Hashing time in ms: 2697.08
+2020-10-25 12:06:14,595 [parsing -parse_output] [DEBUG]  OPRF time in ms: 15774.3
+2020-10-25 12:06:14,595 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 100869.0
+2020-10-25 12:06:14,596 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 606.712
+2020-10-25 12:06:14,596 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1347.01, setup 0.01, total 31339.0
+2020-10-25 12:06:14,596 [parsing -parse_output] [DEBUG]  Total time in ms: 165720.0
+2020-10-25 12:06:14,597 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 164298.0
+2020-10-25 12:06:14,597 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 0/32784384
+2020-10-25 12:06:14,597 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 85228321/16944
+2020-10-25 12:06:14,598 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:06:14,598 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:06:14,599 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1393798263
+2020-10-25 12:06:14,599 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1341371270
+2020-10-25 12:06:14,599 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:06:14,600 [parsing -parse_output] [DEBUG]  Hashing time in ms: 1469.84
+2020-10-25 12:06:14,600 [parsing -parse_output] [DEBUG]  OPRF time in ms: 11733.4
+2020-10-25 12:06:14,600 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 12044.6
+2020-10-25 12:06:14,601 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 91411.0
+2020-10-25 12:06:14,601 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1306.73, setup 0.73, total 31423.9
+2020-10-25 12:06:14,601 [parsing -parse_output] [DEBUG]  Total time in ms: 165715.0
+2020-10-25 12:06:14,602 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 162781.0
+2020-10-25 12:06:14,602 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 32784384/0
+2020-10-25 12:06:14,602 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 16944/85228321
+2020-10-25 12:06:14,603 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:06:14,603 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129577, setup 1278440356, total 1308569933
+2020-10-25 12:06:14,603 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1341371270
+2020-10-25 12:06:14,604 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1393798254
+2020-10-25 12:06:14,604 [run     -run_experime] [INFO ]  == Experiment done! ==================
+2020-10-25 12:06:14,605 [run     -save_data   ] [INFO ]  Saving data to file ./batchlogs/experiments/Batch-ScalingElementsDA_2-Run-3-2020-10-25T12:06:14.605111-Setup-desktop-app.json.
+2020-10-25 12:06:14,607 [run     -run_batch   ] [INFO ]  Waiting for experiment cooldown of 4 s.
+2020-10-25 12:06:18,611 [run     -run_experime] [INFO ]  == New experiment! ===================
+2020-10-25 12:06:18,613 [run     -app_wrapper ] [INFO ]  Running app wrapper as client with context: 1048576;1048576;61;1.27;192.168.0.2;7777;1;0;4002;1024;3;2;0
+2020-10-25 12:06:18,613 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '1048576', '-o', '1048576', '-b', '61', '-e', '1.27', '-a', '192.168.0.2', '-p', '7777', '-t', '1', '-c', '0', '-m', '4002', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '25']
+2020-10-25 12:06:18,669 [run     -app_wrapper ] [DEBUG]  Cleaning up text in output field.
+2020-10-25 12:06:18,867 [run     -app_wrapper ] [DEBUG]  Setting context (encoded).
+2020-10-25 12:06:19,670 [run     -app_wrapper ] [INFO ]  Starting run_psi on app with
+2020-10-25 12:09:07,857 [run     -desktop_wrap] [INFO ]  server   PSI circuit successfully executed. Result: 0
+2020-10-25 12:09:07,857 [run     -desktop_wrap] [INFO ]  server   Time for hashing 2679.27 ms
+2020-10-25 12:09:07,915 [run     -desktop_wrap] [INFO ]  server   Time for OPRF 15698.7 ms
+2020-10-25 12:09:07,915 [run     -desktop_wrap] [INFO ]  server   Time for polynomials 100830 ms
+2020-10-25 12:09:07,915 [run     -desktop_wrap] [INFO ]  server   Time for transmission of the polynomials 822.555 ms
+2020-10-25 12:09:07,916 [run     -desktop_wrap] [INFO ]  server   ABY timings: online time 1862.07 ms, setup time 31815.8 ms, total time 33677.9 ms
+2020-10-25 12:09:07,916 [run     -desktop_wrap] [INFO ]  server   Total runtime: 166776ms
+2020-10-25 12:09:07,916 [run     -desktop_wrap] [INFO ]  server   Total runtime w/o base OTs: 165459ms
+2020-10-25 12:09:07,917 [run     -desktop_wrap] [INFO ]  server   Data for polynomials recv/sent 0 / 32784384 b
+2020-10-25 12:09:07,917 [run     -desktop_wrap] [INFO ]  server   Data for oprf recv/sent 85228321 / 16944 b
+2020-10-25 12:09:07,917 [run     -desktop_wrap] [INFO ]  server   ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:09:07,918 [run     -desktop_wrap] [INFO ]  server   ABY sent: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+2020-10-25 12:09:07,918 [run     -desktop_wrap] [INFO ]  server   Total recv: 1393798263 bytes
+2020-10-25 12:09:07,919 [run     -desktop_wrap] [INFO ]  server   Total sent: 1341371270 bytes
+2020-10-25 12:09:07,919 [run     -desktop_wrap] [INFO ]  server   Total recv w/o base OTs: 1393748234 b
+2020-10-25 12:09:07,920 [run     -desktop_wrap] [INFO ]  server   Total sent w/o base OTs: 1341304414 b
+2020-10-25 12:09:08,104 [run     -app_wrapper ] [INFO ]  Setting encoded Context...
+Running PSI!
+PSI run returned: 0
+Time for hashing 1475.35 ms
+Time for OPRF 11648.7 ms
+Time for polynomials 12036.2 ms
+Time for transmission of the polynomials 91686.1 ms
+ABY timings: online time 1879.48 ms, setup time 31753 ms, total time 33632.5 ms
+Total runtime: 166771ms
+Total runtime w/o base OTs: 163894ms
+Data for polynomials recv/sent 32784384 / 0 b
+Data for oprf recv/sent 16944 / 85228321 b
+ABY recv: online 30129586 bytes, setup 1278440356 bytes, total 1308569942 bytes
+ABY sent: online 30129577 bytes, setup 1278440356 bytes, total 1308569933 bytes
+Total recv: 1341371270 bytes
+Total sent: 1393798254 bytes
+Total recv w/o base OTs: 1341304414 b
+Total sent w/o base OTs: 1393748225 b
+
+2020-10-25 12:09:08,105 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:09:08,105 [parsing -parse_output] [DEBUG]  Hashing time in ms: 2679.27
+2020-10-25 12:09:08,106 [parsing -parse_output] [DEBUG]  OPRF time in ms: 15698.7
+2020-10-25 12:09:08,106 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 100830.0
+2020-10-25 12:09:08,106 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 822.555
+2020-10-25 12:09:08,107 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1862.07, setup 0.07, total 31815.8
+2020-10-25 12:09:08,107 [parsing -parse_output] [DEBUG]  Total time in ms: 166776.0
+2020-10-25 12:09:08,107 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 165459.0
+2020-10-25 12:09:08,108 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 0/32784384
+2020-10-25 12:09:08,108 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 85228321/16944
+2020-10-25 12:09:08,108 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:09:08,108 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:09:08,109 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1393798263
+2020-10-25 12:09:08,109 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1341371270
+2020-10-25 12:09:08,109 [parsing -parse_output] [DEBUG]  Result: 0
+2020-10-25 12:09:08,109 [parsing -parse_output] [DEBUG]  Hashing time in ms: 1475.35
+2020-10-25 12:09:08,110 [parsing -parse_output] [DEBUG]  OPRF time in ms: 11648.7
+2020-10-25 12:09:08,110 [parsing -parse_output] [DEBUG]  Polynomials time in ms: 12036.2
+2020-10-25 12:09:08,110 [parsing -parse_output] [DEBUG]  Polynomials transmission time in ms: 91686.1
+2020-10-25 12:09:08,111 [parsing -parse_output] [DEBUG]  Aby timings in ms: online 1879.48, setup 0.48, total 31753.0
+2020-10-25 12:09:08,111 [parsing -parse_output] [DEBUG]  Total time in ms: 166771.0
+2020-10-25 12:09:08,111 [parsing -parse_output] [DEBUG]  Total time w/o base OTs in ms: 163894.0
+2020-10-25 12:09:08,112 [parsing -parse_output] [DEBUG]  Polynomials data recv/sent in bytes: 32784384/0
+2020-10-25 12:09:08,112 [parsing -parse_output] [DEBUG]  Oprf data recv/sent in bytes: 16944/85228321
+2020-10-25 12:09:08,112 [parsing -parse_output] [DEBUG]  Aby data recv in bytes: online 30129586, setup 1278440356, total 1308569942
+2020-10-25 12:09:08,113 [parsing -parse_output] [DEBUG]  Aby data sent in bytes: online 30129577, setup 1278440356, total 1308569933
+2020-10-25 12:09:08,113 [parsing -parse_output] [DEBUG]  Total data recv in bytes: 1341371270
+2020-10-25 12:09:08,113 [parsing -parse_output] [DEBUG]  Total data sent in bytes: 1393798254
+2020-10-25 12:09:08,114 [run     -run_experime] [INFO ]  == Experiment done! ==================
+2020-10-25 12:09:08,114 [run     -save_data   ] [INFO ]  Saving data to file ./batchlogs/experiments/Batch-ScalingElementsDA_2-Run-4-2020-10-25T12:09:08.114650-Setup-desktop-app.json.
+2020-10-25 12:09:08,116 [run     -run_batch   ] [INFO ]  Waiting for experiment cooldown of 4 s.
+2020-10-25 12:09:12,552 [run     -run_batch   ] [INFO ]  Done with batch

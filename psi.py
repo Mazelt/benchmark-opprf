@@ -3,7 +3,7 @@ import enum
 
 SERVER = 0
 CLIENT = 1
-SERVER_IP = "192.168.0.2"
+SERVER_IP = '127.0.0.1' # "192.168.0.2"
 BIN_PATH = '/home/marcel/repos/original-opprf/buildassociated/bin/psi_analytics_eurocrypt19_example'
 
 class Psi_type(enum.IntEnum):

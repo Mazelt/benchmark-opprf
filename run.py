@@ -73,6 +73,8 @@ def run_batch():
     for b in batch:
         if b['setup'] == 'desktop-app':
             driver = init_appium()
+        else:
+            driver = None
         logger.info(f"Running batch job: {b.items()}")
         repeat = b['repeat']
         del b['repeat']
@@ -85,11 +87,12 @@ def run_batch():
             run_data['batch'] = batch_name
             save_data(run_data)
             logger.info(f"Waiting for experiment cooldown of {EXPERIMENT_COOLDOWN} s.")
-            if 'reset' in b and b[''] == True:
+            if driver and 'reset' in b and b[''] == True:
                 logger.info(f"Resetting app!")
                 driver.reset()
             time.sleep(EXPERIMENT_COOLDOWN)
-        driver.quit()
+        if driver:
+            driver.quit()
     logger.info("Done with batch")
     exit(0)
 
@@ -114,7 +117,7 @@ def run_experiment(driver, config, repeat=None):
             server_thread.start()
             
             if config['setup'] == 'desktop-desktop':
-                desktop_wrapper(paras, BIN_PATH, client_q, CLIENT)
+                desktop_wrapper(paras, BIN_PATH, client_q, lambda: None ,CLIENT)
             elif config['setup'] == 'desktop-app':
                 app_wrapper(driver, paras, client_q)
             else:
@@ -129,6 +132,7 @@ def run_experiment(driver, config, repeat=None):
             retry =-1
         except Exception as e:
             logger.error(f"Caught execption {e}")
+            raise e
             stop_thread = True
             server_thread.join()
             if retry > 0:

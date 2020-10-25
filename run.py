@@ -132,7 +132,6 @@ def run_experiment(driver, config, repeat=None):
             retry =-1
         except Exception as e:
             logger.error(f"Caught execption {e}")
-            raise e
             stop_thread = True
             server_thread.join()
             if retry > 0:
@@ -171,7 +170,7 @@ def app_wrapper(driver, parameters, out_queue):
     while (not run_button.is_enabled()):
         time.sleep(5)
     text_output = output.get_attribute('text')
-    # logger.info(text_output)
+    logger.info(text_output)
     out_queue.put(text_output)
 
 

@@ -162,3 +162,13 @@ class Parser(object):
                 data['nobase_d_rs'].append(nobase_d_s)
                 continue
         return data
+
+
+if __name__ == '__main__':
+    to_parse = 'Total runtime: 134138ms\n'
+    import logging
+    logger = logging.getLogger('__name__')
+
+    parser = Parser(logger)
+    data = parser.parse_output(to_parse)
+    print(data)

@@ -23,21 +23,21 @@ paras_n_12 = Parameters(preset='2_12')
 paras_n_16 = Parameters(preset='2_16')
 paras_n_20 = Parameters(preset='2_20')
 
-batch_name = 'ScalingElementsDA_2'
+batch_name = 'ScalingElementsDD_1'
 batch = [
 {
-    'setup': 'desktop-app',
-    'repeat': 5,
+    'setup': 'desktop-desktop',
+    'repeat': 10,
     'parameters': paras_n_12
 },
 {
-    'setup': 'desktop-app',
-    'repeat': 5,
+    'setup': 'desktop-desktop',
+    'repeat': 10,
     'parameters': paras_n_16
 }, 
 {
-    'setup': 'desktop-app',
-    'repeat': 5,
+    'setup': 'desktop-desktop',
+    'repeat': 10,
     'parameters': paras_n_20
 }
 # {

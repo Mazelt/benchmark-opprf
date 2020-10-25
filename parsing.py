@@ -4,16 +4,16 @@ import re
 re_success_result = re.compile(
     r"PSI circuit successfully executed. Result: (?P<result>\d+)")
 re_app_result = re.compile(r"PSI run returned: (?P<result>\d+)")
-re_time_hashing = re.compile(r"Time for hashing (?P<hashing_t>\d+\.\d+) ms")
-re_time_oprf = re.compile(r"Time for OPRF (?P<oprf_t>\d+\.\d+) ms")
-re_time_poly = re.compile(r"Time for polynomials (?P<poly_t>\d+\.\d+) ms")
+re_time_hashing = re.compile(r"Time for hashing (?P<hashing_t>\d+(\.\d*)?) ms")
+re_time_oprf = re.compile(r"Time for OPRF (?P<oprf_t>\d+(\.\d*)?) ms")
+re_time_poly = re.compile(r"Time for polynomials (?P<poly_t>\d+(\.\d*)?) ms")
 re_time_poly_trans = re.compile(
-    r"Time for transmission of the polynomials (?P<poly_trans_t>\d+\.\d+) ms")
+    r"Time for transmission of the polynomials (?P<poly_trans_t>\d+(\.\d*)?) ms")
 re_time_aby = re.compile(
-    r"ABY timings: online time (?P<aby_online_t>\d+\.\d+) ms, setup time (?P<aby_setup_t>\d+\.\d+) ms, total time (?P<aby_total_t>\d+\.\d+) ms")
-re_time_total = re.compile(r"Total runtime: (?P<total_t>\d+\.\d+)ms")
+    r"ABY timings: online time (?P<aby_online_t>\d+(\.\d*)?) ms, setup time (?P<aby_setup_t>\d+(\.\d*)?) ms, total time (?P<aby_total_t>\d+(\.\d*)?) ms")
+re_time_total = re.compile(r"Total runtime: (?P<total_t>\d+(\.\d*)?)ms")
 re_time_nobase = re.compile(
-    r"Total runtime w/o base OTs: (?P<nobase_t>\d+\.\d+)ms")
+    r"Total runtime w/o base OTs: (?P<nobase_t>\d+(\.\d*)?)ms")
 re_comm_poly = re.compile(
     r"Data for polynomials recv/sent (?P<recv>\d+) / (?P<sent>\d+) b")
 re_comm_oprf = re.compile(

@@ -3,7 +3,7 @@ import enum
 
 SERVER = 0
 CLIENT = 1
-SERVER_IP = '127.0.0.1' # "192.168.0.2"
+SERVER_IP = "192.168.0.2"  # '127.0.0.1'
 BIN_PATH = '/home/marcel/repos/original-opprf/buildassociated/bin/psi_analytics_eurocrypt19_example'
 
 class Psi_type(enum.IntEnum):
@@ -21,7 +21,7 @@ class Psi_type(enum.IntEnum):
 
 class Parameters(dict):
 
-    def __init__(self, preset=None):
+    def __init__(self, preset=None, psitype=Psi_type.Analytics):
         self.client_neles = 1024
         self.server_neles = 1024
         self.bit_len = 51
@@ -34,7 +34,7 @@ class Parameters(dict):
         self.poly_size = 0  # todo: use formula to compute sub 1024 sized polys with statistical security.
         self.n_fun = 3
         self.payload_bl = 2
-        self.fun_type = Psi_type.Analytics
+        self.fun_type = psitype
         self.overlap = 25
         if preset == '2_12':
             self.preset2_12()

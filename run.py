@@ -19,32 +19,69 @@ logger = logging.getLogger('__name__')
 
 EXPERIMENT_COOLDOWN = 4
 
-paras_n_12 = Parameters(preset='2_12')
-paras_n_16 = Parameters(preset='2_16')
-paras_n_20 = Parameters(preset='2_20')
+Parameters(preset='2_12')
 
-batch_name = 'ScalingElementsDD_1'
+batch_name = 'ScalingElementsDA_3'
 batch = [
 {
-    'setup': 'desktop-desktop',
+    'setup': 'desktop-app',
     'repeat': 10,
-    'parameters': paras_n_12
+    'parameters': Parameters(preset='2_12')
 },
-{
-    'setup': 'desktop-desktop',
+    {
+    'setup': 'desktop-app',
     'repeat': 10,
-    'parameters': paras_n_16
-}, 
-{
-    'setup': 'desktop-desktop',
+    'parameters': Parameters(preset='2_16')
+},
+    {
+    'setup': 'desktop-app',
     'repeat': 10,
-    'parameters': paras_n_20
-}
+    'parameters': Parameters(preset='2_20')
+},
 # {
 #     'setup': 'desktop-app',
-#     'repeat': 1,
-#     'parameters': Parameters()
-#     # todo? variable that is changed?
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12',psitype=Psi_type.Threshold)
+# },
+#     {
+#     'setup': 'desktop-desktop',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.Sum)
+# },
+#     {
+#     'setup': 'desktop-desktop',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.SumIfGtThreshold)
+# },
+#     {
+#     'setup': 'desktop-desktop',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadASum)
+# },
+#     {
+#     'setup': 'desktop-desktop',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadASumGT)
+# },
+#     {
+#     'setup': 'desktop-desktop',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABSum)
+# },
+# {
+#     'setup': 'desktop-app',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABSumGT)
+# },
+#     {
+#     'setup': 'desktop-app',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABMulSum)
+# },
+#     {
+#     'setup': 'desktop-app',
+#     'repeat': 5,
+#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABMulSumGT)
 # }
 ]
 

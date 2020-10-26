@@ -141,6 +141,8 @@ def plot_time_pie(data, role=CLIENT):
     poly_t = b[0][output]['poly_t']
     aby_online_t = b[0][output]['aby_online_t']
     aby_setup_t = b[0][output]['aby_setup_t']
+    total_t = b[0][output]['total_t']
+    
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()

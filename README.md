@@ -17,8 +17,6 @@ hashing_t: client does cuckoo, server simple.
 
 oprf_t: server seems to have a bit more to do
 
-
-
 poly_t means:
 
 for client -> evaluation of polynomials
@@ -27,6 +25,13 @@ for server -> generation of values and interpolation
 poly_trans_t on client side is not meaningful since it counts in the time the
 client waits for the server to complete polynomial creation. 
 Only count in poly_trans_t of the server.
+remove polytrans from client time or use server's value for both.
+
+aby_online, _setup.  its synced and same for both.
+
+total_t
+
+other = waiting time, coordination.
 
 # Experiments
 

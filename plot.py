@@ -7,15 +7,18 @@ import argparse
 from psi import CLIENT, SERVER
 
 
-batch_name = "ScalingElementsDA_2"
+batch_name = "ScalingElementsDD_2"
 
-def load_batch(pattern):
+def load_batch(pattern, silent=True):
     os.path.exists('./batchlogs/experiments')
     files = glob.glob(f"./batchlogs/experiments/Batch-{pattern}*.json")
     files = sorted(files)
-    for i,e in enumerate(files):
-        print(f"{i}:\t {e}")
-    all_right = input('Take all? Press any key to continue')
+    if silent:
+        print(f"using pattern: {batch_name}")
+    else:
+        for i,e in enumerate(files):
+            print(f"{i}:\t {e}")
+        all_right = input('Take all? Press any key to continue')
     batches = []
     for f in files:
         with open(f, 'r') as fp:
@@ -131,18 +134,138 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
     plt.tight_layout()
     plt.show()
 
-def plot_time_pie(data, role=CLIENT):
-    # simple version with just one run.
-    output = 'c_output' if role == CLIENT else 's_output'
-    b = data[0]
-    hashing_t = b[0][output]['hashing_t']
-    oprf_t = b[0][output]['oprf_t']
-    poly_trans_t = b[0][output]['poly_trans_t']
-    poly_t = b[0][output]['poly_t']
-    aby_online_t = b[0][output]['aby_online_t']
-    aby_setup_t = b[0][output]['aby_setup_t']
-    total_t = b[0][output]['total_t']
-    
+def plot_time_pies(data, combined=True):
+    # for each !OR FOR ONE DEPENDING ON COMBINED!
+    # batch (equal parameters, different repeats)
+        # for each repeat
+            # the *_t timings are averaged
+        # the other_t is calculated as the differents of the sum of all measured
+        # timings and the total timing.
+        # the percentage of the total running time is taken.
+    # the percentages are averaged over the batches.
+    if combined:
+        batches = data
+    else:
+        batches = [data[2]]
+    pct_client = {
+        'hashing_t': 0.0,
+        'oprf_t': 0.0,
+        'poly_trans_t': 0.0,
+        'poly_t': 0.0,
+        'aby_online_t': 0.0,
+        'aby_setup_t': 0.0,
+        'other_t': 0.0
+    }
+    pct_server = {
+        'hashing_t': 0.0,
+        'oprf_t': 0.0,
+        'poly_trans_t': 0.0,
+        'poly_t': 0.0,
+        'aby_online_t': 0.0,
+        'aby_setup_t': 0.0,
+        'other_t': 0.0
+    }
+    for b in batches:
+        client = {
+            'hashing_t': 0,
+            'oprf_t': 0,
+            'poly_trans_t': 0,
+            'poly_t': 0,
+            'aby_online_t': 0,
+            'aby_setup_t': 0,
+            'total_t': 0
+        }
+        server = {
+            'hashing_t': 0,
+            'oprf_t': 0,
+            'poly_trans_t': 0,
+            'poly_t': 0,
+            'aby_online_t': 0,
+            'aby_setup_t': 0,
+            'total_t': 0
+        }
+        
+        # sum up 
+        for i in range(len(b)-1):
+            for k in client:
+                client[k] += b[i]['c_output'][k]
+            for k in server:
+                server[k] += b[i]['s_output'][k]
+
+        # get average
+        for k in client:
+            client[k] = float(client[k])/(len(b)-1.0)
+
+        for k in server:
+            server[k] = float(server[k])/(len(b)-1.0)
+        
+        # client poly trans wait is mostly waiting for the server to begin.
+        client['poly_trans_t'] = server['poly_trans_t']
+        
+        # other
+        c_other = 2*client['total_t'] 
+        for k in client:
+            c_other -= client[k]
+        client['other_t'] = c_other
+
+        s_other = 2*server['total_t']
+        for k in server:
+            s_other -= server[k]
+        server['other_t'] = s_other
+
+
+        for k in pct_client:
+            pct_client[k] += client[k]/client['total_t']
+
+        for k in pct_server:
+            pct_server[k] += server[k]/server['total_t']
+
+    # get average
+    for k in pct_client:
+        pct_client[k] = pct_client[k]/float(len(batches))
+
+    for k in pct_server:
+        pct_server[k] = pct_server[k]/float(len(batches))
+
+    # print(pct_client)
+    # print(pct_server)
+
+
+
+    fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
+
+    #### For inside text!
+    # wedges, texts, autotexts = ax.pie(pct_server.values(), autopct=lambda pct: f"{pct:.1f}%",
+    #                                   textprops=dict(color="w"), counterclock=False)
+
+    # ax.legend(wedges, pct_server.keys(),
+    #           title="Phases",
+    #           loc="center left",
+    #           bbox_to_anchor=(1, 0, 0.5, 1))
+
+    # plt.setp(autotexts, size=8, weight="bold")
+
+    wedges, texts, = ax.pie(pct_client.values(),startangle=-90)
+
+    # from https://matplotlib.org/3.1.1/gallery/pie_and_polar_charts/pie_and_donut_labels.html
+    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
+    kw = dict(arrowprops=dict(arrowstyle="-"),
+            bbox=bbox_props, zorder=0, va="center")
+
+    for i, p in enumerate(wedges):
+        ang = (p.theta2 - p.theta1)/2. + p.theta1
+        y = np.sin(np.deg2rad(ang))
+        x = np.cos(np.deg2rad(ang))
+        horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+        connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+        kw["arrowprops"].update({"connectionstyle": connectionstyle})
+        ax.annotate(f"{list(pct_client.values())[i]:.2f}% {list(pct_client.keys())[i]}", xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
+                    horizontalalignment=horizontalalignment, **kw)
+
+
+    ax.set_title("Client (DD): Combination of phases time-wise")
+
+    plt.show()
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
@@ -150,6 +273,7 @@ if __name__ == '__main__':
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--total_t', action='store_true')
     ap.add_argument('--aby_t', action='store_true')
+    ap.add_argument('--pies_t', action='store_true')
     args = ap.parse_args()
     data = load_batch(batch_name)
     if args.all or args.hash:
@@ -158,3 +282,5 @@ if __name__ == '__main__':
         plot_total_time(data)
     if args.all or args.aby_t:
         plot_aby_time(data)
+    if args.all or args.pies_t:
+        plot_time_pies(data)

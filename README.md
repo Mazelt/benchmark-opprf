@@ -62,9 +62,6 @@ Future possible topics:
 
 *Scaling of element numbers* 
 Start low. 
-Remember the implementation breaking for n>2^16: it looks like this is because
-the tests are working with k=2 and this reaches 62 bit opprf output length
-requirement which is not supported by the used mersenne prime field.
 Scale other parameters accordingly.
 
 What are the metrics to test:

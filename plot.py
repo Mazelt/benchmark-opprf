@@ -4,10 +4,10 @@ import os.path
 import glob
 import json
 import argparse
-from psi import CLIENT, SERVER
+from psi import Psi_type, CLIENT, SERVER
 
 
-batch_name = "ScalingElementsDD_2"
+batch_name = "PsiTypesDA_3"
 
 def load_batch(pattern, silent=True):
     os.path.exists('./batchlogs/experiments')
@@ -33,21 +33,32 @@ def load_batch(pattern, silent=True):
                 batches.append({'parameters':b['parameters'], b['repeat']: {'s_output': b['s_output'], 'c_output': b['c_output']}})
     return batches
 
-
-def get_s_c_mean_std(data, key):
-    set_sizes = []
+# rs is either None, 'r' or 's'
+def get_s_c_mean_std(data, key, rs=None, parameter='set'):
+    parameters = []
     server_means = []
     client_means = []
     server_stds = []
     client_stds = []
     for b in data:
-        set_sizes.append(b['parameters']['client_neles'])
+        if parameter == 'set':
+            parameters.append(b['parameters']['client_neles'])
+        elif parameter == 'psi':
+            parameters.append(b['parameters']['fun_type'])
         s_measure = []
         c_measure = []
         for i in range(len(b)-1):
             try:
-                s_measure.append(b[i]['s_output'][key])
-                c_measure.append(b[i]['c_output'][key])
+                if rs:
+                    if rs =='r':
+                        index = 0
+                    elif rs == 's':
+                        index = 1
+                    s_measure.append(b[i]['s_output'][key][index])
+                    c_measure.append(b[i]['c_output'][key][index])
+                else:
+                    s_measure.append(b[i]['s_output'][key])
+                    c_measure.append(b[i]['c_output'][key])
             except KeyError as k:
                 print(f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
                 # raise k
@@ -58,7 +69,7 @@ def get_s_c_mean_std(data, key):
         client_means.append(np.mean(c_measure))
         client_stds.append(np.std(c_measure))
     
-    return set_sizes, server_means, server_stds, client_means, client_stds
+    return np.array(parameters), np.array(server_means), np.array(server_stds), np.array(client_means), np.array(client_stds)
 
 def plot_hashing(data):
     # simple plot right now.
@@ -76,6 +87,29 @@ def plot_hashing(data):
     ax.yaxis.grid(True)
 
     ax.legend((server[0], client[0]),('server', 'client'))
+
+    plt.tight_layout()
+    plt.show()
+
+
+def plot_poly_size(data):
+    # simple plot right now.
+    set_sizes, server_means, server_stds, _, _ = get_s_c_mean_std(
+        data, "poly_d_rs",rs='s')
+    x_pos = np.arange(len(set_sizes))
+    server_means = server_means/1e6
+    server_stds = server_stds/1e6
+    fig, ax = plt.subplots()
+    server = ax.bar(x_pos, server_means, yerr=server_stds, width=0.2, color='b', align='center', alpha=0.5,
+                    ecolor='black', capsize=10)
+    ax.set_ylabel(f"Data transmitted im MegaBytes")
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(set_sizes)
+    ax.set_title(
+        "Polynomials transmitted for Desktop-App for different set sizes. With std-error.")
+    ax.yaxis.grid(True)
+
+    # ax.legend((server[0]), ('server'))
 
     plt.tight_layout()
     plt.show()
@@ -100,6 +134,36 @@ def plot_total_time(data):
     plt.tight_layout()
     plt.show()
 
+
+def plot_total_data(data):
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='r') 
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='s')
+    x_pos = np.arange(len(set_sizes))
+    fig, ax = plt.subplots()
+    client_r_means = client_r_means/1e9
+    client_s_means = client_s_means/1e9
+    client_r_stds = client_r_stds/1e9
+    client_s_stds = client_s_stds/1e9
+
+    # Add a table at the bottom of the axes
+    client_r = ax.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.2, color='b', align='center', alpha=0.5,
+                    ecolor='black', capsize=5)
+    client_s = ax.bar(x_pos+0.1, client_s_means, yerr=client_s_stds, width=0.2, color='g', align='center', alpha=0.5,
+                    ecolor='black', capsize=5)
+    ax.set_ylabel(f"Total data in in GigaBytes")
+    
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(set_sizes)
+    ax.set_title(
+        "Client: Total data received/sent for Desktop-App for different set sizes. With std-error.")
+    ax.yaxis.grid(True)
+
+    ax.legend((client_r[0], client_s[0]), ('client received', 'client sent'))
+
+    plt.tight_layout()
+    plt.show()
 
 def plot_aby_time(data, online_only=True ,role=CLIENT):
     set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
@@ -227,11 +291,6 @@ def plot_time_pies(data, combined=True):
     for k in pct_server:
         pct_server[k] = pct_server[k]/float(len(batches))
 
-    # print(pct_client)
-    # print(pct_server)
-
-
-
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
     #### For inside text!
@@ -267,20 +326,68 @@ def plot_time_pies(data, combined=True):
 
     plt.show()
 
+def plot_psi_types_dt(data):
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+        data, "total_t", parameter='psi')
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='r', parameter='psi')
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='s', parameter='psi')
+    # client_means = client_means/1e3 # seconds?
+    client_r_means = client_r_means/1e9
+    client_s_means = client_s_means/1e9
+    client_r_stds = client_r_stds/1e9
+    client_s_stds = client_s_stds/1e9
+
+    x_pos = np.array(set_sizes)
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel('PSI Function Types')
+    ax1.set_ylabel('Total data in in GigaBytes')
+    ax1.set_xticks(x_pos)
+    ax1.set_title(
+        "Client: Time and data for Desktop-App for different psi types with n=4096 elements. With std-error.")
+    labels = [Psi_type(i).name for i in set_sizes]
+    ax1.set_xticklabels(labels)
+    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color='b', align='center', alpha=0.5,
+                       ecolor='black', capsize=5)
+    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color='g', align='center', alpha=0.5,
+                       ecolor='black', capsize=5)
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('time (ms)',color='tab:red')
+    ax2.tick_params(axis='y', labelcolor='tab:red')
+    # Add a table at the bottom of the axes
+    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.1, color='tab:red', align='center', alpha=0.5,
+                       ecolor='black', capsize=5)
+    ax1.legend((client_r[0], client_s[0], client_t[0]),
+               ('client received', 'client sent', 'time'))
+    # fig.tight_layout()
+    plt.show()
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--all', action='store_true')
     ap.add_argument('--hash', action='store_true')
+    ap.add_argument('--poly_d', action='store_true')
     ap.add_argument('--total_t', action='store_true')
+    ap.add_argument('--total_d', action='store_true')
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
+    ap.add_argument('--psi_types_dt', action='store_true')
     args = ap.parse_args()
     data = load_batch(batch_name)
     if args.all or args.hash:
         plot_hashing(data)
+    if args.all or args.poly_d:
+        plot_poly_size(data)
     if args.all or args.total_t:
         plot_total_time(data)
     if args.all or args.aby_t:
         plot_aby_time(data)
     if args.all or args.pies_t:
         plot_time_pies(data)
+    if args.all or args.total_d:
+        plot_total_data(data)
+    if args.all or args.psi_types_dt:
+        if 'PsiTypes' in batch_name:
+            plot_psi_types_dt(data)
+    

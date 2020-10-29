@@ -7,7 +7,7 @@ import argparse
 from psi import Psi_type, CLIENT, SERVER
 
 
-batch_name = "PsiTypesDA_3"
+batch_name = "ServerScalingAnalyticsDD_1"
 
 def load_batch(pattern, silent=True):
     os.path.exists('./batchlogs/experiments')
@@ -42,7 +42,7 @@ def get_s_c_mean_std(data, key, rs=None, parameter='set'):
     client_stds = []
     for b in data:
         if parameter == 'set':
-            parameters.append(b['parameters']['client_neles'])
+            parameters.append(b['parameters']['server_neles'])
         elif parameter == 'psi':
             parameters.append(b['parameters']['fun_type'])
         s_measure = []

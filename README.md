@@ -45,18 +45,18 @@ Wifi router with wired connection to server.
 
 ### Batches
 Topics to cover:
-* Scaling of element numbers
-* Sweet-spot for low amount of elements and performance
+* Scaling of element numbers (not so important)
+* Sweet-spot for low amount of elements and performance (bei tage-aufbrechen.)
 * Differences between PSI types
-* Unbalanced set performances
-* Variation of extra arguments: Megabins, epsilon, hashfun
-* monitoring of network speeds
+* Unbalanced set performances !!
+* Variation of extra arguments: Megabins, epsilon, hashfun (security)
+* monitoring of network speeds (network em (later))
 * monitoring of energy/cpu/memory usage on phone.
 
 Future possible topics:
-* Differences in ABY ciruit types.
+* Differences in ABY ciruit types. (not extensive analysis, DD)
 * Enable SSE?
-* Use newer NTL version?
+* Use newer NTL version? (only on server side)
 * threading? on server side?
 
 
@@ -106,3 +106,31 @@ TODO: add wrapper script to remotely run server binary and download data.
 
 ## Desktop-Desktop
 Add network delay to simulate LAN and not localhost speed.
+
+
+#notes
+Network traces, use network emulator to use traces.
+net em (linux) -> dealy, packet loss.
+
+15-20min each key. 
+
+client-'multi-threading'= 'parallele' per-day ausführungen
+
+
+log-scale for gbit.
+
+pak fehlerbalken
+
+energie/auslastung messen.
+
+aby-compile auf performance?
+aby-production.
+
+messen wie lange gewartet wird.
+
+limit ausrechnen für collision bei skalierung der serve elemente.
+
+Wieviele runs?
+In den titel!
+
+erst perfektes setting

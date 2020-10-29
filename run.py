@@ -21,69 +21,56 @@ EXPERIMENT_COOLDOWN = 4
 
 Parameters(preset='2_12')
 
-batch_name = 'ScalingElementsDA_3'
+batch_name = 'ServerScalingAnalyticsDD_1'
 batch = [
-{
-    'setup': 'desktop-app',
-    'repeat': 10,
-    'parameters': Parameters(preset='2_12')
-},
     {
-    'setup': 'desktop-app',
-    'repeat': 10,
-    'parameters': Parameters(preset='2_16')
-},
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**12)
+    },
     {
-    'setup': 'desktop-app',
-    'repeat': 10,
-    'parameters': Parameters(preset='2_20')
-},
-# {
-#     'setup': 'desktop-app',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12',psitype=Psi_type.Threshold)
-# },
-#     {
-#     'setup': 'desktop-desktop',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.Sum)
-# },
-#     {
-#     'setup': 'desktop-desktop',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.SumIfGtThreshold)
-# },
-#     {
-#     'setup': 'desktop-desktop',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadASum)
-# },
-#     {
-#     'setup': 'desktop-desktop',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadASumGT)
-# },
-#     {
-#     'setup': 'desktop-desktop',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABSum)
-# },
-# {
-#     'setup': 'desktop-app',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABSumGT)
-# },
-#     {
-#     'setup': 'desktop-app',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABMulSum)
-# },
-#     {
-#     'setup': 'desktop-app',
-#     'repeat': 5,
-#     'parameters': Parameters(preset='2_12', psitype=Psi_type.PayloadABMulSumGT)
-# }
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**13)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**14)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**15)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**16)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**17)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**18)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**19)
+    },
+    {
+        'setup': 'desktop-desktop',
+        'repeat': 5,
+        'parameters': Parameters(preset='2_12', server_n=2**20)
+    },
+
 ]
+
 
 class FailedExperiment(Exception):
     pass
@@ -123,7 +110,8 @@ def run_batch():
                 continue
             run_data['batch'] = batch_name
             save_data(run_data)
-            logger.info(f"Waiting for experiment cooldown of {EXPERIMENT_COOLDOWN} s.")
+            logger.info(
+                f"Waiting for experiment cooldown of {EXPERIMENT_COOLDOWN} s.")
             if driver and 'reset' in b and b[''] == True:
                 logger.info(f"Resetting app!")
                 driver.reset()
@@ -132,6 +120,7 @@ def run_batch():
             driver.quit()
     logger.info("Done with batch")
     exit(0)
+
 
 def run_experiment(driver, config, repeat=None):
     retry = 1
@@ -150,11 +139,12 @@ def run_experiment(driver, config, repeat=None):
             stop_thread = False
             server_thread = threading.Thread(target=desktop_wrapper, args=(
                 paras, BIN_PATH, server_q, lambda: stop_thread, SERVER))
-            
+
             server_thread.start()
-            
+
             if config['setup'] == 'desktop-desktop':
-                desktop_wrapper(paras, BIN_PATH, client_q, lambda: None ,CLIENT)
+                desktop_wrapper(paras, BIN_PATH, client_q,
+                                lambda: None, CLIENT)
             elif config['setup'] == 'desktop-app':
                 app_wrapper(driver, paras, client_q)
             else:
@@ -166,7 +156,7 @@ def run_experiment(driver, config, repeat=None):
             data['s_output'] = parser.parse_output(server_output)
             data['c_output'] = parser.parse_output(client_output)
             logger.info("== Experiment done! ==================")
-            retry =-1
+            retry = -1
         except Exception as e:
             logger.error(f"Caught execption {e}")
             stop_thread = True
@@ -178,7 +168,7 @@ def run_experiment(driver, config, repeat=None):
                 raise FailedExperiment()
     return data
 
-    
+
 ##
 # CHECK: Desktop-desktop variant
 # CHECK: Desktop-app variant
@@ -192,7 +182,8 @@ def run_experiment(driver, config, repeat=None):
 
 def app_wrapper(driver, parameters, out_queue):
     encoded_context = parameters.getEncodedContext()
-    logger.info(f'Running app wrapper as client with context: {encoded_context}')
+    logger.info(
+        f'Running app wrapper as client with context: {encoded_context}')
 
     logger.debug('Cleaning up text in output field.')
     output = driver.find_element_by_id('textViewOUTPUT')
@@ -219,7 +210,8 @@ def desktop_wrapper(parameters, binary_path, out_queue, stop, role=SERVER):
     logger.info(f'Running desktop wrapper as {srole} with args: {args}')
     run_args = [binary_path]
     run_args.extend(args)
-    process = subprocess.Popen(run_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
+    process = subprocess.Popen(
+        run_args, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding='utf-8')
     output = ''
     while True:
         time.sleep(1)
@@ -234,6 +226,7 @@ def desktop_wrapper(parameters, binary_path, out_queue, stop, role=SERVER):
                 logger.error(f'{srole}   {line.strip()}')
             break
     out_queue.put(output)
+
 
 def setup_logger(logpath, filename):
     exp_path = os.path.join(logpath, 'experiments')
@@ -252,14 +245,16 @@ def setup_logger(logpath, filename):
 
     logger.setLevel(logging.DEBUG)
 
+
 def save_data(data):
     if 'batch' in data:
-        fname = f"Batch-{data['batch']}-Run-{data['repeat']}-{datetime.now().isoformat()}-Setup-{data['setup']}.json"  # add parameter of interest?
+        # add parameter of interest?
+        fname = f"Batch-{data['batch']}-Run-{data['repeat']}-{datetime.now().isoformat()}-Setup-{data['setup']}.json"
         fname = os.path.join('./batchlogs/experiments', fname)
     else:
         fname = f"{datetime.now().isoformat()}-Setup-{data['setup']}.json"
         fname = os.path.join('./logs/experiments', fname)
-    
+
     if os.path.exists(fname):
         logger.warn(f'Filename {fname} already exists!')
         fname = fname + '.collision'
@@ -277,7 +272,7 @@ if __name__ == '__main__':
     if args.batch_run:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./batchlogs', filename)
-        logger.info('This is a batch run')    
+        logger.info('This is a batch run')
         run_batch()
         exit(0)
     else:
@@ -294,5 +289,3 @@ if __name__ == '__main__':
         results = run_experiment(driver, conf)
         save_data(results)
         driver.quit()
-
-

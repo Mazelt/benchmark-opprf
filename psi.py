@@ -43,10 +43,13 @@ class Parameters(dict):
             self.preset2_20(server_n)
         else:
             raise f"unknonw preset {preset}"
+        if server_n:
+            self.nmegabins = self.get_mega_unbalanced()
+            self.poly_size = self.get_polys_unbalanced()
+        else: 
+            self.nmegabins = self.get_mega()
+            self.poly_size = self.get_polys()
 
-        self.nmegabins = self.get_mega()
-
-        self.poly_size = self.get_polys()
         self.bit_len = self.get_bitlen()
 
     def getEncodedContext(self, role=CLIENT):
@@ -146,6 +149,40 @@ class Parameters(dict):
             2**20: 1024}
         return polys_map[self.server_neles]
 
+    def get_mega_unbalanced(self):
+        if self.n_fun != 3 or self.client_neles != 2**12:
+            raise f"Megabin unbalanced computation only for n_fun=3 and client_neles 2**12"
+        mega_map = {
+            2**10: 4,
+            2**11: 8,
+            2**12: 16,
+            2**13: 31,
+            2**14: 62,
+            2**15: 124,
+            2**16: 248,
+            2**17: 496,
+            2**18: 996,  # increasing to match Pinkas et al.
+            2**19: 1996,
+            2**20: 2601}
+        return mega_map[self.server_neles]
+
+    def get_polys_unbalanced(self):
+        if self.n_fun != 3 or self.client_neles != 2**12:
+            raise f"Polysize unbalanced computation only for n_fun=3 and client_neles 2**12"
+        polys_map = {
+            2**10: 946,
+            2**11: 964,
+            2**12: 975,
+            2**13: 1009,
+            2**14: 1014,
+            2**15: 1018,
+            2**16: 1021,
+            2**17: 1024,
+            2**18: 1024,
+            2**19: 1024,
+            2**20: 1500}
+        return polys_map[self.server_neles]
+
     def get_bitlen(self):
         if self.epsilon != 1.27:
             raise f"Bitlen computation only for eppsilon=1.27"
@@ -164,4 +201,15 @@ class Parameters(dict):
 # n: 131072, mega: 496, psize: 1024
 # n: 262144, mega: 995, psize: 1024
 # n: 524288, mega: 1994, psize: 1024
-# n: 1048576, mega: 3998, psize: 1024
+# n: 1048576, mega: 3998, psize: 1024  # wrong
+
+
+# n: 4096, mega: 16, psize: 975
+# n: 8192, mega: 31, psize: 1009
+# n: 16384, mega: 62, psize: 1014
+# n: 32768, mega: 124, psize: 1018
+# n: 65536, mega: 248, psize: 1021
+# n: 131072, mega: 496, psize: 1024
+# n: 262144, mega: 995, psize: 1024
+# n: 524288, mega: 1994, psize: 1024
+# n: 1048576, mega: 2601, psize: 1500

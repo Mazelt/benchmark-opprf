@@ -79,11 +79,19 @@ n   : #mbins : polys
 2^16:  248   : 1021
 2^20:  4002  : 1024
 
+this wasn't easy. computation is in test.py.
+One has to use the formular from Pinkas et al for mega bins.
+And at some point you have to increase maxb=1024 when the megabins are more then
+half the bins.
 
 
 *Sweet-spot for low amount of elements and performance*
 What is a typical amount of keys for a day and the daily increment on the server
 for each past day?
+
+when the difference between client set and server set is too high. the
+polynomials get too big! Also the setup time for aby might be too much.
+
 
 *Differences between PSI types*
 Choose 3 or 4 parameter sets to test for.

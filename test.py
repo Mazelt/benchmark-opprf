@@ -113,24 +113,13 @@ def get_parameters(nc, ns , K, epsilon=1.27):
     Beta = nc*epsilon
     # get megabins and polysize for ns and K
     mega, polysize = megabins2(ns, K, Beta)
-
-    # after that: check wether megabins are more than half the bins
-    # if Beta <= mega*2:
-    #     # if this is the case we can just use half Beta many megabins
-    #     mega = math.ceil(Beta/2)
-    #     # since we can't push for more megabins to keep the amount of elements
-    #     # inside below 1024 with enough probability
-    #     # we have to increase the polysize now
-    #     polysizebeta = maxbBeta(ns, K, Beta, 1)
-    #     polysize = 2* polysizebeta
-
     # polysize = max(polysizebeta, maxb)
     print(f"n: {ns}, mega: {mega}, psize: {polysize}")
     return mega, polysize
 
 # print(maxbBeta(2**19,3, 2**12 * 1.27, 1))
 
-for i in range(12, 21):
-    get_parameters(2**12, 2**i, 3)
+for i in range(10, 22):
+    get_parameters(2**10, 2**i, 3)
 
 # get_bitlen(2**12)

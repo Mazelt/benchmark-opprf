@@ -30,18 +30,18 @@ def load_batch(pattern, silent=True):
                     b = 0
                     break
             if b:
-                batches.append({'parameters':b['parameters'], b['repeat']: {'s_output': b['s_output'], 'c_output': b['c_output']}})
+                batches.append({'parameters': b['parameters'], b['repeat']: {
+                               's_output': b['s_output'], 'c_output': b['c_output']}})
     return batches
-
 # rs is either None, 'r' or 's'
-def get_s_c_mean_std(data, key, rs=None, parameter='set'):
+def get_s_c_mean_std(data, key, rs=None, parameter='server_set'):
     parameters = []
     server_means = []
     client_means = []
     server_stds = []
     client_stds = []
     for b in data:
-        if parameter == 'set':
+        if parameter == 'server_set':
             parameters.append(b['parameters']['server_neles'])
         elif parameter == 'psi':
             parameters.append(b['parameters']['fun_type'])
@@ -363,6 +363,43 @@ def plot_psi_types_dt(data):
     # fig.tight_layout()
     plt.show()
 
+
+def plot_server_scaling_dt(data):
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+        data, "total_t", parameter='server_set')
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='r', parameter='server_set')
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='s', parameter='server_set')
+    client_means = client_means/1e3 # seconds?
+    client_stds = client_stds/1e3 # seconds?
+    client_r_means = client_r_means/1e6
+    client_s_means = client_s_means/1e6
+    client_r_stds = client_r_stds/1e6
+    client_s_stds = client_s_stds/1e6
+    x_pos = np.arange(len(set_sizes))
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel('Server set sizes')
+    ax1.set_ylabel('Total data in in MegaBytes')
+    ax1.set_xticks(x_pos)
+    ax1.set_title(
+        "Client: Time and data for Desktop-App for different server set sizes with n_client=4096 elements. 5 runs with std-error.")
+    ax1.set_xticklabels(set_sizes)
+    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color='b', align='center', alpha=0.5,
+                       ecolor='black', capsize=5)
+    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color='g', align='center', alpha=0.5,
+                       ecolor='black', capsize=5)
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('time (s)', color='tab:red')
+    ax2.tick_params(axis='y', labelcolor='tab:red')
+
+    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.1, color='tab:red', align='center', alpha=0.5,
+                       ecolor='black', capsize=5)
+    ax1.legend((client_r[0], client_s[0], client_t[0]),
+               ('client received', 'client sent', 'time'))
+    # fig.tight_layout()
+    plt.show()
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--all', action='store_true')
@@ -373,6 +410,7 @@ if __name__ == '__main__':
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
     ap.add_argument('--psi_types_dt', action='store_true')
+    ap.add_argument('--server_scaling_dt', action='store_true')
     args = ap.parse_args()
     data = load_batch(batch_name)
     if args.all or args.hash:
@@ -390,4 +428,6 @@ if __name__ == '__main__':
     if args.all or args.psi_types_dt:
         if 'PsiTypes' in batch_name:
             plot_psi_types_dt(data)
-    
+    if args.all or args.server_scaling_dt:
+        if 'ServerScaling' in batch_name:
+            plot_server_scaling_dt(data)

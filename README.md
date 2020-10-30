@@ -92,6 +92,9 @@ for each past day?
 when the difference between client set and server set is too high. the
 polynomials get too big! Also the setup time for aby might be too much.
 
+Sweetspot important! when a client has just 2^10 elems but the server has 2^22
+how much can we/should we increase the number of bins to decrease the polynomial
+size? plot the functions?
 
 *Differences between PSI types*
 Choose 3 or 4 parameter sets to test for.

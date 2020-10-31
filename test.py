@@ -119,7 +119,7 @@ def get_parameters(nc, ns , K, epsilon=1.27):
 
 # print(maxbBeta(2**19,3, 2**12 * 1.27, 1))
 
-for i in range(10, 22):
-    get_parameters(2**10, 2**i, 3)
+for i in range(12, 25):
+    get_parameters(2**12, 2**i, 3)
 
 # get_bitlen(2**12)

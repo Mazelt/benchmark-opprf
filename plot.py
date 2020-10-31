@@ -7,7 +7,7 @@ import argparse
 from psi import Psi_type, CLIENT, SERVER
 
 
-batch_name = "ScalingElementsDA_3"
+batch_name = "ServerScalingAnalyticsDA_2"
 
 def load_batch(pattern, silent=True):
     os.path.exists('./batchlogs/experiments')
@@ -392,9 +392,10 @@ def plot_server_scaling_dt(data):
     fig, ax1 = plt.subplots()
     ax1.set_xlabel('Server set sizes')
     ax1.set_ylabel('Total data in in MegaBytes')
+    # ax1.set_yscale('log')
     ax1.set_xticks(x_pos)
     ax1.set_title(
-        "Client: Time and data for Desktop-App for different server set sizes with n_client=4096 elements. 5 runs with std-error.")
+        "Client: Time and data for Desktop-App for different server set sizes with n_client=1024 elements. 5 runs with std-error.")
     ax1.set_xticklabels(set_sizes)
     client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color='b', align='center', alpha=0.5,
                        ecolor='black', capsize=5)

@@ -19,56 +19,79 @@ logger = logging.getLogger('__name__')
 
 EXPERIMENT_COOLDOWN = 4
 
-Parameters(preset='2_12')
 
-batch_name = 'ServerScalingAnalyticsDD_1'
+batch_name = 'ServerScalingAnalyticsDA_2'
 batch = [
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**10)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**11)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**12)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**13)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**14)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**15)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**16)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**17)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**18)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**19)
+    # },
     {
-        'setup': 'desktop-desktop',
+        'setup': 'desktop-app',
         'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**12)
+        'parameters': Parameters(server_n=2**21)
     },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**13)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**14)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**15)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**16)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**17)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**18)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**19)
-    },
-    {
-        'setup': 'desktop-desktop',
-        'repeat': 5,
-        'parameters': Parameters(preset='2_12', server_n=2**20)
-    },
-
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**22)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**23)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'parameters': Parameters(server_n=2**24)
+    # },
 ]
 
 

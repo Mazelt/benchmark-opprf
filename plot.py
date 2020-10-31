@@ -7,7 +7,7 @@ import argparse
 from psi import Psi_type, CLIENT, SERVER
 
 
-batch_name = "ServerScalingAnalyticsDD_1"
+batch_name = "ScalingElementsDA_3"
 
 def load_batch(pattern, silent=True):
     os.path.exists('./batchlogs/experiments')
@@ -198,7 +198,7 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
     plt.tight_layout()
     plt.show()
 
-def plot_time_pies(data, combined=True):
+def plot_time_pies(data, combined=False):
     # for each !OR FOR ONE DEPENDING ON COMBINED!
     # batch (equal parameters, different repeats)
         # for each repeat
@@ -210,7 +210,7 @@ def plot_time_pies(data, combined=True):
     if combined:
         batches = data
     else:
-        batches = [data[2]]
+        batches = [data[0]]
     pct_client = {
         'hashing_t': 0.0,
         'oprf_t': 0.0,
@@ -218,6 +218,7 @@ def plot_time_pies(data, combined=True):
         'poly_t': 0.0,
         'aby_online_t': 0.0,
         'aby_setup_t': 0.0,
+        'base_t': 0.0,
         'other_t': 0.0
     }
     pct_server = {
@@ -227,6 +228,7 @@ def plot_time_pies(data, combined=True):
         'poly_t': 0.0,
         'aby_online_t': 0.0,
         'aby_setup_t': 0.0,
+        'base_t' : 0.0,
         'other_t': 0.0
     }
     for b in batches:
@@ -237,7 +239,8 @@ def plot_time_pies(data, combined=True):
             'poly_t': 0,
             'aby_online_t': 0,
             'aby_setup_t': 0,
-            'total_t': 0
+            'total_t': 0,
+            'nobase_t': 0
         }
         server = {
             'hashing_t': 0,
@@ -246,7 +249,8 @@ def plot_time_pies(data, combined=True):
             'poly_t': 0,
             'aby_online_t': 0,
             'aby_setup_t': 0,
-            'total_t': 0
+            'total_t' : 0,
+            'nobase_t': 0
         }
         
         # sum up 
@@ -256,6 +260,11 @@ def plot_time_pies(data, combined=True):
             for k in server:
                 server[k] += b[i]['s_output'][k]
 
+        client['base_t'] = client['total_t'] - client['nobase_t']
+        server['base_t'] = server['total_t'] - server['nobase_t']
+        del client['nobase_t']
+        del server['nobase_t']
+
         # get average
         for k in client:
             client[k] = float(client[k])/(len(b)-1.0)
@@ -263,6 +272,7 @@ def plot_time_pies(data, combined=True):
         for k in server:
             server[k] = float(server[k])/(len(b)-1.0)
         
+        print(server)
         # client poly trans wait is mostly waiting for the server to begin.
         client['poly_trans_t'] = server['poly_trans_t']
         
@@ -286,11 +296,12 @@ def plot_time_pies(data, combined=True):
 
     # get average
     for k in pct_client:
-        pct_client[k] = pct_client[k]/float(len(batches))
+        pct_client[k] = (pct_client[k]/float(len(batches)))*100.0
 
     for k in pct_server:
-        pct_server[k] = pct_server[k]/float(len(batches))
+        pct_server[k] = (pct_server[k]/float(len(batches)))*100.0
 
+    print(pct_server)
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
     #### For inside text!
@@ -304,7 +315,7 @@ def plot_time_pies(data, combined=True):
 
     # plt.setp(autotexts, size=8, weight="bold")
 
-    wedges, texts, = ax.pie(pct_client.values(),startangle=-90)
+    wedges, texts, = ax.pie(pct_server.values(),startangle=-90)
 
     # from https://matplotlib.org/3.1.1/gallery/pie_and_polar_charts/pie_and_donut_labels.html
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
@@ -318,11 +329,11 @@ def plot_time_pies(data, combined=True):
         horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
         connectionstyle = "angle,angleA=0,angleB={}".format(ang)
         kw["arrowprops"].update({"connectionstyle": connectionstyle})
-        ax.annotate(f"{list(pct_client.values())[i]:.2f}% {list(pct_client.keys())[i]}", xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
+        ax.annotate(f"{list(pct_server.values())[i]:.2f}% {list(pct_server.keys())[i]}", xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
                     horizontalalignment=horizontalalignment, **kw)
 
 
-    ax.set_title("Client (DD): Combination of phases time-wise")
+    ax.set_title("Server (DA): Combination of phases time-wise")
 
     plt.show()
 

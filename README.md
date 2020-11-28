@@ -80,10 +80,14 @@ n   : #mbins : polys
 2^20:  4002  : 1024
 
 this wasn't easy. computation is in test.py.
-One has to use the formular from Pinkas et al for mega bins.
+One has to use the formula from Pinkas et al for mega bins.
 And at some point you have to increase maxb=1024 when the megabins are more then
 half the bins.
-
+For the unbalanced scenario this is a bit different. since we cant increase
+megabins above half of Beta (bins on client side.)
+So then the polysize is increasing. This gets computational expensive on the
+server side pretty fast. Communication-wise this isn't a problem. since
+polynomials are not that heavy.
 
 *Sweet-spot for low amount of elements and performance*
 What is a typical amount of keys for a day and the daily increment on the server

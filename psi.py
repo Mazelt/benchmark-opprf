@@ -49,7 +49,8 @@ class Parameters(dict):
         else: 
             self.nmegabins = self.get_mega()
             self.poly_size = self.get_polys()
-
+        if self.nmegabins > self.epsilon*self.client_neles:
+            self.client_neles = math.ceil(self.nmegabins/1.27)
         self.bit_len = self.get_bitlen()
 
     def getEncodedContext(self, role=CLIENT):
@@ -118,6 +119,8 @@ class Parameters(dict):
         if self.n_fun != 3:
             raise f"Megabin computation only for n_fun=3"
         mega_map = {
+            2**8: 1,
+            2**9: 2,
             2**10: 4,
             2**11: 8,
             2**12: 16,
@@ -125,10 +128,10 @@ class Parameters(dict):
             2**14: 62,
             2**15: 124,
             2**16: 248,
-            2**17: 496,
-            2**18: 996, # increasing to match Pinkas et al.
-            2**19: 1996,
-            2**20: 4002}
+            2**17: 497,
+            2**18: 996,
+            2**19: 1997,
+            2**20: 4006}
         return mega_map[self.server_neles]
 
 
@@ -136,14 +139,16 @@ class Parameters(dict):
         if self.n_fun != 3:
             raise f"Polysize computation only for n_fun=3"
         polys_map = {
-            2**10: 946,
-            2**11: 964,
-            2**12: 975,
-            2**13: 1009,
-            2**14: 1014,
-            2**15: 1018,
-            2**16: 1021,
-            2**17: 1024,
+            2**8: 769,
+            2**9: 909,
+            2**10: 947,
+            2**11: 965,
+            2**12: 976,
+            2**13: 1010,
+            2**14: 1015,
+            2**15: 1019,
+            2**16: 1022,
+            2**17: 1023,
             2**18: 1024,
             2**19: 1024,
             2**20: 1024}
@@ -155,21 +160,19 @@ class Parameters(dict):
             raise f"Megabin unbalanced computation only for n_fun=3 and client_neles in {allowed_client_sets}"
         mega_map = { 
             2**12: {
-                2**10: 4,
-                2**11: 8,
                 2**12: 16,
                 2**13: 31,
                 2**14: 62,
                 2**15: 124,
                 2**16: 248,
-                2**17: 496,
-                2**18: 995, 
-                2**19: 1994,
-                2**20: 2601,
-                2**21: 2601,
-                2**22: 2601,
-                2**23: 2601,
-                2**24: 2601,
+                2**17: 497,
+                2**18: 996,
+                2**19: 1997,
+                2**20: 4006,
+                2**21: 8035,
+                2**22: 16115,
+                2**23: 32321,
+                2**24: 64822
                 },
             2**10: {
                 2**10: 4,
@@ -179,14 +182,14 @@ class Parameters(dict):
                 2**14: 62,
                 2**15: 124,
                 2**16: 248,
-                2**17: 496,
-                2**18: 651,
-                2**19: 651,
-                2**20: 651,
-                2**21: 651,
-                2**22: 651,
-                2**23: 651,
-                2**24: 651
+                2**17: 497,
+                2**18: 996,
+                2**19: 1997,
+                2**20: 4006,
+                2**21: 8035,
+                2**22: 16115,
+                2**23: 32321,
+                2**24: 64822
             }}
         return mega_map[self.client_neles][self.server_neles]
 
@@ -196,38 +199,37 @@ class Parameters(dict):
             raise f"Polysize unbalanced computation only for n_fun=3 and client_neles in {allowed_client_sets}"
         polys_map = {
             2**12: {
-                2**10: 946,
-                2**11: 964,
-                2**12: 975,
-                2**13: 1009,
-                2**14: 1014,
-                2**15: 1018,
-                2**16: 1021,
-                2**17: 1024,
+                2**12: 976,
+                2**13: 1010,
+                2**14: 1015,
+                2**15: 1019,
+                2**16: 1022,
+                2**17: 1023,
                 2**18: 1024,
                 2**19: 1024,
-                2**20: 1500,
-                2**21: 2826,
-                2**22: 5409,
-                2**23: 10478,
-                2**24: 20482
+                2**20: 1024,
+                2**21: 1024,
+                2**22: 1024,
+                2**23: 1024,
+                2**24: 1024
                 },
             2**10: {
-                2**10: 946,
-                2**11: 964,
-                2**12: 975,
-                2**13: 1009,
-                2**14: 1014,
-                2**15: 1018,
-                2**16: 1021,
-                2**17: 1024,
-                2**18: 1492,
-                2**19: 2814,
-                2**20: 5391,
-                2**21: 10451,
-                2**22: 20436,
-                2**23: 40220,
-                2**24: 79520}
+                2**10: 947,
+                2**11: 965,
+                2**12: 976,
+                2**13: 1010,
+                2**14: 1015,
+                2**15: 1019,
+                2**16: 1022,
+                2**17: 1023,
+                2**18: 1024,
+                2**19: 1024,
+                2**20: 1024,
+                2**21: 1024,
+                2**22: 1024,
+                2**23: 1024,
+                2**24: 1024
+            }
             }
         return polys_map[self.client_neles][self.server_neles]
 
@@ -236,43 +238,5 @@ class Parameters(dict):
             raise f"Bitlen computation only for eppsilon=1.27"
         blen = math.ceil(40 + math.log2(self.epsilon*self.client_neles))
         if blen > 61:
-            raise f"ERROR: no bitlen > 61 allowd ({blen})"
+            raise f"ERROR: no bitlen > 61 allowed ({blen})"
         return blen
-# from computations:
-# n: 1024, mega: 4, psize: 946
-# n: 2048, mega: 8, psize: 964
-# n: 4096, mega: 16, psize: 975
-# n: 8192, mega: 31, psize: 1009
-# n: 16384, mega: 62, psize: 1014
-# n: 32768, mega: 124, psize: 1018
-# n: 65536, mega: 248, psize: 1021 # the following computations might be off.
-# n: 131072, mega: 496, psize: 1024
-# n: 262144, mega: 995, psize: 1024
-# n: 524288, mega: 1994, psize: 1024
-# n: 1048576, mega: 3998, psize: 1024  # wrong
-
-
-# n: 4096, mega: 16, psize: 975
-# n: 8192, mega: 31, psize: 1009
-# n: 16384, mega: 62, psize: 1014
-# n: 32768, mega: 124, psize: 1018
-# n: 65536, mega: 248, psize: 1021
-# n: 131072, mega: 496, psize: 1024
-# n: 262144, mega: 995, psize: 1024
-# n: 524288, mega: 1994, psize: 1024
-# n: 1048576, mega: 2601, psize: 1500
-# n: 1024, mega: 4, psize: 946
-# n: 2048, mega: 8, psize: 964
-# n: 4096, mega: 16, psize: 975
-# n: 8192, mega: 31, psize: 1009
-# n: 16384, mega: 62, psize: 1014
-# n: 32768, mega: 124, psize: 1018
-# n: 65536, mega: 248, psize: 1021
-# n: 131072, mega: 496, psize: 1024
-# n: 262144, mega: 651, psize: 1492
-# n: 524288, mega: 651, psize: 2814
-# n: 1048576, mega: 651, psize: 5391
-# n: 2097152, mega: 651, psize: 10451
-# n: 4194304, mega: 651, psize: 20436
-# n: 8388608, mega: 651, psize: 40220
-# n: 16777216, mega: 651, psize: 79520

@@ -22,10 +22,10 @@ class Psi_type(enum.IntEnum):
 
 class Parameters(dict):
 
-    def __init__(self, preset=None, psitype=Psi_type.Analytics, server_n=None):
+    def __init__(self, preset=None, psitype=Psi_type.Analytics,client_n=1024, server_n=1024):
         # all things are tailored to security parameter 40
-        self.client_neles = 1024
-        self.server_neles = server_n if server_n else 1024
+        self.client_neles = client_n
+        self.server_neles = server_n
         self.epsilon = 1.27
         self.server_ip = SERVER_IP
         self.port = 7777
@@ -43,7 +43,7 @@ class Parameters(dict):
             self.preset2_20(server_n)
         elif preset != None:
             raise f"unknonw preset {preset}"
-        if server_n:
+        if client_n != server_n:
             self.nmegabins = self.get_mega_unbalanced()
             self.poly_size = self.get_polys_unbalanced()
         else: 

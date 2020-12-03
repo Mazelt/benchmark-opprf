@@ -20,78 +20,96 @@ logger = logging.getLogger('__name__')
 EXPERIMENT_COOLDOWN = 4
 
 
-batch_name = 'ServerScalingAnalyticsDA_2'
+batch_name = 'Unbalanced10AnalyticsDA_1'
+# batch_name = 'test'
 batch = [
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**10)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**10)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**11)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**11)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**12)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**12)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**13)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**13)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**14)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**14)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**15)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**15)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**16)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**16)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**17)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**18)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**19)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17)
     # },
     {
         'setup': 'desktop-app',
-        'repeat': 5,
-        'parameters': Parameters(server_n=2**21)
+        'repeat': 25,
+        'parameters': Parameters(client_n=2**10,server_n=2**18)
     },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**22)
+    #     'repeat': 25,
+    #     
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**23)
+    #     'repeat': 25,
+        
+    #     'parameters': Parameters(client_n=2**10,server_n=2**20)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(server_n=2**24)
+    #     'repeat': 25,
+    #     'start': 21,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21)
     # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    # 
+    #     'parameters': Parameters(client_n=2**10,server_n=2**22)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 1,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**23)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 1,
+    #     'parameters': Parameters(client_n=2**10, server_n=2**24)
+    # }
 ]
 
 
@@ -124,8 +142,9 @@ def run_batch():
             driver = None
         logger.info(f"Running batch job: {b.items()}")
         repeat = b['repeat']
+        start = b['start'] if 'start' in b else 0
         del b['repeat']
-        for i in range(repeat):
+        for i in range(start,repeat):
             try:
                 run_data = run_experiment(driver, b, i)
             except FailedExperiment:
@@ -135,7 +154,7 @@ def run_batch():
             save_data(run_data)
             logger.info(
                 f"Waiting for experiment cooldown of {EXPERIMENT_COOLDOWN} s.")
-            if driver and 'reset' in b and b[''] == True:
+            if driver and 'reset' in b and b['reset'] == True:
                 logger.info(f"Resetting app!")
                 driver.reset()
             time.sleep(EXPERIMENT_COOLDOWN)
@@ -273,7 +292,9 @@ def save_data(data):
     if 'batch' in data:
         # add parameter of interest?
         fname = f"Batch-{data['batch']}-Run-{data['repeat']}-{datetime.now().isoformat()}-Setup-{data['setup']}.json"
-        fname = os.path.join('./batchlogs/experiments', fname)
+        dirname = os.path.join(f"./batchlogs/experiments/",batch_name)
+        os.makedirs(dirname,exist_ok=True)
+        fname = os.path.join(dirname, fname)
     else:
         fname = f"{datetime.now().isoformat()}-Setup-{data['setup']}.json"
         fname = os.path.join('./logs/experiments', fname)
@@ -301,14 +322,16 @@ if __name__ == '__main__':
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
-        p = Parameters()
+        p = Parameters(client_n=2**10,server_n=2**18)
         p.overlap = 20
         conf = {
-            'setup': 'desktop-app',
+            'setup': 'desktop-desktop',
             'parameters': p
         }
         if conf['setup'] == 'desktop-app':
             driver = init_appium()
+        else:
+            driver = None
         results = run_experiment(driver, conf)
         save_data(results)
         driver.quit()

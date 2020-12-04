@@ -20,84 +20,86 @@ logger = logging.getLogger('__name__')
 EXPERIMENT_COOLDOWN = 4
 
 
-batch_name = 'Unbalanced10AnalyticsDA_1'
-# batch_name = 'test'
+# batch_name = 'Unbalanced10AnalyticsDA_2'
+batch_name = 'testUn'
 batch = [
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**10)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**11)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**12)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**13)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**14)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**15)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**16)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**17)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 3,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**18)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 3,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19)
     # },
     {
         'setup': 'desktop-app',
-        'repeat': 25,
-        'parameters': Parameters(client_n=2**10,server_n=2**18)
+        'repeat': 3,
+        'start':2,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**20)
     },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 25,
-        
-    #     'parameters': Parameters(client_n=2**10,server_n=2**20)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     'start': 21,
+    #     'repeat': 3,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**21)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    # 
+    #     'repeat': 1,
+    #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**22)
     # },
     # {

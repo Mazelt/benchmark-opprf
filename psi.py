@@ -203,7 +203,7 @@ class Parameters(dict):
                 2**13: 1010,
                 2**14: 1015,
                 2**15: 1005,
-                2**16: 980
+                2**16: 980,
                 2**17: 983,
                 2**18: 986,
                 2**19: 815,
@@ -236,7 +236,9 @@ class Parameters(dict):
     def get_bitlen(self):
         if self.epsilon != 1.27:
             raise f"Bitlen computation only for eppsilon=1.27"
-        blen = math.ceil(40 + math.log2(self.epsilon*self.client_neles))
+        blen1 = math.ceil(40 + math.log2(self.epsilon*self.client_neles))
+        blen2 = math.ceil(40 + 2*math.log2(self.poly_size))
+        blen = max(blen1, blen2)
         if blen > 61:
             raise f"ERROR: no bitlen > 61 allowed ({blen})"
         return blen

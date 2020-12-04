@@ -1,0 +1,1 @@
+{"setup": "desktop-desktop", "repeat": 0, "parameters": {"client_neles": 51041, "server_neles": 16777216, "epsilon": 1.27, "server_ip": "192.168.0.2", "port": 7777, "threads": 1, "threshold": 0, "n_fun": 3, "payload_bl": 2, "fun_type": 0, "overlap": 25, "nmegabins": 64822, "poly_size": 1024, "bit_len": 56}, "s_output": {}, "c_output": {}, "batch": "UnbalancedData10AnalyticsDD_1"}

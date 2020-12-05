@@ -20,13 +20,68 @@ logger = logging.getLogger('__name__')
 EXPERIMENT_COOLDOWN = 3
 
 
-batch_name = 'Unbalanced10PayloadABSumDA_1'
+batch_name = 'PsiTypes1017DA_1'
 batch = [
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.PayloadABSum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.Analytics)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.Threshold)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.Sum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.SumIfGtThreshold)
+    # },
+    {
+        'setup': 'desktop-app',
+        'repeat': 5,
+        'start': 4,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadASum)
+    },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadASumGT)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABSumGT)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABMulSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABMulSumGT)
     # },
     # {
     #     'setup': 'desktop-app',
@@ -89,13 +144,13 @@ batch = [
     #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABSum)
     # },
-    {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start': 4,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
-    },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'start': 4,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
+    # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
@@ -153,11 +208,11 @@ def run_batch():
                 run_data = run_experiment(driver, b, i)
             except FailedExperiment:
                 numFailed += 1
-                server_n = b['parameters'].server_neles
-                if server_n in failed:
-                    failed[server_n].append(i)
+                fun_type = b['parameters'].fun_type
+                if fun_type in failed:
+                    failed[fun_type].append(i)
                 else:
-                    failed[server_n]=[i]
+                    failed[fun_type]=[i]
                 logger.error(f"Failed Experiment (count: {numFailed})! Continueing...")
                 logger.error(failed)
                 continue

@@ -8,8 +8,7 @@ from psi import Psi_type, CLIENT, SERVER
 from plot_utils import load_batch, get_s_c_mean_std, xticks_to_potencies_label
 
 
-batch_name = "Unbalanced10AnalyticsDA_2"
-# batch_name = "Unbalanced12AnalyticsDA_2"
+
 
 def plot_hashing(data):
     # simple plot right now.
@@ -72,6 +71,55 @@ def plot_total_time(data):
     plt.tight_layout()
     plt.show()
 
+
+def plot_total_data_stacked_combined(data10,data12):
+    set_sizes_10, server_r_means_10, server_r_stds_10, client_r_means_10, client_r_stds_10 = get_s_c_mean_std(
+        data10, "total_d_rs", rs='r')
+    _, server_s_means_10, server_s_stds_10, client_s_means_10, client_s_stds_10 = get_s_c_mean_std(
+        data10, "total_d_rs", rs='s')
+
+    set_sizes_12, server_r_means_12, server_r_stds_12, client_r_means_12, client_r_stds_12 = get_s_c_mean_std(
+        data12, "total_d_rs", rs='r')
+
+    _, server_s_means_12, server_s_stds_12, client_s_means_12, client_s_stds_12 = get_s_c_mean_std(
+        data12, "total_d_rs", rs='s')
+    x_pos_10 = np.arange(len(set_sizes_10))
+    x_pos_12 = np.arange(len(set_sizes_12))
+    fig, ax = plt.subplots()
+    client_r_means_10 = client_r_means_10/1e6
+    client_s_means_10 = client_s_means_10/1e6
+    client_r_means_12 = client_r_means_12/1e6
+    client_s_means_12 = client_s_means_12/1e6
+    # print(f"mean: {client_r_means[0]} single: {data[]}")
+    # client_r_stds = client_r_stds/1e9
+    # client_s_stds = client_s_stds/1e9
+
+    # Add a table at the bottom of the axes
+    client_r_10 = ax.bar(x_pos_10-0.1, client_r_means_10, width=0.2,
+                      color='b', align='center', alpha=0.5)
+    client_s_10 = ax.bar(x_pos_10-0.1, client_s_means_10, width=0.2, color='g',
+                         align='center', alpha=0.5, bottom=client_r_means_10)
+
+    client_r_12 = ax.bar(x_pos_12+0.1+2, client_r_means_12, width=0.2, hatch='///',
+                         color='b', align='center', alpha=0.5)
+    client_s_12 = ax.bar(x_pos_12+0.1+2, client_s_means_12, width=0.2, color='g', hatch='///',
+                         align='center', alpha=0.5, bottom=client_r_means_12)
+    ax.set_ylabel(f"Total data in in MegaBytes")
+
+    ax.set_xticks(x_pos_10)
+    potencies = [int(np.log2(x)) for x in set_sizes_10]
+    ax.set_xticklabels([f"$2^{{{p}}}$" for p in potencies])
+
+    ax.set_xlabel(f"Server set sizes")
+    ax.set_title(
+        f"Client: Total data received/sent for Desktop-App.\nBasic analytics circuit. Unbalanced sets with client set sizes $2^{{10}}$,$2^{{12}}$")
+    ax.yaxis.grid(True)
+
+    ax.legend((client_r_10[0], client_s_10[0], client_r_12[0], client_s_12[0], ),
+              ('client received $2^{10}$', 'client sent $2^{10}$', 'client received $2^{12}$', 'client sent $2^{12}$'))
+
+    plt.tight_layout()
+    plt.show()
 
 def plot_total_data_stacked(data):
     set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
@@ -387,6 +435,10 @@ def plot_server_scaling_dt(data):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--all', action='store_true')
+    ap.add_argument('--ten', action='store_true')
+    ap.add_argument('--twelve', action='store_true')
+    ap.add_argument('--both', action='store_true')
+
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--poly_d', action='store_true')
     ap.add_argument('--total_t', action='store_true')
@@ -397,24 +449,37 @@ if __name__ == '__main__':
     ap.add_argument('--psi_types_dt', action='store_true')
     ap.add_argument('--server_scaling_dt', action='store_true')
     args = ap.parse_args()
-    data = load_batch(batch_name)
-    if args.all or args.hash:
-        plot_hashing(data)
-    if args.all or args.poly_d:
-        plot_poly_size(data)
-    if args.all or args.total_t:
-        plot_total_time(data)
-    if args.all or args.aby_t:
-        plot_aby_time(data)
-    if args.all or args.pies_t:
-        plot_time_pies(data)
-    if args.all or args.total_d:
-        plot_total_data(data)
-    if args.all or args.total_d_stacked:
-        plot_total_data_stacked(data)
-    if args.all or args.psi_types_dt:
-        if 'PsiTypes' in batch_name:
-            plot_psi_types_dt(data)
-    if args.all or args.server_scaling_dt:
-        if 'ServerScaling' in batch_name:
-            plot_server_scaling_dt(data)
+    if args.both:
+        data10 = load_batch("Unbalanced10AnalyticsDA_2")
+        data12 = load_batch("Unbalanced12AnalyticsDA_1")
+        if args.all or args.total_d_stacked:
+            plot_total_data_stacked_combined(data10,data12)
+    else:
+        if args.ten:
+            batch_name = "Unbalanced10AnalyticsDA_2"
+        elif args.twelve:
+            batch_name = "Unbalanced12AnalyticsDA_1"
+        else:
+            print("Please choose either --ten, --twelve or --both")
+            exit(2)
+        data = load_batch(batch_name)
+        if args.all or args.hash:
+            plot_hashing(data)
+        if args.all or args.poly_d:
+            plot_poly_size(data)
+        if args.all or args.total_t:
+            plot_total_time(data)
+        if args.all or args.aby_t:
+            plot_aby_time(data)
+        if args.all or args.pies_t:
+            plot_time_pies(data)
+        if args.all or args.total_d:
+            plot_total_data(data)
+        if args.all or args.total_d_stacked:
+            plot_total_data_stacked(data)
+        if args.all or args.psi_types_dt:
+            if 'PsiTypes' in batch_name:
+                plot_psi_types_dt(data)
+        if args.all or args.server_scaling_dt:
+            if 'ServerScaling' in batch_name:
+                plot_server_scaling_dt(data)

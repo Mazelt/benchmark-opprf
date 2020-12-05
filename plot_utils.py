@@ -3,7 +3,7 @@ import os.path
 import glob
 import json
 
-def load_batch(pattern, silent=True):
+def load_batch(pattern, silent=True,sort_batches="server_neles"):
     os.path.exists('./batchlogs/experiments')
     files = glob.glob(f"./batchlogs/experiments/{pattern}/Batch-{pattern}*.json")
     files = sorted(files)
@@ -26,6 +26,8 @@ def load_batch(pattern, silent=True):
             if b:
                 batches.append({'parameters': b['parameters'], b['repeat']: {
                                's_output': b['s_output'], 'c_output': b['c_output']}})
+    if sort_batches:
+        batches = sorted(batches, key=lambda k: k['parameters'][sort_batches])
     return batches
 # rs is either None, 'r' or 's'
 

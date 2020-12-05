@@ -462,34 +462,33 @@ def plot_psi_types_dt(data):
         data, "total_d_rs", rs='r', parameter='psi')
     set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
         data, "total_d_rs", rs='s', parameter='psi')
-    # client_means = client_means/1e3 # seconds?
-    client_r_means = client_r_means/1e9
-    client_s_means = client_s_means/1e9
-    client_r_stds = client_r_stds/1e9
-    client_s_stds = client_s_stds/1e9
+    client_means = client_means/1e3
+    client_stds = client_stds/1e3
+    client_r_means = client_r_means/1e6
+    client_s_means = client_s_means/1e6
 
     x_pos = np.array(set_sizes)
     fig, ax1 = plt.subplots()
-    ax1.set_xlabel('PSI Function Types')
-    ax1.set_ylabel('Total data in in GigaBytes')
+    ax1.set_xlabel('PSI Function Circuits')
+    ax1.set_ylabel('Total data in in MegaBytes')
     ax1.set_xticks(x_pos)
     ax1.set_title(
-        "Client: Time and data for Desktop-App for different psi types with n=4096 elements. With std-error.")
+        f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
     labels = [Psi_type(i).name for i in set_sizes]
     ax1.set_xticklabels(labels)
-    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color='b', align='center', alpha=0.5,
-                       ecolor='black', capsize=5)
-    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color='g', align='center', alpha=0.5,
-                       ecolor='black', capsize=5)
+    client_r = ax1.bar(x_pos-0.1, client_r_means,width=0.2, color='b', align='center', alpha=0.5)
+    client_s = ax1.bar(x_pos-0.1, client_s_means, width=0.2, color='g', align='center', alpha=0.5, bottom=client_r_means)
     ax2 = ax1.twinx()
-    ax2.set_ylabel('time (ms)',color='tab:red')
+    ax2.set_ylabel('time (seconds)',color='tab:red')
     ax2.tick_params(axis='y', labelcolor='tab:red')
     # Add a table at the bottom of the axes
-    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.1, color='tab:red', align='center', alpha=0.5,
+    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color='tab:red', align='center', alpha=0.5,
                        ecolor='black', capsize=5)
     ax1.legend((client_r[0], client_s[0], client_t[0]),
-               ('client received', 'client sent', 'time'))
-    # fig.tight_layout()
+               ('client received', 'client sent'))
+    ax2.legend(['time'], loc=9)
+    fig.tight_layout()
+    fig.autofmt_xdate()
     plt.show()
 
 
@@ -524,6 +523,10 @@ if __name__ == '__main__':
             plot_total_time_absum(data)
         if args.all or args.aby_t:
             plot_aby_time_absum(data)
+    elif args.psi_types_dt:
+        data17 = load_batch("PsiTypes1017DA_1", sort_batches="fun_type")
+        data19 = load_batch("PsiTypes1019DA_1", sort_batches="fun_type")
+        plot_psi_types_dt(data17)
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"
@@ -547,6 +550,3 @@ if __name__ == '__main__':
             plot_total_data(data)
         if args.all or args.total_d_stacked:
             plot_total_data_stacked(data)
-        if args.all or args.psi_types_dt:
-            if 'PsiTypes' in batch_name:
-                plot_psi_types_dt(data)

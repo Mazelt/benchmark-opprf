@@ -17,86 +17,85 @@ from psi import Parameters, Psi_type, SERVER, SERVER_IP, CLIENT, BIN_PATH
 
 logger = logging.getLogger('__name__')
 
-EXPERIMENT_COOLDOWN = 2
+EXPERIMENT_COOLDOWN = 3
 
 
-batch_name = 'BalancedAnalyticsDA_1'
+batch_name = 'Unbalanced10PayloadABSumDA_1'
 batch = [
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**11,server_n=2**11,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**11,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**12,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**12,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**13,server_n=2**13,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**13,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**14,server_n=2**14,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**14,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**15,server_n=2**15,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**15,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**16,server_n=2**16,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**16,psitype=Psi_type.PayloadABSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'start': 1,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABSum)
     # },
     {
         'setup': 'desktop-app',
         'repeat': 5,
         'start': 4,
         'reset': True,
-        'parameters': Parameters(client_n=2**17,server_n=2**17,psitype=Psi_type.Analytics)
+        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
     },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**18,server_n=2**18,psitype=Psi_type.Analytics)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**19,server_n=2**19,psitype=Psi_type.Analytics)
-    # },
-    {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start': 3,
-        'reset': True,
-        'parameters': Parameters(client_n=2**20,server_n=2**20,psitype=Psi_type.Analytics)
-    },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 20,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSumGT)
-    # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,

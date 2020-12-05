@@ -23,64 +23,66 @@ EXPERIMENT_COOLDOWN = 2
 batch_name = 'Unbalanced12AnalyticsDA_1'
 # batch_name = 'testUn'
 batch = [
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**12)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**13)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**14)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**15)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**16)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**17)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'start' : 19,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**18)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**19)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 25,
+    #     'start': 23,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**20)
+    # },
     {
         'setup': 'desktop-app',
         'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**12)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**13)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**14)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**15)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**16)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**17)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**18)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**19)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
-        # 'start':2,
-        'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**20)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 25,
+        'start': 20,
         'reset': True,
         'parameters': Parameters(client_n=2**12,server_n=2**21)
     },
@@ -141,11 +143,13 @@ def run_batch():
                 run_data = run_experiment(driver, b, i)
             except FailedExperiment:
                 numFailed += 1
-                if b in failed:
-                    failed[b].append(i)
+                server_n = b['parameters'].server_neles
+                if server_n in failed:
+                    failed[server_n].append(i)
                 else:
-                    failed[b]=[i]
+                    failed[server_n]=[i]
                 logger.error(f"Failed Experiment (count: {numFailed})! Continueing...")
+                logger.error(failed)
                 continue
             run_data['batch'] = batch_name
             save_data(run_data)
@@ -206,6 +210,8 @@ def run_experiment(driver, config, repeat=None):
             server_thread.join()
             if retry > 0:
                 logger.info(f"Retrying!")
+                driver.reset()
+                time.sleep(EXPERIMENT_COOLDOWN)
                 retry -= 1
             else:
                 raise FailedExperiment()

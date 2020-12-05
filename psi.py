@@ -49,9 +49,16 @@ class Parameters(dict):
         else: 
             self.nmegabins = self.get_mega()
             self.poly_size = self.get_polys()
-        if self.nmegabins > self.epsilon*self.client_neles:
+        if self.nmegabins > math.ceil(self.epsilon*self.client_neles):
             self.client_neles = math.ceil(self.nmegabins/1.27)
         self.bit_len = self.get_bitlen()
+
+    def __str__(self):
+        return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)}"
+
+    def __repr__(self):
+        return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)}"
+
 
     def getEncodedContext(self, role=CLIENT):
         if (role == CLIENT):

@@ -17,85 +17,73 @@ from psi import Parameters, Psi_type, SERVER, SERVER_IP, CLIENT, BIN_PATH
 
 logger = logging.getLogger('__name__')
 
-EXPERIMENT_COOLDOWN = 4
+EXPERIMENT_COOLDOWN = 2
 
 
-# batch_name = 'Unbalanced10AnalyticsDA_2'
-batch_name = 'testUn'
+batch_name = 'Unbalanced12AnalyticsDA_1'
+# batch_name = 'testUn'
 batch = [
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**10)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**11)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**12)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**13)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**14)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**15)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**16)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**17)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**18)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19)
-    # },
     {
         'setup': 'desktop-app',
-        'repeat': 3,
-        'start':2,
+        'repeat': 25,
         'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**20)
+        'parameters': Parameters(client_n=2**12,server_n=2**12)
     },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**21)
-    # },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**13)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**14)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**15)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**16)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**17)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**18)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**19)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        # 'start':2,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**20)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 25,
+        'reset': True,
+        'parameters': Parameters(client_n=2**12,server_n=2**21)
+    },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 1,
@@ -135,6 +123,8 @@ def init_appium(app_path=None):
 
 
 def run_batch():
+    failed = {}
+    numFailed = 0
     logger.info(f"Running a batch {batch_name}")
     logger.info(f"Batchjob contains {sum([b['repeat'] for b in batch])} runs.")
     for b in batch:
@@ -150,7 +140,12 @@ def run_batch():
             try:
                 run_data = run_experiment(driver, b, i)
             except FailedExperiment:
-                logger.error("Failed Experiment! Continueing...")
+                numFailed += 1
+                if b in failed:
+                    failed[b].append(i)
+                else:
+                    failed[b]=[i]
+                logger.error(f"Failed Experiment (count: {numFailed})! Continueing...")
                 continue
             run_data['batch'] = batch_name
             save_data(run_data)
@@ -161,8 +156,12 @@ def run_batch():
                 driver.reset()
             time.sleep(EXPERIMENT_COOLDOWN)
         if driver:
+            logger.info(f"Batch cooldown of {EXPERIMENT_COOLDOWN}")
+            time.sleep(EXPERIMENT_COOLDOWN/2)
             driver.quit()
+            time.sleep(EXPERIMENT_COOLDOWN/2)
     logger.info("Done with batch")
+    logger.info(failed)
     exit(0)
 
 

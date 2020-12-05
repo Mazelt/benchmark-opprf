@@ -24,9 +24,9 @@ def plot_hashing(data):
     ax.set_xticks(x_pos)
     ax.set_xticklabels(xticks_to_potencies_label(set_sizes))
     ax.set_title(
-        f"Server: Hashing times for Desktop-App. Unbalanced sets with different server set sizes.\nMean over 25 runs with std-error.")
+        f"Server: Hashing times for Desktop-App. Unbalanced sets with different server set sizes.\nMean over {len(data[0])-1} runs with std-error.")
     ax.yaxis.grid(True)
-
+    ax.set_xlabel(f"Server set sizes")
     plt.tight_layout()
     plt.show()
 
@@ -45,7 +45,7 @@ def plot_poly_size(data):
     ax.set_title(
         "Polynomials transmitted for Desktop-App for different set sizes. With std-error.")
     ax.yaxis.grid(True)
-
+    ax.set_xlabel(f"Server set sizes")
     # ax.legend((server[0]), ('server'))
 
     plt.tight_layout()
@@ -55,22 +55,44 @@ def plot_total_time(data):
     set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
         data, "total_t")
     x_pos = np.arange(len(set_sizes))
+    client_means = client_means/1e3
+    client_stds = client_stds/1e3
     fig, ax = plt.subplots()
-    server = ax.bar(x_pos-0.1, server_means, yerr=server_stds, width=0.2, color='b', align='center', alpha=0.5,
-           ecolor='black', capsize=10) 
-    client = ax.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color='g', align='center', alpha=0.5,
-           ecolor='black', capsize=10)
-    ax.set_ylabel(f"Total time in in ms")
+    client = ax.bar(x_pos, client_means, yerr=client_stds, color='g', align='center', alpha=0.5,
+           ecolor='black', capsize=5)
+    ax.set_ylabel(f"Total time in in seconds")
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(set_sizes)
-    ax.set_title("Total time for Desktop-App for different set sizes. With std-error.")
+    ax.set_xticklabels(xticks_to_potencies_label(set_sizes))
+    ax.set_title(
+        f"Total time for Desktop-App with the basic analytics circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nMean over {len(data[0])-1} runs with std-error.")
     ax.yaxis.grid(True)
-
-    ax.legend((server[0], client[0]),('server', 'client'))
+    ax.set_xlabel(f"Server set sizes")
+    # ax.legend((server[0], client[0]),('server', 'client'))
 
     plt.tight_layout()
     plt.show()
 
+
+def plot_total_time_absum(data):
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+        data, "total_t")
+    x_pos = np.arange(len(set_sizes))
+    client_means = client_means/1e3
+    client_stds = client_stds/1e3
+    fig, ax = plt.subplots()
+    client = ax.bar(x_pos, client_means, yerr=client_stds, color='g', align='center', alpha=0.5,
+                    ecolor='black', capsize=5)
+    ax.set_ylabel(f"Total time in in seconds")
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(xticks_to_potencies_label(set_sizes))
+    ax.set_title(
+        f"Total time for Desktop-App with the PayloadABSum circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nMean over {len(data[0])-1} runs with std-error.")
+    ax.yaxis.grid(True)
+    ax.set_xlabel(f"Server set sizes")
+    # ax.legend((server[0], client[0]),('server', 'client'))
+
+    plt.tight_layout()
+    plt.show()
 
 def plot_total_data_stacked_combined(data10,data12):
     set_sizes_10, server_r_means_10, server_r_stds_10, client_r_means_10, client_r_stds_10 = get_s_c_mean_std(
@@ -153,6 +175,41 @@ def plot_total_data_stacked(data):
     plt.tight_layout()
     plt.show()
 
+
+def plot_total_data_absum_stacked(data):
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='r')
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+        data, "total_d_rs", rs='s')
+    x_pos = np.arange(len(set_sizes))
+    fig, ax = plt.subplots()
+    client_r_means = client_r_means/1e6
+    client_s_means = client_s_means/1e6
+    # print(f"mean: {client_r_means[0]} single: {data[]}")
+    # client_r_stds = client_r_stds/1e9
+    # client_s_stds = client_s_stds/1e9
+
+    # Add a table at the bottom of the axes
+    client_r = ax.bar(x_pos, client_r_means, 
+                      color='b', align='center', alpha=0.5)
+    client_s = ax.bar(x_pos, client_s_means,  color='g',
+                      align='center', alpha=0.5, bottom=client_r_means)
+    ax.set_ylabel(f"Total data in in MegaBytes")
+
+    ax.set_xticks(x_pos)
+    potencies = [int(np.log2(x)) for x in set_sizes]
+    ax.set_xticklabels([f"$2^{{{p}}}$" for p in potencies])
+
+    ax.set_xlabel(f"Server set sizes")
+    ax.set_title(
+        f"Client: Total data received/sent for Desktop-App.\nPayloadABSum circuit. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$")
+    ax.yaxis.grid(True)
+
+    ax.legend((client_r[0], client_s[0]), ('client received', 'client sent'))
+
+    plt.tight_layout()
+    plt.show()
+
 def plot_total_data(data):
     set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
         data, "total_d_rs", rs='r')
@@ -211,12 +268,47 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
             "Aby timings for different set sizes. With std-error."
         )
     ax.yaxis.grid(True)
-
+    ax.set_xlabel(f"Server set sizes")
     if not online_only:
         ax.legend((setup[0], online[0]), ('Setup-phase', 'Online-phase'))
 
     plt.tight_layout()
     plt.show()
+
+
+def plot_aby_time_absum(data, online_only=True, role=CLIENT):
+    set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
+        data, "aby_online_t")
+    if not online_only:
+        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_std(
+            data, "aby_setup_t")
+    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_std(
+    #     data, "aby_total_t")
+    x_pos = np.arange(len(set_sizes))
+    fig, ax = plt.subplots()
+    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color='g', align='center', alpha=0.5,
+                    ecolor='black', capsize=10)
+    if not online_only:
+        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color='b', align='center', alpha=0.5,
+                       ecolor='black', capsize=10, bottom=online)
+    ax.set_ylabel(f"Time in in ms")
+    ax.set_xticks(x_pos)
+    ax.set_xticklabels(xticks_to_potencies_label(set_sizes))
+    if online_only:
+        ax.set_title(
+           f"Aby online phase times for PayloadABSum circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$")
+    else:
+        ax.set_title(
+            "Aby setup/online phase times for PayloadABSum circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$"
+        )
+    ax.yaxis.grid(True)
+    ax.set_xlabel(f"Server set sizes")
+    if not online_only:
+        ax.legend((setup[0], online[0]), ('Setup-phase', 'Online-phase'))
+
+    plt.tight_layout()
+    plt.show()
+
 
 def plot_time_pies(data, combined=False):
     # for each !OR FOR ONE DEPENDING ON COMBINED!
@@ -238,7 +330,8 @@ def plot_time_pies(data, combined=False):
         'poly_t': 0.0,
         'aby_online_t': 0.0,
         'aby_setup_t': 0.0,
-        'base_t': 0.0,
+        'aby_baseot_t': 0.0,
+        # 'base_t': 0.0,
         'other_t': 0.0
     }
     pct_server = {
@@ -248,7 +341,8 @@ def plot_time_pies(data, combined=False):
         'poly_t': 0.0,
         'aby_online_t': 0.0,
         'aby_setup_t': 0.0,
-        'base_t' : 0.0,
+        'aby_baseot_t': 0.0,
+        # 'base_t' : 0.0,
         'other_t': 0.0
     }
     for b in batches:
@@ -259,8 +353,9 @@ def plot_time_pies(data, combined=False):
             'poly_t': 0,
             'aby_online_t': 0,
             'aby_setup_t': 0,
-            'total_t': 0,
-            'nobase_t': 0
+            'aby_baseot_t': 0,
+            # 'nobase_t': 0,
+            'total_t': 0
         }
         server = {
             'hashing_t': 0,
@@ -269,10 +364,10 @@ def plot_time_pies(data, combined=False):
             'poly_t': 0,
             'aby_online_t': 0,
             'aby_setup_t': 0,
-            'total_t' : 0,
-            'nobase_t': 0
+            'aby_baseot_t': 0,
+            # 'nobase_t': 0,
+            'total_t' : 0
         }
-        
         # sum up 
         for i in range(len(b)-1):
             for k in client:
@@ -280,10 +375,10 @@ def plot_time_pies(data, combined=False):
             for k in server:
                 server[k] += b[i]['s_output'][k]
 
-        client['base_t'] = client['total_t'] - client['nobase_t']
-        server['base_t'] = server['total_t'] - server['nobase_t']
-        del client['nobase_t']
-        del server['nobase_t']
+        # client['base_t'] = client['total_t'] - client['nobase_t']
+        # server['base_t'] = server['total_t'] - server['nobase_t']
+        # del client['nobase_t']
+        # del server['nobase_t']
 
         # get average
         for k in client:
@@ -292,13 +387,16 @@ def plot_time_pies(data, combined=False):
         for k in server:
             server[k] = float(server[k])/(len(b)-1.0)
         
-        print(server)
         # client poly trans wait is mostly waiting for the server to begin.
         client['poly_trans_t'] = server['poly_trans_t']
-        
+        deb_total = client['total_t']
+        print(f"total: {deb_total}")
         # other
         c_other = 2*client['total_t'] 
         for k in client:
+            if k != 'total_t':
+                deb_total -= client[k]
+                print(f"total - {k}:{client[k]} = {deb_total}")
             c_other -= client[k]
         client['other_t'] = c_other
 
@@ -402,7 +500,7 @@ if __name__ == '__main__':
     ap.add_argument('--ten', action='store_true')
     ap.add_argument('--twelve', action='store_true')
     ap.add_argument('--both', action='store_true')
-
+    ap.add_argument('--absum', action='store_true')
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--poly_d', action='store_true')
     ap.add_argument('--total_t', action='store_true')
@@ -418,6 +516,14 @@ if __name__ == '__main__':
         data12 = load_batch("Unbalanced12AnalyticsDA_1")
         if args.all or args.total_d_stacked:
             plot_total_data_stacked_combined(data10,data12)
+    elif args.absum:
+        data = load_batch("Unbalanced10PayloadABSumDA_1")
+        if args.all or args.total_d_stacked:
+            plot_total_data_absum_stacked(data)
+        if args.all or args.total_t:
+            plot_total_time_absum(data)
+        if args.all or args.aby_t:
+            plot_aby_time_absum(data)
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"

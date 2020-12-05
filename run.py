@@ -20,86 +20,97 @@ logger = logging.getLogger('__name__')
 EXPERIMENT_COOLDOWN = 2
 
 
-batch_name = 'Unbalanced12AnalyticsDA_1'
-# batch_name = 'testUn'
+batch_name = 'BalancedAnalyticsDA_1'
 batch = [
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**12)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**13)
+    #     'parameters': Parameters(client_n=2**11,server_n=2**11,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**14)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**12,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**15)
+    #     'parameters': Parameters(client_n=2**13,server_n=2**13,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**16)
+    #     'parameters': Parameters(client_n=2**14,server_n=2**14,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**17)
+    #     'parameters': Parameters(client_n=2**15,server_n=2**15,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     'start' : 19,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**18)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**19)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 25,
-    #     'start': 23,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**20)
+    #     'parameters': Parameters(client_n=2**16,server_n=2**16,psitype=Psi_type.Analytics)
     # },
     {
         'setup': 'desktop-app',
-        'repeat': 25,
-        'start': 20,
+        'repeat': 5,
+        'start': 4,
         'reset': True,
-        'parameters': Parameters(client_n=2**12,server_n=2**21)
+        'parameters': Parameters(client_n=2**17,server_n=2**17,psitype=Psi_type.Analytics)
     },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 1,
+    #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**22)
+    #     'parameters': Parameters(client_n=2**18,server_n=2**18,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 1,
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**19,server_n=2**19,psitype=Psi_type.Analytics)
+    # },
+    {
+        'setup': 'desktop-app',
+        'repeat': 5,
+        'start': 3,
+        'reset': True,
+        'parameters': Parameters(client_n=2**20,server_n=2**20,psitype=Psi_type.Analytics)
+    },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'start': 20,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSumGT)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**22,psitype=Psi_type.PayloadABSumGT)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
     #     'parameters': Parameters(client_n=2**10,server_n=2**23)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 1,
+    #     'repeat': 5,
     #     'parameters': Parameters(client_n=2**10, server_n=2**24)
     # }
 ]

@@ -322,26 +322,27 @@ def plot_time_pies(data, combined=False):
     if combined:
         batches = data
     else:
-        batches = [data[0]]
+        batches = [data[7]]
+        print(batches[0]['parameters']['server_neles'])
     pct_client = {
-        'hashing_t': 0.0,
-        'oprf_t': 0.0,
         'poly_trans_t': 0.0,
-        'poly_t': 0.0,
+        'hashing_t': 0.0,
         'aby_online_t': 0.0,
+        'poly_t': 0.0,
+        'other_t': 0.0,
         'aby_setup_t': 0.0,
         'aby_baseot_t': 0.0,
+        'oprf_t': 0.0,
         # 'base_t': 0.0,
-        'other_t': 0.0
     }
     pct_server = {
         'hashing_t': 0.0,
         'oprf_t': 0.0,
         'poly_trans_t': 0.0,
         'poly_t': 0.0,
-        'aby_online_t': 0.0,
-        'aby_setup_t': 0.0,
         'aby_baseot_t': 0.0,
+        'aby_setup_t': 0.0,
+        'aby_online_t': 0.0,
         # 'base_t' : 0.0,
         'other_t': 0.0
     }
@@ -351,9 +352,10 @@ def plot_time_pies(data, combined=False):
             'oprf_t': 0,
             'poly_trans_t': 0,
             'poly_t': 0,
-            'aby_online_t': 0,
-            'aby_setup_t': 0,
             'aby_baseot_t': 0,
+            'aby_setup_t': 0,
+            'aby_online_t': 0,
+
             # 'nobase_t': 0,
             'total_t': 0
         }
@@ -362,9 +364,9 @@ def plot_time_pies(data, combined=False):
             'oprf_t': 0,
             'poly_trans_t': 0,
             'poly_t': 0,
-            'aby_online_t': 0,
-            'aby_setup_t': 0,
             'aby_baseot_t': 0,
+            'aby_setup_t': 0,
+            'aby_online_t': 0,
             # 'nobase_t': 0,
             'total_t' : 0
         }
@@ -389,14 +391,10 @@ def plot_time_pies(data, combined=False):
         
         # client poly trans wait is mostly waiting for the server to begin.
         client['poly_trans_t'] = server['poly_trans_t']
-        deb_total = client['total_t']
-        print(f"total: {deb_total}")
+
         # other
         c_other = 2*client['total_t'] 
         for k in client:
-            if k != 'total_t':
-                deb_total -= client[k]
-                print(f"total - {k}:{client[k]} = {deb_total}")
             c_other -= client[k]
         client['other_t'] = c_other
 
@@ -419,11 +417,10 @@ def plot_time_pies(data, combined=False):
     for k in pct_server:
         pct_server[k] = (pct_server[k]/float(len(batches)))*100.0
 
-    print(pct_server)
+    print(pct_client)
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
-
-    #### For inside text!
-    # wedges, texts, autotexts = ax.pie(pct_server.values(), autopct=lambda pct: f"{pct:.1f}%",
+    # #### For inside text!
+    # wedges, texts, autotexts = ax1.pie(pct_server.values(), autopct=lambda pct: f"{pct:.1f}%",
     #                                   textprops=dict(color="w"), counterclock=False)
 
     # ax.legend(wedges, pct_server.keys(),
@@ -433,25 +430,13 @@ def plot_time_pies(data, combined=False):
 
     # plt.setp(autotexts, size=8, weight="bold")
 
-    wedges, texts, = ax.pie(pct_server.values(),startangle=-90)
+    wedges, texts, autotexts = ax.pie(pct_server.values(), autopct=lambda pct: f"{pct:.1f}%", textprops=dict(color="black"))
+    # autotexts = autotexts[3:]
+    ax.legend(wedges, pct_server.keys(), title="protocol phases", loc="center left", bbox_to_anchor=(1,0,0.5,1))
+    
+    # plt.setp(autotexts, size=8, weight='bold')
 
-    # from https://matplotlib.org/3.1.1/gallery/pie_and_polar_charts/pie_and_donut_labels.html
-    bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
-    kw = dict(arrowprops=dict(arrowstyle="-"),
-            bbox=bbox_props, zorder=0, va="center")
-
-    for i, p in enumerate(wedges):
-        ang = (p.theta2 - p.theta1)/2. + p.theta1
-        y = np.sin(np.deg2rad(ang))
-        x = np.cos(np.deg2rad(ang))
-        horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
-        connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-        kw["arrowprops"].update({"connectionstyle": connectionstyle})
-        ax.annotate(f"{list(pct_server.values())[i]:.2f}% {list(pct_server.keys())[i]}", xy=(x, y), xytext=(1.35*np.sign(x), 1.4*y),
-                    horizontalalignment=horizontalalignment, **kw)
-
-
-    ax.set_title("Server (DA): Combination of phases time-wise")
+    ax.set_title("Server (DA): Combination of phases time-wise for the unbalanced set size 1017.\nBasic analytics circuit")
 
     plt.show()
 

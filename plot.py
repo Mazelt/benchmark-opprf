@@ -5,73 +5,7 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-
-
-batch_name = "Unbalanced10AnalyticsDA_2"
-
-def load_batch(pattern, silent=True):
-    os.path.exists('./batchlogs/experiments')
-    files = glob.glob(f"./batchlogs/experiments/{pattern}/Batch-{pattern}*.json")
-    files = sorted(files)
-    if silent:
-        print(f"using pattern: {batch_name}")
-    else:
-        for i,e in enumerate(files):
-            print(f"{i}:\t {e}")
-        all_right = input('Take all? Press any key to continue')
-    batches = []
-    for f in files:
-        with open(f, 'r') as fp:
-            b = json.load(fp)
-            for batch in batches:
-                if batch['parameters'] == b['parameters']:
-                    batch[b['repeat']] = {
-                        's_output': b['s_output'], 'c_output': b['c_output']}
-                    b = 0
-                    break
-            if b:
-                batches.append({'parameters': b['parameters'], b['repeat']: {
-                               's_output': b['s_output'], 'c_output': b['c_output']}})
-    return batches
-# rs is either None, 'r' or 's'
-
-
-def get_s_c_mean_std(data, key, rs=None, parameter='server_set'):
-    parameters = []
-    server_means = []
-    client_means = []
-    server_stds = []
-    client_stds = []
-    for b in data:
-        if parameter == 'server_set':
-            parameters.append(b['parameters']['server_neles'])
-        elif parameter == 'psi':
-            parameters.append(b['parameters']['fun_type'])
-        s_measure = []
-        c_measure = []
-        for i in range(len(b)-1):
-            try:
-                if rs:
-                    if rs =='r':
-                        index = 0
-                    elif rs == 's':
-                        index = 1
-                    s_measure.append(b[i]['s_output'][key][index])
-                    c_measure.append(b[i]['c_output'][key][index])
-                else:
-                    s_measure.append(b[i]['s_output'][key])
-                    c_measure.append(b[i]['c_output'][key])
-            except KeyError as k:
-                print(f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
-                # raise k
-        # print(f"Server hashing time: {sum(s_measure)/(len(b)-1)}")
-        # print(f"Client hashing time: {sum(c_measure)/(len(b)-1)}")
-        server_means.append(np.mean(s_measure))
-        server_stds.append(np.std(s_measure))
-        client_means.append(np.mean(c_measure))
-        client_stds.append(np.std(c_measure))
-    
-    return np.array(parameters), np.array(server_means), np.array(server_stds), np.array(client_means), np.array(client_stds)
+from plot_utils import load_batch, xticks_to_potencies_label, get_s_c_mean_std
 
 def plot_hashing(data):
     # simple plot right now.
@@ -143,24 +77,24 @@ def plot_total_data_stacked(data):
         data, "total_d_rs", rs='s')
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
-    client_r_means = client_r_means/1e6
-    client_s_means = client_s_means/1e6
+    client_r_means = client_r_means/1e9
+    client_s_means = client_s_means/1e9
     # print(f"mean: {client_r_means[0]} single: {data[]}")
     # client_r_stds = client_r_stds/1e9
     # client_s_stds = client_s_stds/1e9
 
     # Add a table at the bottom of the axes
-    client_r = ax.bar(x_pos, client_r_means, width=0.2, color='b', align='center', alpha=0.5)
-    client_s = ax.bar(x_pos, client_s_means, width=0.2, color='g', align='center', alpha=0.5, bottom=client_r_means)
-    ax.set_ylabel(f"Total data in in MegaBytes")
+    client_r = ax.bar(x_pos, client_r_means, color='b', align='center', alpha=0.5)
+    client_s = ax.bar(x_pos, client_s_means, color='g', align='center', alpha=0.5, bottom=client_r_means)
+    ax.set_ylabel(f"Total data in GigaBytes ($10^9$ Bytes)")
     
     ax.set_xticks(x_pos)
     potencies = [int(np.log2(x)) for x in set_sizes]
     ax.set_xticklabels([f"$2^{{{p}}}$" for p in potencies])
 
-    ax.set_xlabel(f"Server set sizes")
+    ax.set_xlabel(f"Set sizes for both server and client (n_1=n_2).")
     ax.set_title(
-        f"Client: Total data received/sent for Desktop-App.\nBasic analytics circuit. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$")
+        f"Client: Total data received/sent for Desktop-App.\nBasic analytics circuit. Balanced sets.")
     ax.yaxis.grid(True)
 
     ax.legend((client_r[0], client_s[0]), ('client received', 'client sent'))
@@ -460,6 +394,7 @@ if __name__ == '__main__':
     ap.add_argument('--psi_types_dt', action='store_true')
     ap.add_argument('--server_scaling_dt', action='store_true')
     args = ap.parse_args()
+    batch_name = "BalancedAnalyticsDA_1"
     data = load_batch(batch_name)
     if args.all or args.hash:
         plot_hashing(data)

@@ -18,72 +18,85 @@ from psi import Parameters, Psi_type, SERVER, SERVER_IP, CLIENT, BIN_PATH
 logger = logging.getLogger('__name__')
 
 EXPERIMENT_COOLDOWN = 3
+# tc netem commands
+enp = 'enp0s31f6'
+tc_reset_enp_netem = f"sudo tc qdisc del dev {enp} root"
+tc_add_enp = f"sudo tc qdisc add dev {enp} root netem"
+tc_add_ifb = "sudo tc qdisc add dev ifb0 root netem"
+modeprobe = "sudo modprobe ifb"
+ip_up = "sudo ip link set dev ifb0 up"
+tc_ingress = f"sudo tc qdisc add dev {enp} ingress"
+tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0"
 
 
-batch_name = 'PsiTypes1019DA_1'
+
+batch_name = 'PsiTypes1221DA_1'
 batch = [
-    {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start': 4,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
-    },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Threshold)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Sum)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Threshold)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Sum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'start': 2,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.SumIfGtThreshold)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASum)
-    # },
-    {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start': 4,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
-    },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadASum)
     # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
+    #     'start': 2,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadASumGT)
     # },
     {
         'setup': 'desktop-app',
         'repeat': 5,
         'start': 4,
         'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSum)
+        'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABSum)
     },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
+    #     'start': 4,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABSumGT)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'start': 3,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABMulSum)
+    # },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'start': 3,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
     # },
     # {
     #     'setup': 'desktop-app',
@@ -125,7 +138,7 @@ batch = [
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABSum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
@@ -138,7 +151,7 @@ batch = [
     #     'repeat': 5,
     #     'start': 1,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
     # },
     # {
     #     'setup': 'desktop-app',
@@ -173,7 +186,7 @@ batch = [
 
 
 class FailedExperiment(Exception):
-    pass
+    pass    
 
 
 def init_appium(app_path=None):
@@ -344,6 +357,59 @@ def desktop_wrapper(parameters, binary_path, out_queue, stop, role=SERVER):
     out_queue.put(output)
 
 
+def reset_networks():
+    logger.info("Resetting networks.")
+    # checking root privileges
+    ret = subprocess.run(['sudo','whoami'],capture_output=True)
+    if ret.stdout!= b'root\n':
+        logger.error("Please start this script as root (using sudo).")
+    # reset netem
+    tc_reset_netem = f"sudo tc qdisc del dev {enp} root"
+    reset_args = tc_reset_netem.split()
+    ret = subprocess.run(reset_args, capture_output=True, check=False)
+    if ret.returncode != 0 and 'Cannot delete qdisc with handle of zero' not in str(ret.stderr):
+        logger.error(str(ret.stderr))
+    # reset ingress
+    tc_reset_ingress = f"sudo tc qdisc del dev {enp} handle ffff: ingress"
+    reset_args = tc_reset_ingress.split()
+    ret = subprocess.run(reset_args, capture_output=True, check=False)
+    if ret.returncode != 0 and 'Invalid handle' not in str(ret.stderr):
+        logger.error(str(ret.stderr))
+    # modprobe -r
+    reset_args = ['modprobe', '-r', 'ifb']
+    subprocess.run(reset_args,capture_output=True)
+    
+
+
+def set_network(delay=80,loss=0.1,rateDown=24,rateUp=4):
+    logger.info(f"Setting network delay={delay}ms loss={loss}% rateDown={rateDown}mbit rateUp={rateUp}mbit.")
+    delay = int(delay/2)
+    # checking root privileges
+    ret = subprocess.run(['sudo','whoami'],capture_output=True)
+    if ret.stdout!= b'root\n':
+        logger.error("Please start this script as root (using sudo).")
+    # reset interface
+    reset_networks()
+    # add outbound
+    add_args = tc_add_enp.split()
+    options = f"delay {delay}ms 5ms 25% loss {loss}% 25% rate {rateDown}mbit"
+    add_args.extend(options.split())
+    ret = subprocess.run(add_args, check=True)
+    # add inbound
+    # modprobe ifb
+    subprocess.run(modeprobe.split(), check=True)
+    # ip link set dev ifb0 up
+    subprocess.run(ip_up.split(), check=True)
+    # tc qdisc add dev {enp} ingress
+    subprocess.run(tc_ingress.split(), check=True)
+    # tc filter add dev $ENP parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0
+    subprocess.run(tc_filter.split(), check=True)
+    add_args = tc_add_ifb.split()
+    options = f"delay {delay}ms 5ms 25% rate {rateUp}mbit"
+    add_args.extend(options.split())
+    ret = subprocess.run(add_args, check=True)
+
+
 def setup_logger(logpath, filename):
     exp_path = os.path.join(logpath, 'experiments')
     os.makedirs(exp_path, exist_ok=True)
@@ -396,10 +462,10 @@ if __name__ == '__main__':
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
-        p = Parameters(client_n=2**10,server_n=2**18)
+        p = Parameters(client_n=2**10,server_n=2**10)
         p.overlap = 20
         conf = {
-            'setup': 'desktop-desktop',
+            'setup': 'desktop-app',
             'parameters': p
         }
         if conf['setup'] == 'desktop-app':

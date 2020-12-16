@@ -31,7 +31,7 @@ tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u3
 lte_network = {'type': 'LTE', 'delay': 80, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
 
 
-batch_name = 'NetworkLTE10AnalyticsDA_1'
+batch_name = 'NetworkLTE12AnalyticsDA_1'
 # batch_name = 'network_test'
 batch = [
     # {
@@ -39,22 +39,23 @@ batch = [
     #     'repeat': 10,
     #     'reset': True,
     #     'network': lte_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**12,server_n=2**17,psitype=Psi_type.Analytics)
     # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 10,
-    #     'reset': True,
-    #     'network': lte_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
-    # },
+#    {
+ #       'setup': 'desktop-app',
+  #      'repeat': 10,
+   #     'start': 2,
+    #    'reset': True,
+     #   'network': lte_network,
+#        'parameters': Parameters(client_n=2**12,server_n=2**19,psitype=Psi_type.Analytics)
+#    },
     {
         'setup': 'desktop-app',
         'repeat': 10,
-        'start': 8,
+        'start': 5,
         'reset': True,
         'network': lte_network,
-        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.Analytics)
+        'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Analytics)
     },
     # {
     #     'setup': 'desktop-app',
@@ -436,13 +437,13 @@ if __name__ == '__main__':
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
-        p = Parameters(client_n=2**10,server_n=2**10)
+        p = Parameters(client_n=2**10,server_n=2**21)
         p.overlap = 20
         lte_network['loss'] = None
         conf = {
             'setup': 'desktop-app',
             'parameters': p,
-            'network': lte_network
+            # 'network': lte_network
         }
         if 'network' in conf:
             network = conf['network']
@@ -455,14 +456,14 @@ if __name__ == '__main__':
                 logger.info(f"LAN network does not need any configurations.")
             else:
                 set_network(**network)
-        # inp = input('press enter to stop')
+        inp = input('press enter to stop')
         
-        if conf['setup'] == 'desktop-app':
-            driver = init_appium()
-        else:
-            driver = None
-        results = run_experiment(driver, conf)
-        save_data(results)
-        driver.quit()
+        # if conf['setup'] == 'desktop-app':
+        #     driver = init_appium()
+        # else:
+        #     driver = None
+        # results = run_experiment(driver, conf)
+        # save_data(results)
+        # driver.quit()
         if network and network['type']!='LAN':
             reset_networks()

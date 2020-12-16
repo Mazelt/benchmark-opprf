@@ -408,3 +408,13 @@ Total sent w/o base OTs: 1291111 b
 2020-12-16 13:07:05,824 [run     -run_experime] [INFO ]  == Experiment done! ==================
 2020-12-16 13:07:05,824 [run     -save_data   ] [INFO ]  Saving data to file ./logs/experiments/2020-12-16T13:07:05.824468-Setup-desktop-app.json.
 2020-12-16 13:07:06,144 [run     -reset_networ] [INFO ]  Resetting networks.
+2020-12-16 14:32:33,317 [run     -<module>    ] [INFO ]  Network of type LTE
+2020-12-16 14:32:33,318 [run     -set_network ] [INFO ]  Setting network delay=80ms loss=None% rateDown=24mbit rateUp=4mbit.
+2020-12-16 14:32:33,329 [run     -reset_networ] [INFO ]  Resetting networks.
+2020-12-16 14:32:33,434 [run     -set_network ] [INFO ]  Tc qdisc show: b'qdisc netem 800d: root refcnt 2 limit 1000 delay 40ms  5ms 25% rate 24Mbit\n'
+2020-12-16 14:35:46,146 [run     -reset_networ] [INFO ]  Resetting networks.
+2020-12-16 15:03:26,334 [run     -<module>    ] [INFO ]  Network of type LTE
+2020-12-16 15:03:26,334 [run     -set_network ] [INFO ]  Setting network delay=80ms loss=None% rateDown=24mbit rateUp=4mbit.
+2020-12-16 15:03:26,347 [run     -reset_networ] [INFO ]  Resetting networks.
+2020-12-16 15:03:26,453 [run     -set_network ] [INFO ]  Tc qdisc show: b'qdisc netem 800f: root refcnt 2 limit 1000 delay 40ms  5ms 25% rate 24Mbit\n'
+2020-12-16 15:19:27,087 [run     -reset_networ] [INFO ]  Resetting networks.

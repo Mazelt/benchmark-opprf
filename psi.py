@@ -4,7 +4,7 @@ import math
 
 SERVER = 0
 CLIENT = 1
-SERVER_IP = "192.168.0.2"  # '127.0.0.1'
+SERVER_IP = "192.168.0.3"  # '127.0.0.1'
 BIN_PATH = '/home/marcel/repos/original-opprf/buildassociated/bin/psi_analytics_eurocrypt19_example'
 
 class Psi_type(enum.IntEnum):
@@ -52,6 +52,7 @@ class Parameters(dict):
         if self.nmegabins > math.ceil(self.epsilon*self.client_neles):
             self.client_neles = math.ceil(self.nmegabins/1.27)
         self.bit_len = self.get_bitlen()
+
 
     def __str__(self):
         return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)}"

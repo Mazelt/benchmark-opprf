@@ -114,6 +114,43 @@ Mostly megabin and polysize changes can bring value.
 if not set, only one megabin is used and a really big polynomial has to be
 interpolated. And.. i think the opprf is batched more efficiently with megabins.
 
+*network sim*
+using netem simulator which is part of iproute2.
+https://wiki.linuxfoundation.org/networking/netem#rate_control
+https://man7.org/linux/man-pages/man8/tc-netem.8.html
+
+LAN setup:
+using ping and iperf3:
+
+server -> phone rtt min/avg/max/mdev = 2.6,135,218,68 ms
+phone -> server rtt min/avg/max/mdev = 2,12,21,9 ms
+phone -> server 500 mbit/s
+server -> phone 540 mbit/s
+
+
+LTE WAN: 80ms RTT, 24Mbits down,4Mbits up. (based on Kales et al. 2019)
+outbound
+tc qdisc add dev $ENP root netem
+* delay 40ms 5ms 25%
+* loss 0.1% 25%
+* rate 24Mbits
+
+inbound
+modprobe ifb
+ip link set dev ifb0 up
+tc qdisc add dev $ENP ingress
+tc filter add dev $ENP parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0 
+tc qdisc add dev ifb0 root netem
+* delay 40ms 5ms 25%
+* rate 4Mbits
+
+using ping and iperf3:
+
+server -> phone rtt min/avg/max/mdev = 81,199,303,69 ms
+phone -> server rtt min/avg/max/mdev = 81,100,113,8 ms
+phone -> server 500 mbit/s = 3.7mbits
+server -> phone 540 mbit/s = 21 mbits
+
 
 ## Desktop-App-WAN
 TODO: get psi binary to run on remote linux vm

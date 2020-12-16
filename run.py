@@ -31,7 +31,7 @@ tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u3
 lte_network = {'type': 'LTE', 'delay': 80, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
 
 
-batch_name = 'NetworkLTE12AnalyticsDA_1'
+batch_name = 'NetworkLTE10PayloadABSumDA_1'
 # batch_name = 'network_test'
 batch = [
     # {
@@ -39,23 +39,22 @@ batch = [
     #     'repeat': 10,
     #     'reset': True,
     #     'network': lte_network,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**17,psitype=Psi_type.Analytics)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABSum)
     # },
 #    {
- #       'setup': 'desktop-app',
-  #      'repeat': 10,
-   #     'start': 2,
-    #    'reset': True,
-     #   'network': lte_network,
-#        'parameters': Parameters(client_n=2**12,server_n=2**19,psitype=Psi_type.Analytics)
+#        'setup': 'desktop-app',
+#        'repeat': 10,
+#        'reset': True,
+#        'network': lte_network,
+#        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
 #    },
     {
         'setup': 'desktop-app',
         'repeat': 10,
-        'start': 5,
+        'start': 8,
         'reset': True,
         'network': lte_network,
-        'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Analytics)
+        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
     },
     # {
     #     'setup': 'desktop-app',

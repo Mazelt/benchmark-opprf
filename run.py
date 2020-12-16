@@ -23,26 +23,30 @@ enp = 'enp0s31f6'
 tc_reset_enp_netem = f"sudo tc qdisc del dev {enp} root"
 tc_add_enp = f"sudo tc qdisc add dev {enp} root netem"
 tc_add_ifb = "sudo tc qdisc add dev ifb0 root netem"
+tc_show_enp = f"sudo tc qdisc show dev {enp} root"
 modeprobe = "sudo modprobe ifb"
 ip_up = "sudo ip link set dev ifb0 up"
 tc_ingress = f"sudo tc qdisc add dev {enp} ingress"
 tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0"
-
+lte_network = {'type': 'LTE', 'delay': 80, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
 
 
 batch_name = 'PsiTypes1221DA_1'
+# batch_name = 'network_test'
 batch = [
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
+    #     'repeat': 2,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Analytics)
+    #     'network': lte_network,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**14,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
-    #     'repeat': 5,
+    #     'repeat': 2,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Threshold)
+    #     'network':lte_network,
+    #     'parameters': Parameters(client_n=2**12,server_n=2**15,psitype=Psi_type.Analytics)
     # },
     # {
     #     'setup': 'desktop-app',
@@ -70,6 +74,8 @@ batch = [
     #     'reset': True,
     #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadASumGT)
     # },
+
+
     {
         'setup': 'desktop-app',
         'repeat': 5,
@@ -77,6 +83,9 @@ batch = [
         'reset': True,
         'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABSum)
     },
+    
+    
+    
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
@@ -98,90 +107,7 @@ batch = [
     #     'reset': True,
     #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
     # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**11,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**12,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**13,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**14,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**15,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**16,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 1,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 4,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**22,psitype=Psi_type.PayloadABSumGT)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**23)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'parameters': Parameters(client_n=2**10, server_n=2**24)
-    # }
+   
 ]
 
 
@@ -210,6 +136,17 @@ def run_batch():
     logger.info(f"Running a batch {batch_name}")
     logger.info(f"Batchjob contains {sum([b['repeat'] for b in batch])} runs.")
     for b in batch:
+        # network 
+        if 'network' in b:
+            network = b['network']
+        else:
+            network = None
+        if network:
+            logger.info(f"Network of type {network['type']}")
+            if network['type'] == 'LAN':
+                logger.info(f"LAN network does not need any configurations.")
+            else:
+                set_network(**network)
         if b['setup'] == 'desktop-app':
             driver = init_appium()
         else:
@@ -244,6 +181,8 @@ def run_batch():
             time.sleep(EXPERIMENT_COOLDOWN/2)
             driver.quit()
             time.sleep(EXPERIMENT_COOLDOWN/2)
+        if network and network['type']!='LAN':
+            reset_networks()
     logger.info("Done with batch")
     logger.info(failed)
     exit(0)
@@ -261,6 +200,8 @@ def run_experiment(driver, config, repeat=None):
                 data['repeat'] = repeat
             paras = config['parameters']
             data['parameters'] = vars(paras)
+            if 'network' in config:
+                data['network'] = config['network']
             server_q = Queue()
             client_q = Queue()
             stop_thread = False
@@ -376,12 +317,12 @@ def reset_networks():
     if ret.returncode != 0 and 'Invalid handle' not in str(ret.stderr):
         logger.error(str(ret.stderr))
     # modprobe -r
-    reset_args = ['modprobe', '-r', 'ifb']
+    reset_args = ['sudo','modprobe', '-r', 'ifb']
     subprocess.run(reset_args,capture_output=True)
     
 
 
-def set_network(delay=80,loss=0.1,rateDown=24,rateUp=4):
+def set_network(type=None,delay=80,loss=0.1,rateDown=24,rateUp=4):
     logger.info(f"Setting network delay={delay}ms loss={loss}% rateDown={rateDown}mbit rateUp={rateUp}mbit.")
     delay = int(delay/2)
     # checking root privileges
@@ -392,9 +333,19 @@ def set_network(delay=80,loss=0.1,rateDown=24,rateUp=4):
     reset_networks()
     # add outbound
     add_args = tc_add_enp.split()
-    options = f"delay {delay}ms 5ms 25% loss {loss}% 25% rate {rateDown}mbit"
+    options = ""
+    if delay:
+        options = f"{options} delay {delay}ms 5ms 25%"
+    if loss:
+        options = f"{options} loss {loss}% 25%"
+    if rateDown:
+        options = f"{options} rate {rateDown}mbit"
+    
     add_args.extend(options.split())
     ret = subprocess.run(add_args, check=True)
+
+    ret = subprocess.run(tc_show_enp.split(), capture_output=True)
+    logger.info(f"Tc qdisc show: {ret.stdout}")
     # add inbound
     # modprobe ifb
     subprocess.run(modeprobe.split(), check=True)
@@ -405,7 +356,13 @@ def set_network(delay=80,loss=0.1,rateDown=24,rateUp=4):
     # tc filter add dev $ENP parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0
     subprocess.run(tc_filter.split(), check=True)
     add_args = tc_add_ifb.split()
-    options = f"delay {delay}ms 5ms 25% rate {rateUp}mbit"
+    options = ""
+    if delay:
+        options = f"{options} delay {delay}ms 5ms 25%"
+    if loss:
+        options = f"{options} loss {loss}% 25%"
+    if rateUp:
+        options = f"{options} rate {rateUp}mbit"
     add_args.extend(options.split())
     ret = subprocess.run(add_args, check=True)
 
@@ -464,10 +421,23 @@ if __name__ == '__main__':
         setup_logger('./logs', filename)
         p = Parameters(client_n=2**10,server_n=2**10)
         p.overlap = 20
+        lte_network['loss'] = None
         conf = {
             'setup': 'desktop-app',
-            'parameters': p
+            'parameters': p,
+            'network': lte_network
         }
+        if 'network' in conf:
+            network = conf['network']
+        else:
+            network = None
+
+        if network:
+            logger.info(f"Network of type {network['type']}")
+            if network['type'] == 'LAN':
+                logger.info(f"LAN network does not need any configurations.")
+            else:
+                set_network(**network)
         if conf['setup'] == 'desktop-app':
             driver = init_appium()
         else:
@@ -475,3 +445,5 @@ if __name__ == '__main__':
         results = run_experiment(driver, conf)
         save_data(results)
         driver.quit()
+        if network and network['type']!='LAN':
+            reset_networks()

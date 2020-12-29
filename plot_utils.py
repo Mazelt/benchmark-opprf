@@ -3,6 +3,13 @@ import os.path
 import glob
 import json
 
+tableau_c10 = [(0, 107, 164), (255, 128, 14), (171, 171, 171), (95, 158, 209), (89, 89, 89),
+               (255, 188, 121), (207, 207, 207), (200, 82, 0), 
+               (162, 200, 236), (137, 137, 137)]
+for i in range(len(tableau_c10)):
+    r, g, b = tableau_c10[i]
+    tableau_c10[i] = (r / 255., g / 255., b / 255.)
+
 def load_batch(pattern, silent=True,sort_batches="server_neles"):
     os.path.exists('./batchlogs/experiments')
     files = glob.glob(f"./batchlogs/experiments/{pattern}/Batch-{pattern}*.json")

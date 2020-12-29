@@ -5,7 +5,7 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, get_s_c_mean_std, get_specific_s_c_mean_std, xticks_to_potencies_label
+from plot_utils import load_batch, get_s_c_mean_std, get_specific_s_c_mean_std, xticks_to_potencies_label, tableau_c10
 
 
 
@@ -23,9 +23,9 @@ def plot_total_time(datalan, datalte):
     client_means_lte = client_means_lte/1e3
     client_stds_lte = client_stds_lte/1e3
     fig, ax = plt.subplots()
-    client_lan = ax.bar(x_pos-0.1, client_means_lan, yerr=client_stds_lan, color='g', align='center', alpha=0.5, width=0.2,
+    client_lan = ax.bar(x_pos-0.1, client_means_lan, yerr=client_stds_lan, color=tableau_c10[1], align='center', alpha=0.5, width=0.2,
            ecolor='black', capsize=5)
-    client_lte = ax.bar(x_pos+0.1, client_means_lte, yerr=client_stds_lte, color='b', align='center', alpha=0.5, width=0.2,
+    client_lte = ax.bar(x_pos+0.1, client_means_lte, yerr=client_stds_lte, color=tableau_c10[0], align='center', alpha=0.5, width=0.2,
            ecolor='black', capsize=5)
     ax.set_ylabel(f"Total time in in seconds")
     ax.set_xticks(x_pos)
@@ -47,7 +47,7 @@ def plot_total_time_absum(data):
     client_means = client_means/1e3
     client_stds = client_stds/1e3
     fig, ax = plt.subplots()
-    client = ax.bar(x_pos, client_means, yerr=client_stds, color='g', align='center', alpha=0.5,
+    client = ax.bar(x_pos, client_means, yerr=client_stds, color=tableau_c10[1], align='center', alpha=0.5,
                     ecolor='black', capsize=5)
     ax.set_ylabel(f"Total time in in seconds")
     ax.set_xticks(x_pos)
@@ -73,10 +73,10 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
-    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color='g', align='center', alpha=0.5,
+    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color=tableau_c10[1], align='center', alpha=0.5,
                     ecolor='black', capsize=10)
     if not online_only:
-        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color='b', align='center', alpha=0.5,
+        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color=tableau_c10[0], align='center', alpha=0.5,
                         ecolor='black', capsize=10, bottom=online)
     ax.set_ylabel(f"Time in in ms")
     ax.set_xticks(x_pos)
@@ -107,10 +107,10 @@ def plot_aby_time_absum(data, online_only=True, role=CLIENT):
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
-    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color='g', align='center', alpha=0.5,
+    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color=tableau_c10[1], align='center', alpha=0.5,
                     ecolor='black', capsize=10)
     if not online_only:
-        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color='b', align='center', alpha=0.5,
+        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color=tableau_c10[0], align='center', alpha=0.5,
                        ecolor='black', capsize=10, bottom=online)
     ax.set_ylabel(f"Time in in ms")
     ax.set_xticks(x_pos)

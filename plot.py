@@ -12,9 +12,9 @@ def plot_hashing(data):
     set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(data, "hashing_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
-    server = ax.bar(x_pos-0.1, server_means, yerr=server_stds, width=0.2, color='b', align='center', alpha=0.5,
+    server = ax.bar(x_pos-0.1, server_means, yerr=server_stds, width=0.2, color=tableau_c10[0], align='center', alpha=0.5,
            ecolor='black', capsize=10) 
-    client = ax.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color='g', align='center', alpha=0.5,
+    client = ax.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color=tableau_c10[1], align='center', alpha=0.5,
            ecolor='black', capsize=10)
     ax.set_ylabel(f"Time for hashing in ms")
     ax.set_xticks(x_pos)
@@ -36,7 +36,7 @@ def plot_poly_size(data):
     server_means = server_means/1e6
     server_stds = server_stds/1e6
     fig, ax = plt.subplots()
-    server = ax.bar(x_pos, server_means, width=0.2, color='b', align='center', alpha=0.5, capsize=10)
+    server = ax.bar(x_pos, server_means, width=0.2, color=tableau_c10[0], align='center', alpha=0.5, capsize=10)
     ax.set_ylabel(f"Data transmitted im MegaBytes")
     ax.set_xticks(x_pos)
     ax.set_xticklabels(set_sizes)
@@ -54,9 +54,9 @@ def plot_total_time(data):
         data, "total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
-    server = ax.bar(x_pos-0.1, server_means, yerr=server_stds, width=0.2, color='b', align='center', alpha=0.5,
+    server = ax.bar(x_pos-0.1, server_means, yerr=server_stds, width=0.2, color=tableau_c10[0], align='center', alpha=0.5,
            ecolor='black', capsize=10) 
-    client = ax.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color='g', align='center', alpha=0.5,
+    client = ax.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color=tableau_c10[1], align='center', alpha=0.5,
            ecolor='black', capsize=10)
     ax.set_ylabel(f"Total time in in ms")
     ax.set_xticks(x_pos)
@@ -84,8 +84,8 @@ def plot_total_data_stacked(data):
     # client_s_stds = client_s_stds/1e9
 
     # Add a table at the bottom of the axes
-    client_r = ax.bar(x_pos, client_r_means, color='b', align='center', alpha=0.5)
-    client_s = ax.bar(x_pos, client_s_means, color='g', align='center', alpha=0.5, bottom=client_r_means)
+    client_r = ax.bar(x_pos, client_r_means, color=tableau_c10[0], align='center', alpha=0.5)
+    client_s = ax.bar(x_pos, client_s_means, color=tableau_c10[1], align='center', alpha=0.5, bottom=client_r_means)
     ax.set_ylabel(f"Total data in GigaBytes ($10^9$ Bytes)")
     
     ax.set_xticks(x_pos)
@@ -116,9 +116,9 @@ def plot_total_data(data):
     # client_s_stds = client_s_stds/1e9
 
     # Add a table at the bottom of the axes
-    client_r = ax.bar(x_pos-0.1, client_r_means, width=0.2, color='b', align='center', alpha=0.5,
+    client_r = ax.bar(x_pos-0.1, client_r_means, width=0.2, color=tableau_c10[0], align='center', alpha=0.5,
                       ecolor='black', capsize=5)
-    client_s = ax.bar(x_pos+0.1, client_s_means, width=0.2, color='g', align='center', alpha=0.5,
+    client_s = ax.bar(x_pos+0.1, client_s_means, width=0.2, color=tableau_c10[1], align='center', alpha=0.5,
                       ecolor='black', capsize=5)
     ax.set_ylabel(f"Total data in in GigaBytes")
 
@@ -144,10 +144,10 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
-    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color='g', align='center', alpha=0.5,
+    online = ax.bar(x_pos, online_means, yerr=online_stds, width=0.2, color=tableau_c10[1], align='center', alpha=0.5,
                     ecolor='black', capsize=10)
     if not online_only:
-        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color='b', align='center', alpha=0.5,
+        setup = ax.bar(x_pos, setup_means, yerr=setup_stds, width=0.2, color=tableau_c10[0], align='center', alpha=0.5,
                         ecolor='black', capsize=10, bottom=online)
     ax.set_ylabel(f"Time in in ms")
     ax.set_xticks(x_pos)
@@ -180,6 +180,26 @@ def plot_time_pies(data, combined=False):
         batches = data
     else:
         batches = [data[0]]
+    translate_s = {
+        'poly_trans_t': 'Polynomialtransport',
+        'hashing_t': 'Hashing',
+        'aby_online_t': 'ABY Online',
+        'poly_t': 'Polynomial Interpolation',
+        'other_t': 'Waiting',
+        'aby_setup_t': 'ABY Setup',
+        'aby_baseot_t': 'ABY BaseOT',
+        'oprf_t': 'OPRF',
+    }
+    translate_c = {
+        'poly_trans_t': 'Polynomialtransport',
+        'hashing_t': 'Hashing',
+        'aby_online_t': 'ABY Online',
+        'poly_t': 'Polynomial Evaluation',
+        'other_t': 'Waiting',
+        'aby_setup_t': 'ABY Setup',
+        'aby_baseot_t': 'ABY BaseOT',
+        'oprf_t': 'OPRF',
+    }
     pct_client = {
         'hashing_t': 0.0,
         'oprf_t': 0.0,
@@ -269,7 +289,14 @@ def plot_time_pies(data, combined=False):
 
     for k in pct_server:
         pct_server[k] = (pct_server[k]/float(len(batches)))*100.0
+    
+    for k in translate_c:
+        pct_client[translate_c[k]] = pct_client[k]
+        del pct_client[k]
 
+    for k in translate_s:
+        pct_server[translate_s[k]] = pct_server[k]
+        del pct_server[k]
     print(pct_server)
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
 
@@ -284,7 +311,7 @@ def plot_time_pies(data, combined=False):
 
     # plt.setp(autotexts, size=8, weight="bold")
 
-    wedges, texts, = ax.pie(pct_server.values(),startangle=-90)
+    wedges, texts, = ax.pie(pct_server.values(),startangle=-90,colors=tableau_c10)
 
     # from https://matplotlib.org/3.1.1/gallery/pie_and_polar_charts/pie_and_donut_labels.html
     bbox_props = dict(boxstyle="square,pad=0.3", fc="w", ec="k", lw=0.72)
@@ -328,9 +355,9 @@ def plot_psi_types_dt(data):
         "Client: Time and data for Desktop-App for different psi types with n=4096 elements. With std-error.")
     labels = [Psi_type(i).name for i in set_sizes]
     ax1.set_xticklabels(labels)
-    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color='b', align='center', alpha=0.5,
+    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color=tableau_c10[0], align='center', alpha=0.5,
                        ecolor='black', capsize=5)
-    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color='g', align='center', alpha=0.5,
+    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color=tableau_c10[1], align='center', alpha=0.5,
                        ecolor='black', capsize=5)
     ax2 = ax1.twinx()
     ax2.set_ylabel('time (ms)',color='tab:red')
@@ -366,9 +393,9 @@ def plot_server_scaling_dt(data):
     ax1.set_title(
         "Client: Time and data for Desktop-App for different server set sizes with n_client=1024 elements. 5 runs with std-error.")
     ax1.set_xticklabels(set_sizes)
-    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color='b', align='center', alpha=0.5,
+    client_r = ax1.bar(x_pos-0.1, client_r_means, yerr=client_r_stds, width=0.1, color=tableau_c10[0], align='center', alpha=0.5,
                        ecolor='black', capsize=5)
-    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color='g', align='center', alpha=0.5,
+    client_s = ax1.bar(x_pos, client_s_means, yerr=client_s_stds, width=0.1, color=tableau_c10[1], align='center', alpha=0.5,
                        ecolor='black', capsize=5)
     ax2 = ax1.twinx()
     ax2.set_ylabel('time (s)', color='tab:red')

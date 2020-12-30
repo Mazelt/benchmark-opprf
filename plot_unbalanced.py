@@ -5,14 +5,14 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, get_s_c_mean_std, xticks_to_potencies_label, tableau_c10
+from plot_utils import load_batch, get_s_c_mean_sd,get_s_c_mean_se, xticks_to_potencies_label, tableau_c10
 
 
 
 
 def plot_hashing(data):
     # simple plot right now.
-    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(data, "hashing_t")
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(data, "hashing_t")
     server_means = server_means/1e3
     server_stds = server_stds/1e3
     x_pos = np.arange(len(set_sizes))
@@ -32,7 +32,7 @@ def plot_hashing(data):
 
 def plot_poly_size(data):
     # simple plot right now.
-    set_sizes, server_means, server_stds, _, _ = get_s_c_mean_std(
+    set_sizes, server_means, server_stds, _, _ = get_s_c_mean_sd(
         data, "poly_d_rs",rs='s')
     x_pos = np.arange(len(set_sizes))
     server_means = server_means/1e6
@@ -52,7 +52,7 @@ def plot_poly_size(data):
     plt.show()
 
 def plot_total_time(data):
-    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_se(
         data, "total_t")
     x_pos = np.arange(len(set_sizes))
     client_means = client_means/1e3
@@ -74,7 +74,7 @@ def plot_total_time(data):
 
 
 def plot_total_time_absum(data):
-    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(
         data, "total_t")
     x_pos = np.arange(len(set_sizes))
     client_means = client_means/1e3
@@ -95,15 +95,15 @@ def plot_total_time_absum(data):
     plt.show()
 
 def plot_total_data_stacked_combined(data10,data12):
-    set_sizes_10, server_r_means_10, server_r_stds_10, client_r_means_10, client_r_stds_10 = get_s_c_mean_std(
+    set_sizes_10, server_r_means_10, server_r_stds_10, client_r_means_10, client_r_stds_10 = get_s_c_mean_sd(
         data10, "total_d_rs", rs='r')
-    _, server_s_means_10, server_s_stds_10, client_s_means_10, client_s_stds_10 = get_s_c_mean_std(
+    _, server_s_means_10, server_s_stds_10, client_s_means_10, client_s_stds_10 = get_s_c_mean_sd(
         data10, "total_d_rs", rs='s')
 
-    set_sizes_12, server_r_means_12, server_r_stds_12, client_r_means_12, client_r_stds_12 = get_s_c_mean_std(
+    set_sizes_12, server_r_means_12, server_r_stds_12, client_r_means_12, client_r_stds_12 = get_s_c_mean_sd(
         data12, "total_d_rs", rs='r')
 
-    _, server_s_means_12, server_s_stds_12, client_s_means_12, client_s_stds_12 = get_s_c_mean_std(
+    _, server_s_means_12, server_s_stds_12, client_s_means_12, client_s_stds_12 = get_s_c_mean_sd(
         data12, "total_d_rs", rs='s')
     x_pos_10 = np.arange(len(set_sizes_10))
     x_pos_12 = np.arange(len(set_sizes_12))
@@ -144,9 +144,9 @@ def plot_total_data_stacked_combined(data10,data12):
     plt.show()
 
 def plot_total_data_stacked(data):
-    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='r') 
-    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='s')
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -177,9 +177,9 @@ def plot_total_data_stacked(data):
 
 
 def plot_total_data_absum_stacked(data):
-    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='r')
-    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='s')
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -211,9 +211,9 @@ def plot_total_data_absum_stacked(data):
     plt.show()
 
 def plot_total_data(data):
-    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='r')
-    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='s')
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -243,12 +243,12 @@ def plot_total_data(data):
     plt.show()
 
 def plot_aby_time(data, online_only=True ,role=CLIENT):
-    set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
+    set_sizes, _, _, online_means, online_stds = get_s_c_mean_sd(
         data, "aby_online_t")
     if not online_only:
-        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_std(
+        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_sd(
             data, "aby_setup_t")
-    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_std(
+    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_sd(
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -277,12 +277,12 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
 
 
 def plot_aby_time_absum(data, online_only=True, role=CLIENT):
-    set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
+    set_sizes, _, _, online_means, online_stds = get_s_c_mean_sd(
         data, "aby_online_t")
     if not online_only:
-        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_std(
+        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_sd(
             data, "aby_setup_t")
-    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_std(
+    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_sd(
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -469,11 +469,11 @@ def plot_time_pies(data, combined=False):
     plt.show()
 
 def plot_psi_types_dt(data):
-    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(
         data, "total_t", parameter='psi')
-    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_std(
+    set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='r', parameter='psi')
-    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_std(
+    set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='s', parameter='psi')
     client_means = client_means/1e3
     client_stds = client_stds/1e3

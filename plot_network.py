@@ -1,21 +1,34 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import sem
 import os.path
 import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, get_s_c_mean_std, get_specific_s_c_mean_std, xticks_to_potencies_label, tableau_c10
+from plot_utils import load_batch, get_s_c_mean_sd, get_specific_s_c_mean_sd, xticks_to_potencies_label, tableau_c10
 
 
+def get_rtt(data):
+    b = data[0]
+    rtts = []
+    # rtts = [2.4205, 2.757, 2.518, 2.45363, 2.57025, 2.41744, 2.29819, 2.35794, 2.32744, 2.31425, 2.132, 2.37244, 2.92756, 2.752, 2.50294, 2.4095, 2.40994, 2.47906, 2.81631, 2.61075, 2.4955, 2.43962, 2.45887, 2.43662, 2.68319,
+    #         2.62794, 2.46756, 2.38719, 2.23781, 2.49313, 2.32925, 2.5685, 2.32725, 2.63925, 2.8215, 2.372, 2.40856, 2.37625, 2.28494, 2.50756, 2.60763, 2.44612, 2.81256, 2.26719, 2.54137, 2.19531, 2.7655, 2.438, 2.41919, 2.38944]
+    # print(b)
+    for i in range(len(b)-1):
+        rtts.append(b[i]['s_output']['rtt'])
+    rtt_mean = np.mean(rtts)
+    rtt_sd = np.std(rtts)
+    rtt_se = sem(rtts)
+    print(f"{len(rtts)} RTTs: mean: {rtt_mean}, sd: {rtt_sd}, se {rtt_se}.")
 
 def plot_total_time(datalan, datalte):
 
     set_sizes_lan, server_means_lan, server_stds_lan, client_means_lan, client_stds_lan = \
-        get_specific_s_c_mean_std(datalan, 'total_t', circuit=Psi_type.Analytics, 
+        get_specific_s_c_mean_sd(datalan, 'total_t', circuit=Psi_type.Analytics, 
                                   parameter='server_neles', pfilter=[2**17,2**19,2**21])
     set_sizes_lte, server_means_lte, server_stds_lte, client_means_lte, client_stds_lte = \
-        get_specific_s_c_mean_std(datalte, 'total_t', circuit=Psi_type.Analytics,
+        get_specific_s_c_mean_sd(datalte, 'total_t', circuit=Psi_type.Analytics,
                                   parameter='server_neles', pfilter=[2**17, 2**19, 2**21])
     x_pos = np.arange(len(set_sizes_lan))
     client_means_lan = client_means_lan/1e3
@@ -41,7 +54,7 @@ def plot_total_time(datalan, datalte):
 
 
 def plot_total_time_absum(data):
-    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_std(
+    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(
         data, "total_t")
     x_pos = np.arange(len(set_sizes))
     client_means = client_means/1e3
@@ -64,12 +77,12 @@ def plot_total_time_absum(data):
 
 
 def plot_aby_time(data, online_only=True ,role=CLIENT):
-    set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
+    set_sizes, _, _, online_means, online_stds = get_s_c_mean_sd(
         data, "aby_online_t")
     if not online_only:
-        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_std(
+        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_sd(
             data, "aby_setup_t")
-    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_std(
+    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_sd(
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -98,12 +111,12 @@ def plot_aby_time(data, online_only=True ,role=CLIENT):
 
 
 def plot_aby_time_absum(data, online_only=True, role=CLIENT):
-    set_sizes, _, _, online_means, online_stds = get_s_c_mean_std(
+    set_sizes, _, _, online_means, online_stds = get_s_c_mean_sd(
         data, "aby_online_t")
     if not online_only:
-        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_std(
+        set_sizes, _, _, setup_means, setup_stds = get_s_c_mean_sd(
             data, "aby_setup_t")
-    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_std(
+    # set_sizes, _, _, total_means, total_stds = get_s_c_mean_sd(
     #     data, "aby_total_t")
     x_pos = np.arange(len(set_sizes))
     fig, ax = plt.subplots()
@@ -134,12 +147,18 @@ def plot_aby_time_absum(data, online_only=True, role=CLIENT):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--all', action='store_true')
+    ap.add_argument('--rtts', action='store_true')
     ap.add_argument('--total_t', action='store_true')
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
     args = ap.parse_args()
     
-    batch_10_LAN = load_batch('Unbalanced10AnalyticsDA_2')
-    batch_10_LTE = load_batch('NetworkLTE10AnalyticsDA_1')
-    
-    plot_total_time(batch_10_LAN, batch_10_LTE)
+    if args.rtts:
+        batch = load_batch('NetworkDebugging_LTEonlyRTT70')
+        get_rtt(batch)
+    else:
+
+        batch_10_LAN = load_batch('Unbalanced10AnalyticsDA_2')
+        batch_10_LTE = load_batch('NetworkLTE10AnalyticsDA_1')
+        
+        plot_total_time(batch_10_LAN, batch_10_LTE)

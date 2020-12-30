@@ -20,6 +20,7 @@ logger = logging.getLogger('__name__')
 EXPERIMENT_COOLDOWN = 3
 # tc netem commands
 enp = 'enp0s31f6'
+# enp='lo'
 tc_reset_enp_netem = f"sudo tc qdisc del dev {enp} root"
 tc_add_enp = f"sudo tc qdisc add dev {enp} root netem"
 tc_add_ifb = "sudo tc qdisc add dev ifb0 root netem"
@@ -31,16 +32,17 @@ tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u3
 lte_network = {'type': 'LTE', 'delay': 80, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
 
 
-batch_name = 'NetworkLTE10PayloadABSumDA_1'
+batch_name = 'NetworkDebugging_LAN'
 # batch_name = 'network_test'
 batch = [
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 10,
-    #     'reset': True,
-    #     'network': lte_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**17,psitype=Psi_type.PayloadABSum)
-    # },
+    {
+        'setup': 'desktop-app',
+        'repeat': 50,
+        'start': 15,
+        'reset': True,
+        # 'network': ,
+        'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
+    },
 #    {
 #        'setup': 'desktop-app',
 #        'repeat': 10,
@@ -48,14 +50,14 @@ batch = [
 #        'network': lte_network,
 #        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
 #    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 10,
-        'start': 8,
-        'reset': True,
-        'network': lte_network,
-        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
-    },
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 10,
+    #     'start': 8,
+    #     'reset': True,
+    #     'network': lte_network,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
+    # },
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 2,
@@ -436,7 +438,7 @@ if __name__ == '__main__':
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
-        p = Parameters(client_n=2**10,server_n=2**21)
+        p = Parameters(client_n=2**10,server_n=2**10)
         p.overlap = 20
         lte_network['loss'] = None
         conf = {
@@ -457,12 +459,13 @@ if __name__ == '__main__':
                 set_network(**network)
         inp = input('press enter to stop')
         
-        # if conf['setup'] == 'desktop-app':
-        #     driver = init_appium()
-        # else:
-        #     driver = None
-        # results = run_experiment(driver, conf)
-        # save_data(results)
-        # driver.quit()
+        if conf['setup'] == 'desktop-app':
+            driver = init_appium()
+        else:
+            driver = None
+        results = run_experiment(driver, conf)
+        save_data(results)
+        if driver:
+            driver.quit()
         if network and network['type']!='LAN':
             reset_networks()

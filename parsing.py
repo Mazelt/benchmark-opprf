@@ -27,6 +27,8 @@ re_comm_total_sent = re.compile(r"Total sent: (?P<sent>\d+) bytes")
 re_comm_nobase_recv = re.compile(r"Total recv w/o base OTs: (?P<recv>\d+) b")
 re_comm_nobase_sent = re.compile(
     r"Total sent w/o base OTs: (?P<sent>\d+) b")
+re_rtt = re.compile(r"RTT: (?P<rtt>\d+(\.\d*)?)ms")
+re_throughput = re.compile(r"Throughput (?P<throughput>\d+(\.\d*)?) MiB/s")
 class Parser(object):
 
     def __init__(self, logger):
@@ -36,6 +38,18 @@ class Parser(object):
         lines = s.split('\n')
         data = {}
         for l in lines:
+            m = re_rtt.match(l)
+            if m:
+                rtt = float(m.group('rtt'))
+                self.logger.debug(f'RTT: {rtt}')
+                data['rtt'] = rtt
+                continue
+            m = re_throughput.match(l)
+            if m:
+                throughput = float(m.group('throughput'))
+                self.logger.debug(f'Throughput: {throughput}')
+                data['throughput'] = throughput
+                continue    
             m = re_success_result.match(l)
             if m:
                 result = int(m.group('result'))
@@ -172,6 +186,9 @@ class Parser(object):
 
 if __name__ == '__main__':
     to_parse = "PSI circuit successfully executed. Result: 0\n" + \
+    "AES performance: 4589.05 MiB/sec\n" + \
+    "RTT: 2.43131 ms\n" + \
+    "Throughput: 51.2355 MiB/s\n" + \
     "Time for hashing 6.59715 ms\n" + \
     "Time for OPRF 452.343 ms\n" + \
     "Time for polynomials 365.963 ms\n" + \

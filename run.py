@@ -29,18 +29,21 @@ modeprobe = "sudo modprobe ifb"
 ip_up = "sudo ip link set dev ifb0 up"
 tc_ingress = f"sudo tc qdisc add dev {enp} ingress"
 tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0"
-lte_network = {'type': 'LTE', 'delay': 80, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
+lte_network = {'type': 'LTE', 'delay': 70, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
+lte_benchmark = lte_network
+lte_benchmark['loss'] = None
+lte_benchmark['rateDown']=None
+lte_benchmark['rateUp']=None
 
-
-batch_name = 'NetworkDebugging_LAN'
+batch_name = 'NetworkDebugging_LTEonlyRTT70'
 # batch_name = 'network_test'
 batch = [
     {
         'setup': 'desktop-app',
         'repeat': 50,
-        'start': 15,
+        'start': 37,
         'reset': True,
-        # 'network': ,
+        'network': lte_benchmark,
         'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
     },
 #    {
@@ -341,7 +344,7 @@ def reset_networks():
     
 
 
-def set_network(type=None,delay=80,loss=0.1,rateDown=24,rateUp=4):
+def set_network(type=None,delay=70,loss=0.1,rateDown=24,rateUp=4):
     logger.info(f"Setting network delay={delay}ms loss={loss}% rateDown={rateDown}mbit rateUp={rateUp}mbit.")
     delay = int(delay/2)
     # checking root privileges
@@ -441,10 +444,12 @@ if __name__ == '__main__':
         p = Parameters(client_n=2**10,server_n=2**10)
         p.overlap = 20
         lte_network['loss'] = None
+        lte_network['rateUp'] = None
+        lte_network['rateDown'] = None
         conf = {
             'setup': 'desktop-app',
             'parameters': p,
-            # 'network': lte_network
+            'network': lte_network
         }
         if 'network' in conf:
             network = conf['network']

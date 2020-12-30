@@ -27,8 +27,8 @@ re_comm_total_sent = re.compile(r"Total sent: (?P<sent>\d+) bytes")
 re_comm_nobase_recv = re.compile(r"Total recv w/o base OTs: (?P<recv>\d+) b")
 re_comm_nobase_sent = re.compile(
     r"Total sent w/o base OTs: (?P<sent>\d+) b")
-re_rtt = re.compile(r"RTT: (?P<rtt>\d+(\.\d*)?)ms")
-re_throughput = re.compile(r"Throughput (?P<throughput>\d+(\.\d*)?) MiB/s")
+re_rtt = re.compile(r"RTT: (?P<rtt>\d+(\.\d*)?) ms")
+re_throughput = re.compile(r"Throughput: (?P<throughput>\d+(\.\d*)?) MiB/s")
 class Parser(object):
 
     def __init__(self, logger):

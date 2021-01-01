@@ -73,6 +73,40 @@ def plot_total_time(data):
     plt.show()
 
 
+def plot_total_time_combined(data10,data12):
+    set_sizes_10, server_means_10, server_sd_10, client_means_10, client_sd_10 = get_s_c_mean_sd(
+        data10, "total_t")
+    set_sizes_12, server_means_12, server_sd_12, client_means_12, client_sd_12 = get_s_c_mean_sd(
+        data12, "total_t")
+    x_pos_10 = np.arange(len(set_sizes_10))
+    x_pos_12 = np.arange(len(set_sizes_12))
+    client_means_10 = client_means_10/1e3
+    client_sd_10 = client_sd_10/1e3
+    client_means_12 = client_means_12/1e3
+    client_sd_12 = client_sd_12/1e3
+    fig, ax = plt.subplots()
+    # client = ax.bar(x_pos, client_means, yerr=client_sd_10, color=tableau_c10[1], align='center', alpha=0.5,
+    #                 ecolor='black', capsize=5)
+    client_10 = ax.bar(x_pos_10-0.1, client_means_10, yerr=client_sd_10, width=0.2,
+                       color=tableau_c10[0], align='center', alpha=0.5, ecolor='black', capsize=1)
+    client_12 = ax.bar(x_pos_12+0.1+2, client_means_12,yerr=client_sd_12, width=0.2,
+                       color=tableau_c10[1], align='center', alpha=0.5, ecolor='black', capsize=1)
+
+    ax.set_ylabel(f"Total runtime in in seconds")
+    ax.set_xticks(x_pos_10)
+    ax.set_xticklabels(xticks_to_potencies_label(set_sizes_10))
+    # ax.set_title(
+    #     f"Total time for Desktop-App with the basic analytics circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nMean over {len(data[0])-1} runs with std-error.")
+    ax.yaxis.grid(True)
+    ax.set_xlabel(f"Server set sizes ($n_2$)")
+    ax.legend((client_10[0], client_12[0]),
+              ('n_1 = $2^{10}$', 'n_1 = $2^{12}$'))
+
+    plt.tight_layout()
+    plt.show()
+
+
+
 def plot_total_time_absum(data):
     set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(
         data, "total_t")
@@ -88,7 +122,7 @@ def plot_total_time_absum(data):
     ax.set_title(
         f"Total time for Desktop-App with the PayloadABSum circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nMean over {len(data[0])-1} runs with std-error.")
     ax.yaxis.grid(True)
-    ax.set_xlabel(f"Server set sizes")
+    ax.set_xlabel(f"Server set sizes ($n_2$)")
     # ax.legend((server[0], client[0]),('server', 'client'))
 
     plt.tight_layout()
@@ -116,6 +150,8 @@ def plot_total_data_stacked_combined(data10,data12):
     # client_r_stds = client_r_stds/1e9
     # client_s_stds = client_s_stds/1e9
 
+    print(client_r_means_10)
+    print(client_r_means_12)
     # Add a table at the bottom of the axes
     client_r_10 = ax.bar(x_pos_10-0.1, client_r_means_10, width=0.2,
                       color=tableau_c10[0], align='center', alpha=0.5)
@@ -131,14 +167,15 @@ def plot_total_data_stacked_combined(data10,data12):
     ax.set_xticks(x_pos_10)
     potencies = [int(np.log2(x)) for x in set_sizes_10]
     ax.set_xticklabels([f"$2^{{{p}}}$" for p in potencies])
+    # ax.set_yscale('log')
 
-    ax.set_xlabel(f"Server set sizes")
-    ax.set_title(
-        f"Client: Total data received/sent for Desktop-App.\nBasic analytics circuit. Unbalanced sets with client set sizes $2^{{10}}$,$2^{{12}}$")
+    ax.set_xlabel(f"Server set sizes ($n_2$)")
+    # ax.set_title(
+    #     f"Client: Total data received/sent for Desktop-App.\nBasic analytics circuit. Unbalanced sets with client set sizes $2^{{10}}$,$2^{{12}}$")
     ax.yaxis.grid(True)
 
     ax.legend((client_r_10[0], client_s_10[0], client_r_12[0], client_s_12[0], ),
-              ('client received $2^{10}$', 'client sent $2^{10}$', 'client received $2^{12}$', 'client sent $2^{12}$'))
+              ('client received $n_1=2^{10}$', 'client sent $n_1=2^{10}$', 'client received $n_1=2^{12}$', 'client sent $n_1=2^{12}$'))
 
     plt.tight_layout()
     plt.show()
@@ -528,6 +565,8 @@ if __name__ == '__main__':
         data12 = load_batch("Unbalanced12AnalyticsDA_1")
         if args.all or args.total_d_stacked:
             plot_total_data_stacked_combined(data10,data12)
+        if args.all or args.total_t:
+            plot_total_time_combined(data10,data12)
     elif args.absum:
         data = load_batch("Unbalanced10PayloadABSumDA_1")
         if args.all or args.total_d_stacked:

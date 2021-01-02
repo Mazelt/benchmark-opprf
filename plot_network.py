@@ -22,6 +22,20 @@ def get_rtt(data):
     rtt_se = sem(rtts)
     print(f"{len(rtts)} RTTs: mean: {rtt_mean}, sd: {rtt_sd}, se {rtt_se}.")
 
+
+def get_tp(data):
+    b = data[0]
+    tps = []
+    # tps = [2.4205, 2.757, 2.518, 2.45363, 2.57025, 2.41744, 2.29819, 2.35794, 2.32744, 2.31425, 2.132, 2.37244, 2.92756, 2.752, 2.50294, 2.4095, 2.40994, 2.47906, 2.81631, 2.61075, 2.4955, 2.43962, 2.45887, 2.43662, 2.68319,
+    #         2.62794, 2.46756, 2.38719, 2.23781, 2.49313, 2.32925, 2.5685, 2.32725, 2.63925, 2.8215, 2.372, 2.40856, 2.37625, 2.28494, 2.50756, 2.60763, 2.44612, 2.81256, 2.26719, 2.54137, 2.19531, 2.7655, 2.438, 2.41919, 2.38944]
+    # print(b)
+    for i in range(len(b)-1):
+        tps.append(b[i]['s_output']['throughput'])
+    tp_mean = np.mean(tps)
+    tp_sd = np.std(tps)
+    tp_se = sem(tps)
+    print(f"{len(tps)} tps: mean: {tp_mean}, sd: {tp_sd}, se {tp_se}.")
+
 def plot_total_time(datalan, datalte):
 
     set_sizes_lan, server_means_lan, server_stds_lan, client_means_lan, client_stds_lan = \
@@ -148,14 +162,18 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser()
     ap.add_argument('--all', action='store_true')
     ap.add_argument('--rtts', action='store_true')
+    ap.add_argument('--tps', action='store_true')
     ap.add_argument('--total_t', action='store_true')
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
     args = ap.parse_args()
     
     if args.rtts:
-        batch = load_batch('NetworkDebugging_WANRTT60')
+        batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
         get_rtt(batch)
+    elif args.tps:
+        batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
+        get_tp(batch)
     else:
 
         batch_10_LAN = load_batch('Unbalanced10AnalyticsDA_2')

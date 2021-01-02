@@ -29,94 +29,22 @@ modeprobe = "sudo modprobe ifb"
 ip_up = "sudo ip link set dev ifb0 up"
 tc_ingress = f"sudo tc qdisc add dev {enp} ingress"
 tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0"
-wan_network = {'type': 'WAN', 'delay': 60, 'loss': 0.1, 'rateDown':230,'rateUp':230}
-lte_network = {'type': 'LTE', 'delay': 70, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
-badlte_network = {'type': 'LTE', 'delay': 70, 'loss': 4, 'rateDown': 24, 'rateUp': 4}
+wan_network = {'type': 'WAN', 'delay': 29, 'loss': 0.1, 'rateDown':50,'rateUp':50}
+lte_network = {'type': 'LTE', 'delay': 39, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
+badlte_network = {'type': 'LTE', 'delay': 39, 'loss': 4, 'rateDown': 24, 'rateUp': 4}
 
 lte_benchmark = lte_network
 lte_benchmark['loss'] = None
-lte_benchmark['rateDown']=None
-lte_benchmark['rateUp']=None
 
-batch_name = 'Circuits_Unbalanced10'
-# batch_name = 'network_test'
+# batch_name = 'Circuits_Unbalanced10'
+batch_name = 'NetworkDebugging_NewRTTs_WAN6'
 batch = [
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadASumGT)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadASumGT)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadASumGT)
-    # },
-        {
+    {
         'setup': 'desktop-app',
         'repeat': 5,
-        'start': 1,
         'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABSumGT)
-    },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABSumGT)
-    # },
-        {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start': 4,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSumGT)
-    },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 4,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABMulSumGT)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)
-    # },
-        {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start':4,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABMulSumGT)
-    },
-        {
-        'setup': 'desktop-app',
-        'repeat': 5,
-        'start': 4,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
+        'network': wan_network, # APP PATH CHANGED!!!
+        'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
     },
 ]
 
@@ -336,7 +264,7 @@ def reset_networks():
 
 def set_network(type=None,delay=70,loss=0.1,rateDown=24,rateUp=4):
     logger.info(f"Setting network delay={delay}ms loss={loss}% rateDown={rateDown}mbit rateUp={rateUp}mbit.")
-    delay = int(delay/2)
+    delay = float(delay/2)
     # checking root privileges
     ret = subprocess.run(['sudo','whoami'],capture_output=True)
     if ret.stdout!= b'root\n':
@@ -431,7 +359,7 @@ if __name__ == '__main__':
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
-        p = Parameters(client_n=2**10,server_n=2**10)
+        p = Parameters(client_n=2**10,server_n=2**19)
         p.overlap = 20
         lte_network['loss'] = None
         lte_network['rateUp'] = None
@@ -439,7 +367,7 @@ if __name__ == '__main__':
         conf = {
             'setup': 'desktop-app',
             'parameters': p,
-            'network': lte_network
+            'network': badlte_network
         }
         if 'network' in conf:
             network = conf['network']

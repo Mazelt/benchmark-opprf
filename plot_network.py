@@ -26,10 +26,10 @@ def plot_total_time(datalan, datalte):
 
     set_sizes_lan, server_means_lan, server_stds_lan, client_means_lan, client_stds_lan = \
         get_specific_s_c_mean_sd(datalan, 'total_t', circuit=Psi_type.Analytics, 
-                                  parameter='server_neles', pfilter=[2**17,2**19,2**21])
+                                  parameter='server_neles', pfilter={'server_neles':[2**17,2**19,2**21]})
     set_sizes_lte, server_means_lte, server_stds_lte, client_means_lte, client_stds_lte = \
         get_specific_s_c_mean_sd(datalte, 'total_t', circuit=Psi_type.Analytics,
-                                  parameter='server_neles', pfilter=[2**17, 2**19, 2**21])
+                                 parameter='server_neles', pfilter={'server_neles': [2**17, 2**19, 2**21]})
     x_pos = np.arange(len(set_sizes_lan))
     client_means_lan = client_means_lan/1e3
     client_stds_lan = client_stds_lan/1e3

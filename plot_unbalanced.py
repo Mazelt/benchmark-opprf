@@ -5,7 +5,7 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, get_s_c_mean_sd,get_s_c_mean_se, xticks_to_potencies_label, tableau_c10
+from plot_utils import load_batch, get_s_c_mean_sd, get_s_c_mean_se, xticks_to_potencies_label, tableau_c10, get_specific_s_c_mean_sd
 
 
 
@@ -544,6 +544,88 @@ def plot_psi_types_dt(data):
     plt.show()
 
 
+def plot_payload_len_psi_types_dt(data):
+    set_sizes_2, server_means_2, server_stds_2, client_means_2, client_sd_2 = get_specific_s_c_mean_sd(
+        data, "total_t", parameter='fun_type',pfilter={'payload_bl':[2]})
+    set_sizes_2, server_r_means_2, server_r_stds_2, client_r_means_2, client_r_stds_2 = get_specific_s_c_mean_sd(
+        data, "total_d_rs", rs='r', parameter='fun_type',pfilter={'payload_bl':[2]})
+    set_sizes_2, server_s_means_2, server_s_stds_2, client_s_means_2, client_s_stds_2 = get_specific_s_c_mean_sd(
+        data, "total_d_rs", rs='s', parameter='fun_type',pfilter={'payload_bl':[2]})
+    set_sizes_3, server_means_3, server_stds_3, client_means_3, client_sd_3 = get_specific_s_c_mean_sd(
+        data, "total_t", parameter='fun_type',pfilter={'payload_bl':[3]})
+    set_sizes_3, server_r_means_3, server_r_stds_3, client_r_means_3, client_r_stds_3 = get_specific_s_c_mean_sd(
+        data, "total_d_rs", rs='r', parameter='fun_type',pfilter={'payload_bl':[3]})
+    set_sizes_3, server_s_means_3, server_s_stds_3, client_s_means_3, client_s_stds_3 = get_specific_s_c_mean_sd(
+        data, "total_d_rs", rs='s', parameter='fun_type',pfilter={'payload_bl':[3]})
+    set_sizes_4, server_means_4, server_stds_4, client_means_4, client_sd_4 = get_specific_s_c_mean_sd(
+        data, "total_t", parameter='fun_type',pfilter={'payload_bl':[4]})
+    set_sizes_4, server_r_means_4, server_r_stds_4, client_r_means_4, client_r_stds_4 = get_specific_s_c_mean_sd(
+        data, "total_d_rs", rs='r', parameter='fun_type',pfilter={'payload_bl':[4]})
+    set_sizes_4, server_s_means_4, server_s_stds_4, client_s_means_4, client_s_stds_4 = get_specific_s_c_mean_sd(
+        data, "total_d_rs", rs='s', parameter='fun_type',pfilter={'payload_bl':[4]})
+    client_means_2 = client_means_2/1e3
+    client_sd_2 = client_sd_2/1e3
+    client_r_means_2 = client_r_means_2/1e6
+    client_s_means_2 = client_s_means_2/1e6
+    client_means_3 = client_means_3/1e3
+    client_sd_3 = client_sd_3/1e3
+    client_r_means_3 = client_r_means_3/1e6
+    client_s_means_3 = client_s_means_3/1e6
+    client_means_4 = client_means_4/1e3
+    client_sd_4 = client_sd_4/1e3
+    client_r_means_4 = client_r_means_4/1e6
+    client_s_means_4 = client_s_means_4/1e6
+    client_r_means_3 = client_r_means_3 - client_r_means_2
+    client_s_means_3 = client_s_means_3 - client_s_means_2
+    client_r_means_4 = client_r_means_4 - client_r_means_2
+    client_s_means_4 = client_s_means_4 - client_s_means_2
+    client_means_3 = client_means_3-client_means_2
+    client_means_4 = client_means_4-client_means_2
+    client_sd_3 = client_sd_3-client_sd_2
+    client_sd_4 = client_sd_4-client_sd_2
+    print(client_means_3)
+    print(client_means_4)
+    print(client_r_means_3+client_s_means_3)
+
+    x_pos = np.array(set_sizes_2)
+    fig, ax1 = plt.subplots()
+    ax1.set_xlabel('PSI Function Circuits')
+    ax1.set_ylabel('Total data in in MegaBytes')
+    ax1.set_xticks(x_pos)
+    # ax1.set_title(
+    #     f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
+    labels = [Psi_type(i).name for i in set_sizes_2]
+    ax1.set_xticklabels(labels)
+    # client_r_2 = ax1.bar(x_pos-0.1-0.3 , client_r_means_2, width=0.1,
+    #                    color=tableau_c10[0], align='center', alpha=0.5)
+    # client_s_2 = ax1.bar(x_pos-0.1-0.3, client_s_means_2, width=0.1,
+    #                    color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_2)
+    client_r_3 = ax1.bar(x_pos-0.1-0.3 , client_r_means_3, width=0.1,
+                       color=tableau_c10[0], align='center', alpha=0.5)
+    client_s_3 = ax1.bar(x_pos-0.1-0.3, client_s_means_3, width=0.1,
+                       color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_3)
+    client_r_3 = ax1.bar(x_pos-0.1+0.3, client_r_means_3, width=0.1,
+                         color=tableau_c10[0], align='center', alpha=0.5)
+    client_s_3 = ax1.bar(x_pos-0.1+0.3, client_s_means_3, width=0.1,
+                         color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_3)
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('runtime (seconds)', color=tableau_c10[7])
+    ax2.tick_params(axis='y', labelcolor=tableau_c10[7])
+    # Add a table at the bottom of the axes
+    # client_t_2 = ax2.bar(x_pos+0.1-0.3, client_means_2, yerr=client_sd_2, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
+    #                    ecolor='black', capsize=2)
+    client_t_3 = ax2.bar(x_pos+0.1-0.3, client_means_3, yerr=client_sd_3, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
+                       ecolor='black', capsize=2)
+    client_t_4 = ax2.bar(x_pos+0.1+0.3, client_means_4, yerr=client_sd_4, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
+                       ecolor='black', capsize=2)
+    ax1.legend((client_r_3[0], client_s_3[0], client_t_3[0]),
+               ('client received', 'client sent'))
+    ax2.legend(['runtime'], loc=9)
+    fig.tight_layout()
+    fig.autofmt_xdate()
+    plt.show()
+
+
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
@@ -554,6 +636,7 @@ if __name__ == '__main__':
     ap.add_argument('--absum', action='store_true')
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--poly_d', action='store_true')
+    ap.add_argument('--payload_bl', action='store_true')
     ap.add_argument('--total_t', action='store_true')
     ap.add_argument('--total_d', action='store_true')
     ap.add_argument('--total_d_stacked', action='store_true')
@@ -581,6 +664,9 @@ if __name__ == '__main__':
         data17 = load_batch("PsiTypes1017DA_1", sort_batches="fun_type")
         data19 = load_batch("PsiTypes1019DA_1", sort_batches="fun_type")
         plot_psi_types_dt(data19)
+    elif args.payload_bl:
+        data = load_batch("PayloadBitlen_1019")
+        plot_payload_len_psi_types_dt(data)
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"

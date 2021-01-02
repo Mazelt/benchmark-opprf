@@ -5,7 +5,7 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, xticks_to_potencies_label, get_s_c_mean_sd
+from plot_utils import load_batch, xticks_to_potencies_label, get_s_c_mean_sd, tableau_c10
 
 def plot_hashing(data):
     # simple plot right now.

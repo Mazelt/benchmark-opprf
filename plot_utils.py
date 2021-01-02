@@ -116,7 +116,7 @@ def get_s_c_mean_se(data, key, rs=None, parameter='server_set'):
     return np.array(parameters), np.array(server_means), np.array(server_se), np.array(client_means), np.array(client_se)
 
 
-def get_specific_s_c_mean_sd(data, key, circuit=None,  server_neles=None, parameter='server_neles', pfilter=[]):
+def get_specific_s_c_mean_sd(data, key, rs=None ,circuit=None,  server_neles=None, parameter='server_neles', pfilter={}):
     # data is data
     # key is the key that the mean and std is computed for
     # circuit, server_neles, 
@@ -134,18 +134,19 @@ def get_specific_s_c_mean_sd(data, key, circuit=None,  server_neles=None, parame
         if server_neles and not b['parameters']['server_neles'] == server_neles:
             continue
         
+        # filter
+        if len(pfilter)>0:
+            fpara = list(pfilter.keys())[0]
+            filter_items = pfilter[fpara]
+            if b['parameters'][fpara] not in filter_items:
+                continue
+
         # what is the variable
         if parameter == 'server_neles':
             bpara = b['parameters']['server_neles']
-            if len(pfilter) > 0:
-                if bpara not in pfilter:
-                    continue
             parameters.append(bpara)
         elif parameter == 'fun_type':
             bpara = b['parameters']['fun_type']
-            if len(pfilter) > 0:
-                if bpara not in pfilter:
-                    continue
             parameters.append(bpara)
         else:
             raise f"not implemented yet for parameter {parameter}"
@@ -154,16 +155,16 @@ def get_specific_s_c_mean_sd(data, key, circuit=None,  server_neles=None, parame
         # still here? then let's get some means computed.
         for i in range(len(b)-1):
             try:
-                # if rs:
-                #     if rs =='r':
-                #         index = 0
-                #     elif rs == 's':
-                #         index = 1
-                #     s_measure.append(b[i]['s_output'][key][index])
-                #     c_measure.append(b[i]['c_output'][key][index])
-                # else:
-                s_measure.append(b[i]['s_output'][key])
-                c_measure.append(b[i]['c_output'][key])
+                if rs:
+                    if rs == 'r':
+                        index = 0
+                    elif rs == 's':
+                        index = 1
+                    s_measure.append(b[i]['s_output'][key][index])
+                    c_measure.append(b[i]['c_output'][key][index])
+                else:
+                    s_measure.append(b[i]['s_output'][key])
+                    c_measure.append(b[i]['c_output'][key])
             except KeyError as k:
                 print(f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
                 # raise k

@@ -11,7 +11,7 @@ for i in range(len(tableau_c10)):
     r, g, b = tableau_c10[i]
     tableau_c10[i] = (r / 255., g / 255., b / 255.)
 
-def load_batch(pattern, silent=True,sort_batches="server_neles"):
+def load_batch(pattern, silent=True, important_parameters=['server_neles','client_neles', 'epsilon','fun_type', 'payload_bl'] ,sort_batches="server_neles"):
     os.path.exists('./batchlogs/experiments')
     files = glob.glob(f"./batchlogs/experiments/{pattern}/Batch-{pattern}*.json")
     files = sorted(files)
@@ -25,17 +25,22 @@ def load_batch(pattern, silent=True,sort_batches="server_neles"):
     for f in files:
         with open(f, 'r') as fp:
             b = json.load(fp)
+            parameters = {key: b['parameters'][key]
+                          for key in important_parameters}
+            # print(f"{b['parameters']['server_neles']} f{b['parameters']['fun_type']} {b['repeat']}")
             for batch in batches:
-                if batch['parameters'] == b['parameters']:
+                if batch['parameters'] == parameters:
                     batch[b['repeat']] = {
                         's_output': b['s_output'], 'c_output': b['c_output']}
                     b = 0
                     break
             if b:
-                batches.append({'parameters': b['parameters'], b['repeat']: {
+                batches.append({'parameters': parameters, b['repeat']: {
                                's_output': b['s_output'], 'c_output': b['c_output']}})
     if sort_batches:
         batches = sorted(batches, key=lambda k: k['parameters'][sort_batches])
+    for b in batches:
+        print(f"{b['parameters']}: {b.keys()}")
     return batches
 # rs is either None, 'r' or 's'
 
@@ -66,7 +71,7 @@ def get_s_c_mean_sd(data, key, rs=None, parameter='server_set'):
                     s_measure.append(b[i]['s_output'][key])
                     c_measure.append(b[i]['c_output'][key])
             except KeyError as k:
-                print(f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
+                print(f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['server_neles']}")
                 # raise k
         # print(f"Server hashing time: {sum(s_measure)/(len(b)-1)}")
         # print(f"Client hashing time: {sum(c_measure)/(len(b)-1)}")
@@ -104,7 +109,7 @@ def get_s_c_mean_se(data, key, rs=None, parameter='server_set'):
                     c_measure.append(b[i]['c_output'][key])
             except KeyError as k:
                 print(
-                    f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
+                    f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['server_neles']}")
                 # raise k
         # print(f"Server hashing time: {sum(s_measure)/(len(b)-1)}")
         # print(f"Client hashing time: {sum(c_measure)/(len(b)-1)}")
@@ -149,7 +154,7 @@ def get_specific_s_c_mean_sd(data, key, rs=None ,circuit=None,  server_neles=Non
             bpara = b['parameters']['fun_type']
             parameters.append(bpara)
         else:
-            raise f"not implemented yet for parameter {parameter}"
+            raise f"not implemented yet for parameter {b['parameter']['server_neles']}"
         s_measure = []
         c_measure = []
         # still here? then let's get some means computed.
@@ -166,7 +171,7 @@ def get_specific_s_c_mean_sd(data, key, rs=None ,circuit=None,  server_neles=Non
                     s_measure.append(b[i]['s_output'][key])
                     c_measure.append(b[i]['c_output'][key])
             except KeyError as k:
-                print(f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
+                print(f"KEYERROR for key: {key} in repeat {i} for {b}")
                 # raise k
         server_means.append(np.mean(s_measure))
         server_stds.append(np.std(s_measure))
@@ -226,7 +231,7 @@ def get_specific_s_c_mean_se(data, key, circuit=None,  server_neles=None, parame
                 c_measure.append(b[i]['c_output'][key])
             except KeyError as k:
                 print(
-                    f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['client_neles']}")
+                    f"KEYERROR for key: {key} in repeat {i} for {b['parameters']['server_neles']}")
                 # raise k
         server_means.append(np.mean(s_measure))
         server_se.append(sem(s_measure))
@@ -239,3 +244,10 @@ def get_specific_s_c_mean_se(data, key, circuit=None,  server_neles=None, parame
 def xticks_to_potencies_label(xticks):
     potencies = [int(np.log2(x)) for x in xticks]
     return [f"$2^{{{p}}}$" for p in potencies]
+
+
+def print_table(table_data):
+    for row in table_data:
+        for column in row:
+            print(column+" & ",end='')
+        print('\\\\ \\hline')

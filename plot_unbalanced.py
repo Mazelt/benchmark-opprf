@@ -5,7 +5,8 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, get_s_c_mean_sd, get_s_c_mean_se, xticks_to_potencies_label, tableau_c10, get_specific_s_c_mean_sd
+from plot_utils import load_batch, get_s_c_mean_sd, get_s_c_mean_se, xticks_to_potencies_label, \
+tableau_c10, get_specific_s_c_mean_sd, print_table
 
 
 
@@ -544,6 +545,35 @@ def plot_psi_types_dt(data):
     plt.show()
 
 
+def table_psi_types_scaling_dt(data):
+    table_data_1 = []
+    table_data_2 = []
+    for ft in [5,7,9]:
+        set_sizes, server_means, server_stds, client_means, client_sd = get_specific_s_c_mean_sd(
+            data, "total_t", parameter='fun_type', pfilter={'fun_type':[ft]})
+        set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_specific_s_c_mean_sd(
+            data, "total_d_rs", rs='r', parameter='fun_type', pfilter={'fun_type': [ft]})
+        set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_specific_s_c_mean_sd(
+            data, "total_d_rs", rs='s', parameter='fun_type', pfilter={'fun_type': [ft]})
+        client_means = client_means/1e3
+        client_sd = client_sd/1e3
+        client_d_means = client_r_means + client_s_means
+        client_d_means = client_d_means/1e6
+        row_1  = []
+        row_2  = []
+        for i in range(len(client_means)):
+            row_1.append(f"{client_means[i]:.3f}$\pm${client_sd[i]:.2f}")
+            row_2.append(f"{client_d_means[i]:.3f}")
+        table_data_1.append(row_1)
+        table_data_2.append(row_2)
+    print("runtime")
+    print(print_table(table_data_1))
+    print("comm")
+    print(print_table(table_data_2))
+
+
+   
+
 def plot_payload_len_psi_types_dt(data):
     set_sizes_2, server_means_2, server_stds_2, client_means_2, client_sd_2 = get_specific_s_c_mean_sd(
         data, "total_t", parameter='fun_type',pfilter={'payload_bl':[2]})
@@ -581,8 +611,8 @@ def plot_payload_len_psi_types_dt(data):
     client_s_means_4 = client_s_means_4 - client_s_means_2
     client_means_3 = client_means_3-client_means_2
     client_means_4 = client_means_4-client_means_2
-    client_sd_3 = client_sd_3-client_sd_2
-    client_sd_4 = client_sd_4-client_sd_2
+    # client_sd_3 = client_sd_3-client_sd_2
+    # client_sd_4 = client_sd_4-client_sd_2
     print(client_means_3)
     print(client_means_4)
     print(client_r_means_3+client_s_means_3)
@@ -614,9 +644,9 @@ def plot_payload_len_psi_types_dt(data):
     # Add a table at the bottom of the axes
     # client_t_2 = ax2.bar(x_pos+0.1-0.3, client_means_2, yerr=client_sd_2, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
     #                    ecolor='black', capsize=2)
-    client_t_3 = ax2.bar(x_pos+0.1-0.3, client_means_3, yerr=client_sd_3, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
+    client_t_3 = ax2.bar(x_pos+0.1-0.3, client_means_3, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
                        ecolor='black', capsize=2)
-    client_t_4 = ax2.bar(x_pos+0.1+0.3, client_means_4, yerr=client_sd_4, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
+    client_t_4 = ax2.bar(x_pos+0.1+0.3, client_means_4, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
                        ecolor='black', capsize=2)
     ax1.legend((client_r_3[0], client_s_3[0], client_t_3[0]),
                ('client received', 'client sent'))
@@ -634,6 +664,7 @@ if __name__ == '__main__':
     ap.add_argument('--twelve', action='store_true')
     ap.add_argument('--both', action='store_true')
     ap.add_argument('--absum', action='store_true')
+    ap.add_argument('--circuits', action='store_true')
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--poly_d', action='store_true')
     ap.add_argument('--payload_bl', action='store_true')
@@ -665,8 +696,15 @@ if __name__ == '__main__':
         data19 = load_batch("PsiTypes1019DA_1", sort_batches="fun_type")
         plot_psi_types_dt(data19)
     elif args.payload_bl:
-        data = load_batch("PayloadBitlen_1019")
+        data = load_batch("PayloadBitlen_1019", sort_batches="fun_type")
+        # for b in data:
+        #     print(f"b circ{b['parameters']['fun_type']} payload{b['parameters']['payload_bl']} sn{b['parameters']['server_neles']}")
         plot_payload_len_psi_types_dt(data)
+    elif args.circuits:
+        data = load_batch("Circuits_Unbalanced10", important_parameters=['server_neles', 'fun_type'])
+        for b in data:
+            print(f"b circ{b['parameters']['fun_type']} sn{b['parameters']['server_neles']}")
+        table_psi_types_scaling_dt(data)
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"

@@ -22,7 +22,7 @@ class Psi_type(enum.IntEnum):
 
 class Parameters(dict):
 
-    def __init__(self, preset=None, psitype=Psi_type.Analytics,client_n=1024, server_n=1024):
+    def __init__(self, preset=None, psitype=Psi_type.Analytics,client_n=1024, server_n=1024, payload_bl=2):
         # all things are tailored to security parameter 40
         self.client_neles = client_n
         self.server_neles = server_n
@@ -32,7 +32,7 @@ class Parameters(dict):
         self.threads = 1
         self.threshold = 0
         self.n_fun = 3
-        self.payload_bl = 2
+        self.payload_bl = payload_bl
         self.fun_type = psitype
         self.overlap = 25
         if preset == '2_12':
@@ -55,10 +55,10 @@ class Parameters(dict):
 
 
     def __str__(self):
-        return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)}"
+        return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)} plen: {self.payload_bl}"
 
     def __repr__(self):
-        return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)}"
+        return f"psitype: {self.fun_type}, client_n: {self.client_neles}, server_n: 2**{math.log2(self.server_neles)} plen: {self.payload_bl}"
 
 
     def getEncodedContext(self, role=CLIENT):

@@ -29,105 +29,74 @@ modeprobe = "sudo modprobe ifb"
 ip_up = "sudo ip link set dev ifb0 up"
 tc_ingress = f"sudo tc qdisc add dev {enp} ingress"
 tc_filter = f"sudo tc filter add dev {enp} parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0"
+wan_network = {'type': 'WAN', 'delay': 60, 'loss': 0.1, 'rateDown':230,'rateUp':230}
 lte_network = {'type': 'LTE', 'delay': 70, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
+badlte_network = {'type': 'LTE', 'delay': 70, 'loss': 4, 'rateDown': 24, 'rateUp': 4}
+
 lte_benchmark = lte_network
 lte_benchmark['loss'] = None
 lte_benchmark['rateDown']=None
 lte_benchmark['rateUp']=None
 
-batch_name = 'NetworkDebugging_LTEonlyRTT70'
+batch_name = 'PayloadBitlen_1019'
 # batch_name = 'network_test'
 batch = [
-    {
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT,payload_bl=2)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT,payload_bl=3)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT,payload_bl=4)
+    # },
+        {
         'setup': 'desktop-app',
-        'repeat': 50,
-        'start': 37,
+        'repeat': 5,
+        'start':3,
         'reset': True,
-        'network': lte_benchmark,
-        'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
+        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT,payload_bl=2)
     },
-#    {
-#        'setup': 'desktop-app',
-#        'repeat': 10,
-#        'reset': True,
-#        'network': lte_network,
-#        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
-#    },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 10,
-    #     'start': 8,
-    #     'reset': True,
-    #     'network': lte_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 2,
-    #     'reset': True,
-    #     'network':lte_network,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**15,psitype=Psi_type.Analytics)
-    # },
-    # {
+    #     {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.Sum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT,payload_bl=3)
     # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 2,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.SumIfGtThreshold)
-    # },
-    # {
+    #     {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadASum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT,payload_bl=4)
     # },
-    # {
+        {
+        'setup': 'desktop-app',
+        'repeat': 5,
+        'start': 4,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT,payload_bl=2)
+    },
+    #     {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
-    #     'start': 2,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadASumGT)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT,payload_bl=3)
     # },
-
-
-    # {
+    #     {
     #     'setup': 'desktop-app',
     #     'repeat': 5,
-    #     'start': 4,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABSum)
-    # },
-    
-    
-    
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 4,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABSumGT)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABMulSum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 5,
-    #     'start': 3,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**12,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
-    # },
-   
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT,payload_bl=4)
+    # }
 ]
 
 
@@ -359,7 +328,7 @@ def set_network(type=None,delay=70,loss=0.1,rateDown=24,rateUp=4):
     if delay:
         options = f"{options} delay {delay}ms 5ms 25%"
     if loss:
-        options = f"{options} loss {loss}% 25%"
+        options = f"{options} loss random {loss}%"
     if rateDown:
         options = f"{options} rate {rateDown}mbit"
     

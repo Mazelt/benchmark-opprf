@@ -154,7 +154,7 @@ if __name__ == '__main__':
     args = ap.parse_args()
     
     if args.rtts:
-        batch = load_batch('NetworkDebugging_LTEonlyRTT70')
+        batch = load_batch('NetworkDebugging_WANRTT60')
         get_rtt(batch)
     else:
 

@@ -95,12 +95,14 @@ def plot_total_time_combined(data10,data12):
     ax.set_ylabel(f"Total runtime in in seconds")
     ax.set_xticks(x_pos_10)
     ax.set_xticklabels(xticks_to_potencies_label(set_sizes_10))
+    print(client_means_10)
+    print(client_means_12)
     # ax.set_title(
     #     f"Total time for Desktop-App with the basic analytics circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nMean over {len(data[0])-1} runs with std-error.")
     ax.yaxis.grid(True)
     ax.set_xlabel(f"Server set sizes ($n_2$)")
     ax.legend((client_10[0], client_12[0]),
-              ('n_1 = $2^{10}$', 'n_1 = $2^{12}$'))
+              ('$n_1$ = $2^{10}$', '$n_1$ = $2^{12}$'))
 
     plt.tight_layout()
     plt.show()
@@ -506,14 +508,14 @@ def plot_time_pies(data, combined=False):
     plt.show()
 
 def plot_psi_types_dt(data):
-    set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(
+    set_sizes, server_means, server_stds, client_means, client_sd = get_s_c_mean_sd(
         data, "total_t", parameter='psi')
     set_sizes, server_r_means, server_r_stds, client_r_means, client_r_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='r', parameter='psi')
     set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='s', parameter='psi')
     client_means = client_means/1e3
-    client_stds = client_stds/1e3
+    client_sd = client_sd/1e3
     client_r_means = client_r_means/1e6
     client_s_means = client_s_means/1e6
 
@@ -522,21 +524,21 @@ def plot_psi_types_dt(data):
     ax1.set_xlabel('PSI Function Circuits')
     ax1.set_ylabel('Total data in in MegaBytes')
     ax1.set_xticks(x_pos)
-    ax1.set_title(
-        f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
+    # ax1.set_title(
+    #     f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
     labels = [Psi_type(i).name for i in set_sizes]
     ax1.set_xticklabels(labels)
     client_r = ax1.bar(x_pos-0.1, client_r_means,width=0.2, color=tableau_c10[0], align='center', alpha=0.5)
-    client_s = ax1.bar(x_pos-0.1, client_s_means, width=0.2, color=tableau_c10[1], align='center', alpha=0.5, bottom=client_r_means)
+    client_s = ax1.bar(x_pos-0.1, client_s_means, width=0.2, color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means)
     ax2 = ax1.twinx()
-    ax2.set_ylabel('time (seconds)',color='tab:red')
-    ax2.tick_params(axis='y', labelcolor='tab:red')
+    ax2.set_ylabel('runtime (seconds)', color=tableau_c10[7])
+    ax2.tick_params(axis='y', labelcolor=tableau_c10[7])
     # Add a table at the bottom of the axes
-    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_stds, width=0.2, color='tab:red', align='center', alpha=0.5,
-                       ecolor='black', capsize=5)
+    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_sd, width=0.2, color=tableau_c10[7], align='center', alpha=0.5,
+                       ecolor='black', capsize=2)
     ax1.legend((client_r[0], client_s[0], client_t[0]),
                ('client received', 'client sent'))
-    ax2.legend(['time'], loc=9)
+    ax2.legend(['runtime'], loc=9)
     fig.tight_layout()
     fig.autofmt_xdate()
     plt.show()
@@ -578,7 +580,7 @@ if __name__ == '__main__':
     elif args.psi_types_dt:
         data17 = load_batch("PsiTypes1017DA_1", sort_batches="fun_type")
         data19 = load_batch("PsiTypes1019DA_1", sort_batches="fun_type")
-        plot_psi_types_dt(data17)
+        plot_psi_types_dt(data19)
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"

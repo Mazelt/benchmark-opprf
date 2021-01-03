@@ -522,8 +522,9 @@ def plot_psi_types_dt(data):
 
     x_pos = np.array(set_sizes)
     fig, ax1 = plt.subplots()
-    ax1.set_xlabel('PSI Function Circuits')
-    ax1.set_ylabel('Total data in in MegaBytes')
+
+    ax1.set_ylabel('Total data in MB')
+    ax1.set_xlabel('PSI Functionalities')
     ax1.set_xticks(x_pos)
     # ax1.set_title(
     #     f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
@@ -540,8 +541,9 @@ def plot_psi_types_dt(data):
     ax1.legend((client_r[0], client_s[0], client_t[0]),
                ('client received', 'client sent'))
     ax2.legend(['runtime'], loc=9)
-    fig.tight_layout()
+
     fig.autofmt_xdate()
+    fig.tight_layout()
     plt.show()
 
 

@@ -36,34 +36,169 @@ def get_tp(data):
     tp_se = sem(tps)
     print(f"{len(tps)} tps: mean: {tp_mean}, sd: {tp_sd}, se {tp_se}.")
 
-def plot_total_time(datalan, datalte):
+def plot_total_time(datalan, datawan, datalte):
 
     set_sizes_lan, server_means_lan, server_stds_lan, client_means_lan, client_stds_lan = \
-        get_specific_s_c_mean_sd(datalan, 'total_t', circuit=Psi_type.Analytics, 
-                                  parameter='server_neles', pfilter={'server_neles':[2**17,2**19,2**21]})
+        get_specific_s_c_mean_sd(datalan, 'total_t', server_neles=2**19, parameter='fun_type')
+    set_sizes_wan, server_means_wan, server_stds_wan, client_means_wan, client_stds_wan = \
+        get_specific_s_c_mean_sd(datawan, 'total_t', server_neles=2**19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
     set_sizes_lte, server_means_lte, server_stds_lte, client_means_lte, client_stds_lte = \
-        get_specific_s_c_mean_sd(datalte, 'total_t', circuit=Psi_type.Analytics,
-                                 parameter='server_neles', pfilter={'server_neles': [2**17, 2**19, 2**21]})
-    x_pos = np.arange(len(set_sizes_lan))
+        get_specific_s_c_mean_sd(datalte, 'total_t', server_neles=2**19 , parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+    x_pos = np.array(set_sizes_lan)
+    labels = [Psi_type(i).name for i in set_sizes_lan]
     client_means_lan = client_means_lan/1e3
     client_stds_lan = client_stds_lan/1e3
+    client_means_wan = client_means_wan/1e3
+    client_stds_wan = client_stds_wan/1e3
     client_means_lte = client_means_lte/1e3
     client_stds_lte = client_stds_lte/1e3
     fig, ax = plt.subplots()
-    client_lan = ax.bar(x_pos-0.1, client_means_lan, yerr=client_stds_lan, color=tableau_c10[1], align='center', alpha=0.5, width=0.2,
-           ecolor='black', capsize=5)
-    client_lte = ax.bar(x_pos+0.1, client_means_lte, yerr=client_stds_lte, color=tableau_c10[0], align='center', alpha=0.5, width=0.2,
-           ecolor='black', capsize=5)
+    client_lan = ax.bar(x_pos-0.4, client_means_lan, yerr=client_stds_lan, color=tableau_c10[1], align='center', alpha=0.5, width=0.3,
+           ecolor='black', capsize=2)
+    client_wan = ax.bar(x_pos, client_means_wan, yerr=client_stds_wan, color=tableau_c10[0], align='center', alpha=0.5, width=0.3,
+                        ecolor='black', capsize=2)
+    client_lte = ax.bar(x_pos+0.4, client_means_lte, yerr=client_stds_lte, color=tableau_c10[2], align='center', alpha=0.5, width=0.3,
+           ecolor='black', capsize=2)
     ax.set_ylabel(f"Total time in in seconds")
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(xticks_to_potencies_label(set_sizes_lan))
-    ax.set_title(
-        f"Client: Total time for Desktop-App with different networks.\nUnbalanced sets with client set size $2^{{{int(np.log2(datalan[0]['parameters']['client_neles']))}}}$ and the basic analytics circuit.\nMean over {len(datalan[0])-1} runs with std-error.")
+    # ax.set_title(
+    #     f"Client: Total time for Desktop-App with different networks.\nUnbalanced sets with client set size $2^{{{int(np.log2(datalan[0]['parameters']['client_neles']))}}}$ and the basic analytics circuit.\nMean over {len(datalan[0])-1} runs with std-error.")
     ax.yaxis.grid(True)
-    ax.set_xlabel(f"Server set sizes")
-    ax.legend((client_lan[0], client_lte[0]),('LAN', 'LTE'))
+    ax.set_xlabel('PSI Functionalities')
+    ax.set_xticklabels(labels)
+    ax.legend((client_lan[0], client_wan[0], client_lte[0]),('LAN','WAN','LTE'))
 
+    fig.autofmt_xdate()
     plt.tight_layout()
+    plt.show()
+
+def table_time_phases(data):
+    table_data = [['Phase'], ['hashing'],['OPRF'], ['Poly int'],
+                  ['Poly transm'], ['Poly eval'], ['Circuit'],['Waiting']]
+
+    c_total_t_means = []
+    c_hashing_t_means = []
+    c_oprf_t_means = []
+    c_poly_t_means = []
+    c_aby_t_means = []
+
+    s_total_t_means = []
+    s_hashing_t_means = []
+    s_oprf_t_means = []
+    s_poly_t_means = []
+    s_poly_trans_t_means = []
+    s_aby_t_means = []
+    
+    for ft in [5]:  # , 7, 9
+        for b in data:
+            if b['parameters']['server_neles'] != 2**19 or b['parameters']['fun_type'] != ft:
+                continue
+            else:
+                c_total_t = []
+                c_hashing_t = []
+                c_oprf_t = []
+                c_poly_t = []
+                c_aby_t = []
+
+                s_total_t = []
+                s_hashing_t = []
+                s_oprf_t = []
+                s_poly_t = []
+                s_poly_trans_t = []
+                s_aby_t = []
+                for r in range(len(b)-1):
+                    repeat_c = b[r]['c_output']
+                    repeat_s = b[r]['s_output']
+                    c_total_t.append(repeat_c['total_t'])
+                    c_hashing_t.append(repeat_c['hashing_t'])
+                    c_oprf_t.append(repeat_c['oprf_t'])
+                    c_poly_t.append(repeat_c['poly_t'])
+                    c_aby_t.append(repeat_c['aby_total_t'])
+
+                    s_total_t.append(repeat_s['total_t'])
+                    s_hashing_t.append(repeat_s['hashing_t'])
+                    s_oprf_t.append(repeat_s['oprf_t'])
+                    s_poly_t.append(repeat_s['poly_t'])
+                    s_poly_trans_t.append(repeat_s['poly_trans_t'])
+                    s_aby_t.append(repeat_s['aby_total_t'])
+
+                c_total_t_means.append(np.mean(c_total_t))
+                c_hashing_t_means.append(np.mean(c_hashing_t))
+                c_oprf_t_means.append(np.mean(c_oprf_t))
+                c_poly_t_means.append(np.mean(c_poly_t))
+                c_aby_t_means.append(np.mean(c_aby_t))
+
+                s_total_t_means.append(np.mean(s_total_t))
+                s_hashing_t_means.append(np.mean(s_hashing_t))
+                s_oprf_t_means.append(np.mean(s_oprf_t))
+                s_poly_t_means.append(np.mean(s_poly_t))
+                s_poly_trans_t_means.append(np.mean(s_poly_trans_t))
+                s_aby_t_means.append(np.mean(s_aby_t))
+
+
+                # aby_d_pct = float(aby_d/total_d)*100.0
+                # oprf_d_pct = float(oprf_d/total_d)*100.0 
+                # print("There is a bug for the oprf_d value for AB circuits. Manual fix: count the data twice for oprf_d")
+                # poly_d_pct = float(poly_d/total_d)*100.0
+                # column_val = np.array([ft*1e6, oprf_d, poly_d, aby_d])
+                # column_val = column_val/1e6
+                # column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct]
+                # for i in range(len(table_data)):
+                #     table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
+    for i in range(len(s_total_t_means)):
+        print(c_total_t_means[i])
+
+def plot_total_data(datalan, datawan, datalte):
+
+    set_sizes_r_lan, server_means_r_lan, _, client_means_r_lan, _ = \
+        get_specific_s_c_mean_sd(
+            datalan, 'total_d_rs',rs='r', server_neles=2**19, parameter='fun_type')
+    set_sizes_s_lan, server_means_s_lan, _, client_means_s_lan, _ = \
+        get_specific_s_c_mean_sd(
+            datalan, 'total_d_rs', rs='s', server_neles=2**19, parameter='fun_type')
+    
+    set_sizes_r_wan, server_means_r_wan, _, client_means_r_wan, _ = \
+        get_specific_s_c_mean_sd(datawan, 'total_d_rs', rs='r', server_neles=2 **
+                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+    set_sizes_s_wan, server_means_s_wan, _, client_means_s_wan, _ = \
+        get_specific_s_c_mean_sd(datawan, 'total_d_rs', rs='s', server_neles=2 **
+                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+
+    set_sizes_r_lte, server_means_r_lte, _, client_means_r_lte, _ = \
+        get_specific_s_c_mean_sd(datalte, 'total_d_rs', rs='r', server_neles=2 **
+                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+    set_sizes_s_lte, server_means_s_lte, _, client_means_s_lte, _ = \
+        get_specific_s_c_mean_sd(datalte, 'total_d_rs', rs='s', server_neles=2 **
+                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+
+    x_pos = np.array(set_sizes_r_lan)
+    labels = [Psi_type(i).name for i in set_sizes_r_lan]
+    client_means_r_lan = client_means_r_lan/1e6
+    client_means_r_wan = client_means_r_wan/1e6
+    client_means_r_lte = client_means_r_lte/1e6
+    client_means_s_lan = client_means_s_lan/1e6
+    client_means_s_wan = client_means_s_wan/1e6
+    client_means_s_lte = client_means_s_lte/1e6
+    fig, ax = plt.subplots()
+    client_r_lan = ax.bar(x_pos-0.2, client_means_r_lan, color=tableau_c10[0], align='center', alpha=0.5,width=0.2)
+    client_s_lan = ax.bar(x_pos-0.2, client_means_s_lan, color=tableau_c10[4], align='center', alpha=0.5,width=0.2, bottom=client_means_r_lan)
+
+    client_r_wan = ax.bar(x_pos, client_means_r_wan, color=tableau_c10[0], align='center', alpha=0.5,width=0.2)
+    client_s_wan = ax.bar(x_pos, client_means_s_wan, color=tableau_c10[4], align='center', alpha=0.5,width=0.2,bottom=client_means_r_wan)
+    
+    client_r_lte = ax.bar(x_pos+0.2, client_means_r_lte, color=tableau_c10[0], align='center', alpha=0.5,width=0.2)
+    client_s_lte = ax.bar(x_pos+0.2, client_means_s_lte, color=tableau_c10[4], align='center', alpha=0.5,width=0.2, bottom=client_means_r_lte)
+    ax.set_ylabel(f"Total time in in seconds")
+    ax.set_xticks(x_pos)
+    # ax.set_title(
+    #     f"Client: Total time for Desktop-App with different networks.\nUnbalanced sets with client set size $2^{{{int(np.log2(datalan[0]['parameters']['client_neles']))}}}$ and the basic analytics circuit.\nMean over {len(datalan[0])-1} runs with std-error.")
+    ax.yaxis.grid(True)
+    ax.set_xlabel('PSI Function Circuits')
+    ax.set_xticklabels(labels)
+    # ax.legend((client_r_lan[0], client_r_wan[0],
+    #            client_r_lte[0]), ('LAN', 'WAN', 'LTE'))
+    plt.tight_layout()
+    fig.autofmt_xdate()
     plt.show()
 
 
@@ -163,9 +298,10 @@ if __name__ == '__main__':
     ap.add_argument('--all', action='store_true')
     ap.add_argument('--rtts', action='store_true')
     ap.add_argument('--tps', action='store_true')
-    ap.add_argument('--total_t', action='store_true')
+    ap.add_argument('--time', action='store_true')
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
+    ap.add_argument('--phases_t', action='store_true')
     args = ap.parse_args()
     
     if args.rtts:
@@ -174,9 +310,19 @@ if __name__ == '__main__':
     elif args.tps:
         batch = load_batch('NetworkDebugging_NewRTTs_LTE')
         get_tp(batch)
-    else:
+    elif args.phases_t:
+        batch_10_LAN = load_batch('Circuits_Unbalanced10', important_parameters=[
+                                  'server_neles', 'fun_type'])
+        batch_10_WAN = load_batch('Network1019_WAN')
+        batch_10_LTE = load_batch('Network1019_LTE')
+        table_time_phases(batch_10_LAN)
+    elif args.time:
 
-        batch_10_LAN = load_batch('Unbalanced10AnalyticsDA_2')
-        batch_10_LTE = load_batch('NetworkLTE10AnalyticsDA_1')
+        batch_10_LAN = load_batch('Circuits_Unbalanced10',important_parameters=['server_neles', 'fun_type'])
+        batch_10_WAN = load_batch('Network1019_WAN')
+        batch_10_LTE = load_batch('Network1019_LTE')
         
-        plot_total_time(batch_10_LAN, batch_10_LTE)
+        plot_total_time(batch_10_LAN, batch_10_WAN, batch_10_LTE)
+        # plot_total_data(batch_10_LAN,batch_10_WAN,batch_10_LTE)
+    else:
+        print('nothing to do...')

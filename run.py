@@ -37,14 +37,45 @@ lte_benchmark = lte_network
 lte_benchmark['loss'] = None
 
 # batch_name = 'Circuits_Unbalanced10'
-batch_name = 'NetworkDebugging_NewRTTs_WAN6'
+batch_name = 'Network1019_WAN'
 batch = [
+    # {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'reset': True,
+    #     'network': wan_network,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'reset': True,
+    #     'network': wan_network,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 4,
+    #     'reset': True,
+    #     'network': wan_network,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 11,
+    #     'reset': True,
+    #     'network': wan_network,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
+    # },
     {
         'setup': 'desktop-app',
-        'repeat': 5,
+        'repeat': 20,
+        'start': 10,
         'reset': True,
-        'network': wan_network, # APP PATH CHANGED!!!
-        'parameters': Parameters(client_n=2**10,server_n=2**10,psitype=Psi_type.Analytics)
+        'network': wan_network,
+        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)
     },
 ]
 
@@ -361,13 +392,13 @@ if __name__ == '__main__':
         setup_logger('./logs', filename)
         p = Parameters(client_n=2**10,server_n=2**19)
         p.overlap = 20
-        lte_network['loss'] = None
-        lte_network['rateUp'] = None
-        lte_network['rateDown'] = None
+        # lte_network['loss'] = None
+        # lte_network['rateUp'] = None
+        # lte_network['rateDown'] = None
         conf = {
             'setup': 'desktop-app',
             'parameters': p,
-            'network': badlte_network
+            'network': wan_network
         }
         if 'network' in conf:
             network = conf['network']
@@ -382,13 +413,13 @@ if __name__ == '__main__':
                 set_network(**network)
         inp = input('press enter to stop')
         
-        if conf['setup'] == 'desktop-app':
-            driver = init_appium()
-        else:
-            driver = None
-        results = run_experiment(driver, conf)
-        save_data(results)
-        if driver:
-            driver.quit()
+        # if conf['setup'] == 'desktop-app':
+        #     driver = init_appium()
+        # else:
+        #     driver = None
+        # results = run_experiment(driver, conf)
+        # save_data(results)
+        # if driver:
+        #     driver.quit()
         if network and network['type']!='LAN':
             reset_networks()

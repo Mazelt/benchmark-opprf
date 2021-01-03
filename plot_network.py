@@ -169,10 +169,10 @@ if __name__ == '__main__':
     args = ap.parse_args()
     
     if args.rtts:
-        batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
+        batch = load_batch('NetworkDebugging_NewRTTs_LTE')
         get_rtt(batch)
     elif args.tps:
-        batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
+        batch = load_batch('NetworkDebugging_NewRTTs_LTE')
         get_tp(batch)
     else:
 

@@ -1,0 +1,5 @@
+2021-01-03 11:52:09,788 [run     -<module>    ] [INFO ]  Network of type WAN
+2021-01-03 11:52:09,788 [run     -set_network ] [INFO ]  Setting network delay=29ms loss=0.1% rateDown=50mbit rateUp=50mbit.
+2021-01-03 11:52:09,797 [run     -reset_networ] [INFO ]  Resetting networks.
+2021-01-03 11:52:09,854 [run     -set_network ] [INFO ]  Tc qdisc show: b'qdisc netem 8003: root refcnt 2 limit 1000 delay 14.5ms  5ms 25% loss 0.1% rate 50Mbit\n'
+2021-01-03 12:04:10,195 [run     -reset_networ] [INFO ]  Resetting networks.

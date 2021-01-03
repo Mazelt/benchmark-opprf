@@ -572,6 +572,32 @@ def table_psi_types_scaling_dt(data):
     print(print_table(table_data_2))
 
 
+def table_psi_types_phases_d(data):
+    table_data = [['Phase'],['OPRF'],['Polynomials'],['Circuit']]
+    for sn in [2**18,2**21]:
+        for ft in [5, 7, 9]:
+            for b in data:
+                if b['parameters']['server_neles'] != sn or b['parameters']['fun_type'] != ft:
+                    continue
+                else:
+                    total_d = sum(b[0]['s_output']['total_d_rs'])
+                    aby_d = sum(b[0]['s_output']['aby_total_d_rs'])
+                    oprf_d = sum(b[0]['s_output']['oprf_d_rs'])
+                    poly_d = sum(b[0]['s_output']['poly_d_rs'])
+                    aby_d_pct = float(aby_d/total_d)*100.0
+                    oprf_d_pct = float(oprf_d/total_d)*100.0 
+                    print("There is a bug for the oprf_d value for AB circuits. Manual fix: count the data twice for oprf_d")
+                    poly_d_pct = float(poly_d/total_d)*100.0
+                    column_val = np.array([ft*1e6, oprf_d, poly_d, aby_d])
+                    column_val = column_val/1e6
+                    column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct]
+                    for i in range(len(table_data)):
+                        table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
+                    
+    print("comm")
+    print(print_table(table_data))
+
+
    
 
 def plot_payload_len_psi_types_dt(data):
@@ -665,6 +691,7 @@ if __name__ == '__main__':
     ap.add_argument('--both', action='store_true')
     ap.add_argument('--absum', action='store_true')
     ap.add_argument('--circuits', action='store_true')
+    ap.add_argument('--phases_d', action='store_true')
     ap.add_argument('--hash', action='store_true')
     ap.add_argument('--poly_d', action='store_true')
     ap.add_argument('--payload_bl', action='store_true')
@@ -705,6 +732,12 @@ if __name__ == '__main__':
         for b in data:
             print(f"b circ{b['parameters']['fun_type']} sn{b['parameters']['server_neles']}")
         table_psi_types_scaling_dt(data)
+    elif args.phases_d:
+        data = load_batch("Circuits_Unbalanced10", important_parameters=[
+                          'server_neles', 'fun_type'])
+        for b in data:
+            print(f"b circ{b['parameters']['fun_type']} sn{b['parameters']['server_neles']}")
+        table_psi_types_phases_d(data)
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"

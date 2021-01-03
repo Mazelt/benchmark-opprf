@@ -36,46 +36,15 @@ badlte_network = {'type': 'LTE', 'delay': 39, 'loss': 4, 'rateDown': 24, 'rateUp
 lte_benchmark = lte_network
 lte_benchmark['loss'] = None
 
-# batch_name = 'Circuits_Unbalanced10'
-batch_name = 'Network1019_WAN'
+batch_name = 'Circuits_Unbalanced10'
+# batch_name = 'Network1019_WAN'
 batch = [
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'reset': True,
-    #     'network': wan_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'reset': True,
-    #     'network': wan_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 4,
-    #     'reset': True,
-    #     'network': wan_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 11,
-    #     'reset': True,
-    #     'network': wan_network,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
-    # },
     {
         'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 10,
+        'repeat': 4,
         'reset': True,
-        'network': wan_network,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)
+        # 'network': wan_network,
+        'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABMulSumGT)
     },
 ]
 

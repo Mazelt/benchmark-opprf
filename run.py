@@ -33,43 +33,44 @@ wan_network = {'type': 'WAN', 'delay': 29, 'loss': 0.1, 'rateDown':50,'rateUp':5
 lte_network = {'type': 'LTE', 'delay': 39, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
 badlte_network = {'type': 'LTE', 'delay': 39, 'loss': 4, 'rateDown': 24, 'rateUp': 4}
 
-lte_benchmark = lte_network
-lte_benchmark['loss'] = None
 
 # batch_name = 'Circuits_Unbalanced10'
-batch_name = 'Network1019_LAN' # increase to 25 w/ start: 10
+batch_name = 'Network1019_LTE_wloss' # increase to 25 w/ start: 10
 batch = [
-{
-        'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 19,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
-    },
-    #     {
+# {
+#         'setup': 'desktop-app',
+#         'repeat': 10,
+#         'network': lte_network,
+#         'reset': True,
+#         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
+#     },
+#         {
+#         'setup': 'desktop-app',
+#         'repeat': 10,
+#         'network': lte_network,
+#         'reset': True,
+#         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
+#     },
+#         {
+#         'setup': 'desktop-app',
+#         'repeat': 10,
+#         'network': lte_network,
+#         'reset': True,
+#         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
+#     },
+    # {
     #     'setup': 'desktop-app',
-    #     'repeat': 20,
+    #     'repeat': 10,
+    #     'start': 3,
+    #     'network': lte_network,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
     # },
-        {
-        'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 6,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
-    },
     {
         'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 13,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
-    },
-    {
-        'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 13,
+        'repeat': 10,
+        'start': 8,
+        'network': lte_network,
         'reset': True,
         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)
     },
@@ -327,7 +328,7 @@ def set_network(type=None,delay=70,loss=0.1,rateDown=24,rateUp=4):
     if delay:
         options = f"{options} delay {delay}ms 5ms 25%"
     if loss:
-        options = f"{options} loss {loss}% 25%"
+        options = f"{options} loss random {loss}%"
     if rateUp:
         options = f"{options} rate {rateUp}mbit"
     add_args.extend(options.split())

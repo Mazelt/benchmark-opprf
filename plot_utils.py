@@ -246,8 +246,14 @@ def xticks_to_potencies_label(xticks):
     return [f"$2^{{{p}}}$" for p in potencies]
 
 
-def print_table(table_data):
+def print_table(table_data, ending=True):
     for row in table_data:
-        for column in row:
-            print(column+" & ",end='')
-        print('\\\\ \\hline')
+        for i,column in enumerate(row):
+            if i != len(row):
+                print(column+" & ",end='')
+            else:
+                print(column+" ",end='')
+        if ending:
+            print('\\\\ \\hline')
+        else:
+            print(' & ')

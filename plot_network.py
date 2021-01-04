@@ -6,7 +6,7 @@ import glob
 import json
 import argparse
 from psi import Psi_type, CLIENT, SERVER
-from plot_utils import load_batch, get_s_c_mean_sd, get_specific_s_c_mean_sd, xticks_to_potencies_label, tableau_c10
+from plot_utils import load_batch, get_s_c_mean_sd, get_specific_s_c_mean_sd, xticks_to_potencies_label, tableau_c10, print_table
 
 
 def get_rtt(data):
@@ -79,8 +79,6 @@ def plot_total_time(datalan, datawan, datalte):
     plt.show()
 
 def table_time_phases(data):
-    table_data = [['Phase'], ['hashing'],['OPRF'], ['Poly int'],
-                  ['Poly transm'], ['Poly eval'], ['Circuit'],['Waiting']]
     oprf_m = []
     poly_int_m = []
     poly_trans_m = []
@@ -238,9 +236,13 @@ def table_time_phases(data):
                 # column_val = column_val/1e6
                 # column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct]
                 # for i in range(len(table_data)):
-                #     table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
+                # table_data[i].append(f"{column_val[i]:.1f}
+                # ({column_pct[i]:.2f}\%)")
+    # val_rows = [['Network'],["Func"],["Total"],["OPRF"],["PolyInt"],["PolyTransp"],["PolyEval"],["Circuit"]]
+    # pct_rows = [['Network'],["Func"],["Total"],["OPRF"],["PolyInt"],["PolyTransp"],["PolyEval"],["Circuit"]]
+    val_rows = [[''],[""],[""],[""],[""],[""],[""],[""]]
+    pct_rows = [[''],[""],[""],[""],[""],[""],[""],[""]]
     for i in range(len(c_total_t_means)):
-        print(f"Circuit {list([5,7,9])[i]}")
         # c_total= hashing+oprf+ (pint)+(s_ptrans)+polyt + aby_t
         oprf = oprf_m[i]
         poly_int = poly_int_m[i]
@@ -268,15 +270,21 @@ def table_time_phases(data):
         std_poly_eval_pct = round(std_poly_eval/total*100.0)
         std_circuit_pct = round(std_circuit/total*100.0)
 
-
-
+        
+        print(f"{list([5,7,9])[i]}")
         print(
-            f"Total: {total:.0f}({std_total:.0f}) = OPRF {oprf:.0f}({std_oprf:.0f}) + PolyInt {poly_int:.0f}({std_poly_int:.0f}) + PolyTransp {poly_trans:.0f}({std_poly_trans:.0f}) + PolyEval {poly_eval:.0f}({std_poly_eval:.0f}) + Circuit {circuit:.0f}({std_circuit:.0f})")
+            f"Total: {total:.0f}\%({std_total:.0f}) = OPRF {oprf:.0f}({std_oprf:.0f}) + PolyInt {poly_int:.0f}({std_poly_int:.0f}) + PolyTransp {poly_trans:.0f}({std_poly_trans:.0f}) + PolyEval {poly_eval:.0f}({std_poly_eval:.0f}) + Circuit {circuit:.0f}({std_circuit:.0f})")
         print(
             f"Percent: 100% = OPRF {oprf_pct:.0f}({std_oprf_pct:.0f}) + PolyInt {poly_int_pct:.0f}({std_poly_int_pct:.0f}) + PolyTransp {poly_trans_pct:.0f}({std_poly_trans_pct:.0f}) + PolyEval {poly_eval_pct:.0f}({std_poly_eval_pct:.0f}) + Circuit {circuit_pct:.0f}({std_circuit_pct:.0f})")
-        # print(
-        #     f"{c_total_t_means[i]}, all = {c_total_t_means[i] -(c_hashing_t_means[i] + c_oprf_t_means[i]+c_poly_trans_t_means[i]+ c_poly_t_means[i] + c_aby_t_means[i]+c_aby_bot_t_means[i])}")
-        # print(f"party :")
+            
+        c = ["?", f"{list([5,7,9])[i]}", f"{total:.0f}({std_total:.0f})", f"{oprf:.0f}({std_oprf:.0f})", f"{poly_int:.0f}({std_poly_int:.0f})", f"{poly_trans:.0f}({std_poly_trans:.0f})", f"{poly_eval:.0f}({std_poly_eval:.0f})", f"{circuit:.0f}({std_circuit:.0f})"]
+        for e,row in enumerate(val_rows):
+            row.append(c[e])
+        c_pct = ["?", f"{list([5,7,9])[i]}", "100\%", f"{oprf_pct:.0f}\%({std_oprf_pct:.0f})", f"{poly_int_pct:.0f}\%({std_poly_int_pct:.0f})", f"{poly_trans_pct:.0f}\%({std_poly_trans_pct:.0f})", f"{poly_eval_pct:.0f}\%({std_poly_eval_pct:.0f})", f"{circuit_pct:.0f}\%({std_circuit_pct:.0f})"]
+        for e, row in enumerate(pct_rows):
+            row.append(c_pct[e])
+    print(pct_rows)
+    print(print_table(pct_rows,ending=True))
 
         # print(f"client:+ {c_oprf_t_means[i]} (pint) (s_ptrans) {c_poly_t_means[i]} + {c_aby_t_means[i]+c_aby_bot_t_means[i]}")
         # print(
@@ -455,7 +463,7 @@ if __name__ == '__main__':
         batch_10_LAN = load_batch('Network1019_LAN')
         batch_10_WAN = load_batch('Network1019_WAN')
         batch_10_LTE = load_batch('Network1019_LTE_wloss')
-        table_time_phases(batch_10_LAN)
+        table_time_phases(batch_10_LTE)
     elif args.time:
 
         batch_10_LAN = load_batch('Network1019_LAN')

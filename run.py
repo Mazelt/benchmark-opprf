@@ -39,37 +39,40 @@ batch_name = 'Network1019_LTE_wloss' # increase to 25 w/ start: 10
 batch = [
 # {
 #         'setup': 'desktop-app',
-#         'repeat': 10,
+#         'repeat': 20,
+#         'start': 10,
 #         'network': lte_network,
 #         'reset': True,
 #         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
 #     },
 #         {
 #         'setup': 'desktop-app',
-#         'repeat': 10,
+#         'repeat': 20,
+#         'start': 10,
 #         'network': lte_network,
 #         'reset': True,
 #         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
 #     },
 #         {
 #         'setup': 'desktop-app',
-#         'repeat': 10,
+#         'repeat': 20,
+#         'start': 10,
 #         'network': lte_network,
 #         'reset': True,
 #         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
 #     },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 10,
-    #     'start': 3,
-    #     'network': lte_network,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
-    # },
     {
         'setup': 'desktop-app',
-        'repeat': 10,
-        'start': 8,
+        'repeat': 20,
+        'start': 19,
+        'network': lte_network,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
+    },
+    {
+        'setup': 'desktop-app',
+        'repeat': 20,
+        'start': 18,
         'network': lte_network,
         'reset': True,
         'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)

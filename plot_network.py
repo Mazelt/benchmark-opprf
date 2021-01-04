@@ -39,11 +39,11 @@ def get_tp(data):
 def plot_total_time(datalan, datawan, datalte):
 
     set_sizes_lan, server_means_lan, server_stds_lan, client_means_lan, client_stds_lan = \
-        get_specific_s_c_mean_sd(datalan, 'total_t', server_neles=2**19, parameter='fun_type')
+        get_specific_s_c_mean_sd(datalan, 'total_t', server_neles=2**19, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     set_sizes_wan, server_means_wan, server_stds_wan, client_means_wan, client_stds_wan = \
-        get_specific_s_c_mean_sd(datawan, 'total_t', server_neles=2**19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+        get_specific_s_c_mean_sd(datawan, 'total_t', server_neles=2**19, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     set_sizes_lte, server_means_lte, server_stds_lte, client_means_lte, client_stds_lte = \
-        get_specific_s_c_mean_sd(datalte, 'total_t', server_neles=2**19 , parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+        get_specific_s_c_mean_sd(datalte, 'total_t', server_neles=2**19 , parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     x_pos = np.array(set_sizes_lan)
     labels = [Psi_type(i).name for i in set_sizes_lan]
     client_means_lan = client_means_lan/1e3
@@ -59,7 +59,7 @@ def plot_total_time(datalan, datawan, datalte):
                         ecolor='black', capsize=2)
     client_lte = ax.bar(x_pos+0.4, client_means_lte, yerr=client_stds_lte, color=tableau_c10[2], align='center', alpha=0.5, width=0.3,
            ecolor='black', capsize=2)
-    ax.set_ylabel(f"Total time in in seconds")
+    ax.set_ylabel(f"Total time in seconds")
     ax.set_xticks(x_pos)
     # ax.set_title(
     #     f"Client: Total time for Desktop-App with different networks.\nUnbalanced sets with client set size $2^{{{int(np.log2(datalan[0]['parameters']['client_neles']))}}}$ and the basic analytics circuit.\nMean over {len(datalan[0])-1} runs with std-error.")
@@ -76,18 +76,20 @@ def table_time_phases(data):
     table_data = [['Phase'], ['hashing'],['OPRF'], ['Poly int'],
                   ['Poly transm'], ['Poly eval'], ['Circuit'],['Waiting']]
 
-    c_total_t_means = []
+    c_total_t_means = [] # hashing+oprf+ (pint)+(s_ptrans)+polyt + aby_t
     c_hashing_t_means = []
     c_oprf_t_means = []
     c_poly_t_means = []
     c_aby_t_means = []
+    c_aby_bot_t_means = []
 
-    s_total_t_means = []
+    s_total_t_means = []  # hashing+oprf+ poly_t +ptrans+ (peval) + aby_t
     s_hashing_t_means = []
     s_oprf_t_means = []
     s_poly_t_means = []
     s_poly_trans_t_means = []
     s_aby_t_means = []
+    s_aby_bot_t_means = []
     
     for ft in [5]:  # , 7, 9
         for b in data:
@@ -99,6 +101,7 @@ def table_time_phases(data):
                 c_oprf_t = []
                 c_poly_t = []
                 c_aby_t = []
+                c_aby_bot_t = []
 
                 s_total_t = []
                 s_hashing_t = []
@@ -106,6 +109,7 @@ def table_time_phases(data):
                 s_poly_t = []
                 s_poly_trans_t = []
                 s_aby_t = []
+                s_aby_bot_t = []
                 for r in range(len(b)-1):
                     repeat_c = b[r]['c_output']
                     repeat_s = b[r]['s_output']
@@ -114,6 +118,7 @@ def table_time_phases(data):
                     c_oprf_t.append(repeat_c['oprf_t'])
                     c_poly_t.append(repeat_c['poly_t'])
                     c_aby_t.append(repeat_c['aby_total_t'])
+                    c_aby_bot_t.append(repeat_c['aby_baseot_t'])
 
                     s_total_t.append(repeat_s['total_t'])
                     s_hashing_t.append(repeat_s['hashing_t'])
@@ -121,12 +126,14 @@ def table_time_phases(data):
                     s_poly_t.append(repeat_s['poly_t'])
                     s_poly_trans_t.append(repeat_s['poly_trans_t'])
                     s_aby_t.append(repeat_s['aby_total_t'])
+                    s_aby_bot_t.append(repeat_s['aby_baseot_t'])
 
                 c_total_t_means.append(np.mean(c_total_t))
                 c_hashing_t_means.append(np.mean(c_hashing_t))
                 c_oprf_t_means.append(np.mean(c_oprf_t))
                 c_poly_t_means.append(np.mean(c_poly_t))
                 c_aby_t_means.append(np.mean(c_aby_t))
+                c_aby_bot_t_means.append(np.mean(c_aby_bot_t))
 
                 s_total_t_means.append(np.mean(s_total_t))
                 s_hashing_t_means.append(np.mean(s_hashing_t))
@@ -134,6 +141,7 @@ def table_time_phases(data):
                 s_poly_t_means.append(np.mean(s_poly_t))
                 s_poly_trans_t_means.append(np.mean(s_poly_trans_t))
                 s_aby_t_means.append(np.mean(s_aby_t))
+                s_aby_bot_t_means.append(np.mean(s_aby_bot_t))
 
 
                 # aby_d_pct = float(aby_d/total_d)*100.0
@@ -145,31 +153,43 @@ def table_time_phases(data):
                 # column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct]
                 # for i in range(len(table_data)):
                 #     table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
-    for i in range(len(s_total_t_means)):
-        print(c_total_t_means[i])
+    for i in range(len(c_total_t_means)):
+        #c_total= hashing+oprf+ (pint)+(s_ptrans)+polyt + aby_t
+        print("client")
+        print(f"{c_hashing_t_means[i]} + {c_oprf_t_means[i]} (pint) (s_ptrans) {c_poly_t_means[i]} + {c_aby_t_means[i]+c_aby_bot_t_means[i]}")
+        print(
+            f"{c_total_t_means[i]}-all = {c_total_t_means[i]-(c_hashing_t_means[i] + c_oprf_t_means[i]+s_poly_t_means[i]+s_poly_trans_t_means[i]+ c_poly_t_means[i] + c_aby_t_means[i]+c_aby_bot_t_means[i])}")
+
+        print("server")
+        print(
+            f"{s_hashing_t_means[i]} + {s_oprf_t_means[i]} + {s_poly_t_means[i]}  +{s_poly_trans_t_means[i]}+ (peval)+ {s_aby_t_means[i]+s_aby_bot_t_means[i]}")
+        print(
+            f"{s_total_t_means[i]}-all = {s_total_t_means[i]-(s_hashing_t_means[i] + s_oprf_t_means[i]+s_poly_t_means[i]+s_poly_trans_t_means[i]+ s_poly_t_means[i] +c_poly_t_means[i]+ s_aby_t_means[i]+s_aby_bot_t_means[i])}")
 
 def plot_total_data(datalan, datawan, datalte):
 
     set_sizes_r_lan, server_means_r_lan, _, client_means_r_lan, _ = \
         get_specific_s_c_mean_sd(
-            datalan, 'total_d_rs',rs='r', server_neles=2**19, parameter='fun_type')
+            datalan, 'total_d_rs', rs='r', server_neles=2 **
+            19, parameter='fun_type', pfilter={'fun_type': [3,5, 7, 9]})
     set_sizes_s_lan, server_means_s_lan, _, client_means_s_lan, _ = \
         get_specific_s_c_mean_sd(
-            datalan, 'total_d_rs', rs='s', server_neles=2**19, parameter='fun_type')
+            datalan, 'total_d_rs', rs='s', server_neles=2 **
+            19, parameter='fun_type', pfilter={'fun_type': [3,5, 7, 9]})
     
     set_sizes_r_wan, server_means_r_wan, _, client_means_r_wan, _ = \
         get_specific_s_c_mean_sd(datawan, 'total_d_rs', rs='r', server_neles=2 **
-                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+                                 19, parameter='fun_type', pfilter={'fun_type': [3,5, 7, 9]})
     set_sizes_s_wan, server_means_s_wan, _, client_means_s_wan, _ = \
         get_specific_s_c_mean_sd(datawan, 'total_d_rs', rs='s', server_neles=2 **
-                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+                                 19, parameter='fun_type', pfilter={'fun_type': [3,5, 7, 9]})
 
     set_sizes_r_lte, server_means_r_lte, _, client_means_r_lte, _ = \
         get_specific_s_c_mean_sd(datalte, 'total_d_rs', rs='r', server_neles=2 **
-                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+                                 19, parameter='fun_type', pfilter={'fun_type': [3,5, 7, 9]})
     set_sizes_s_lte, server_means_s_lte, _, client_means_s_lte, _ = \
         get_specific_s_c_mean_sd(datalte, 'total_d_rs', rs='s', server_neles=2 **
-                                 19, parameter='fun_type', pfilter={'fun_type': [5, 7, 9]})
+                                 19, parameter='fun_type', pfilter={'fun_type': [3,5, 7, 9]})
 
     x_pos = np.array(set_sizes_r_lan)
     labels = [Psi_type(i).name for i in set_sizes_r_lan]
@@ -311,14 +331,13 @@ if __name__ == '__main__':
         batch = load_batch('NetworkDebugging_NewRTTs_LTE')
         get_tp(batch)
     elif args.phases_t:
-        batch_10_LAN = load_batch('Circuits_Unbalanced10', important_parameters=[
-                                  'server_neles', 'fun_type'])
+        batch_10_LAN = load_batch('Network1019_LAN')
         batch_10_WAN = load_batch('Network1019_WAN')
         batch_10_LTE = load_batch('Network1019_LTE')
         table_time_phases(batch_10_LAN)
     elif args.time:
 
-        batch_10_LAN = load_batch('Circuits_Unbalanced10',important_parameters=['server_neles', 'fun_type'])
+        batch_10_LAN = load_batch('Network1019_LAN')
         batch_10_WAN = load_batch('Network1019_WAN')
         batch_10_LTE = load_batch('Network1019_LTE')
         

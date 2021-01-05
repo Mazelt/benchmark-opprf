@@ -101,6 +101,7 @@ def table_time_phases(data):
     c_poly_trans_t_means = []
     c_aby_t_means = []
     c_aby_bot_t_means = []
+    c_aby_online_t_means = []
 
     c_total_t_std = []
     c_hashing_t_std = []
@@ -145,6 +146,7 @@ def table_time_phases(data):
                 c_poly_trans_t = []
                 c_aby_t = []
                 c_aby_bot_t = []
+                c_aby_online_t = []
 
                 s_total_t = []
                 s_hashing_t = []
@@ -163,7 +165,7 @@ def table_time_phases(data):
                     poly_eval.append(repeat_c['poly_t'])
                     circuit.append(repeat_c['aby_total_t']+repeat_c['aby_baseot_t'])
                     total.append(sum([oprf[r],poly_int[r],poly_trans[r],poly_eval[r],circuit[r]]))
-
+                    
                     c_total_t.append(repeat_c['total_t'])
                     c_hashing_t.append(repeat_c['hashing_t'])
                     c_oprf_t.append(repeat_c['oprf_t'])
@@ -171,6 +173,7 @@ def table_time_phases(data):
                     c_poly_trans_t.append(repeat_c['poly_trans_t'])
                     c_aby_t.append(repeat_c['aby_total_t'])
                     c_aby_bot_t.append(repeat_c['aby_baseot_t'])
+                    c_aby_online_t.append(repeat_c['aby_online_t'])
 
                     s_total_t.append(repeat_s['total_t'])
                     s_hashing_t.append(repeat_s['hashing_t'])
@@ -202,6 +205,7 @@ def table_time_phases(data):
                 c_poly_trans_t_means.append(np.mean(c_poly_trans_t))
                 c_aby_t_means.append(np.mean(c_aby_t))
                 c_aby_bot_t_means.append(np.mean(c_aby_bot_t))
+                c_aby_online_t_means.append(np.mean(c_aby_online_t))
 
                 c_total_t_std.append(np.std(c_total_t))
                 c_hashing_t_std.append(np.std(c_hashing_t))
@@ -251,6 +255,8 @@ def table_time_phases(data):
         circuit = circuit_m[i] 
         total = total_m[i]
 
+        print(f"aby_online {c_aby_online_t_means[i]:.0f}  total%: {c_aby_online_t_means[i]/total*100.0:.0f}  aby%: {c_aby_online_t_means[i]/circuit*100.0:.0f}")
+
         oprf_pct = round(oprf/total*100.0)
         poly_int_pct = round(poly_int/total*100.0)
         poly_trans_pct = round(poly_trans/total*100.0)
@@ -270,7 +276,7 @@ def table_time_phases(data):
         std_poly_eval_pct = round(std_poly_eval/total*100.0)
         std_circuit_pct = round(std_circuit/total*100.0)
 
-        
+        print(f"Hashing C:{c_hashing_t_means[i]} S:{s_hashing_t_means[i]}")
         print(f"{list([5,7,9])[i]}")
         print(
             f"Total: {total:.0f}\%({std_total:.0f}) = OPRF {oprf:.0f}({std_oprf:.0f}) + PolyInt {poly_int:.0f}({std_poly_int:.0f}) + PolyTransp {poly_trans:.0f}({std_poly_trans:.0f}) + PolyEval {poly_eval:.0f}({std_poly_eval:.0f}) + Circuit {circuit:.0f}({std_circuit:.0f})")

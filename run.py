@@ -390,7 +390,7 @@ if __name__ == '__main__':
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
-        p = Parameters(client_n=2**10,server_n=2**19)
+        p = Parameters(client_n=2**10,server_n=2**19, psitype=Psi_type.SumIfGtThreshold)
         p.overlap = 20
         # lte_network['loss'] = None
         # lte_network['rateUp'] = None
@@ -398,7 +398,7 @@ if __name__ == '__main__':
         conf = {
             'setup': 'desktop-app',
             'parameters': p,
-            'network': wan_network
+            # 'network': wan_network
         }
         if 'network' in conf:
             network = conf['network']
@@ -413,13 +413,13 @@ if __name__ == '__main__':
                 set_network(**network)
         inp = input('press enter to stop')
         
-        # if conf['setup'] == 'desktop-app':
-        #     driver = init_appium()
-        # else:
-        #     driver = None
-        # results = run_experiment(driver, conf)
-        # save_data(results)
-        # if driver:
-        #     driver.quit()
+        if conf['setup'] == 'desktop-app':
+            driver = init_appium()
+        else:
+            driver = None
+        results = run_experiment(driver, conf)
+        save_data(results)
+        if driver:
+            driver.quit()
         if network and network['type']!='LAN':
             reset_networks()

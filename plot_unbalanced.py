@@ -61,7 +61,7 @@ def plot_total_time(data):
     fig, ax = plt.subplots()
     client = ax.bar(x_pos, client_means, yerr=client_stds, color=tableau_c10[1], align='center', alpha=0.5,
            ecolor='black', capsize=5)
-    ax.set_ylabel(f"Total time in in seconds")
+    ax.set_ylabel(f"Total time in seconds")
     ax.set_xticks(x_pos)
     ax.set_xticklabels(xticks_to_potencies_label(set_sizes))
     ax.set_title(
@@ -89,13 +89,17 @@ def plot_total_time_combined(data10,data12):
     # client = ax.bar(x_pos, client_means, yerr=client_sd_10, color=tableau_c10[1], align='center', alpha=0.5,
     #                 ecolor='black', capsize=5)
     client_10 = ax.bar(x_pos_10-0.1, client_means_10, yerr=client_sd_10, width=0.2,
-                       color=tableau_c10[0], align='center', alpha=0.5, ecolor='black', capsize=1)
+                       color=tableau_c10[0], align='center', alpha=0.5, ecolor='black', capsize=2)
     client_12 = ax.bar(x_pos_12+0.1+2, client_means_12,yerr=client_sd_12, width=0.2,
-                       color=tableau_c10[1], align='center', alpha=0.5, ecolor='black', capsize=1)
+                       color=tableau_c10[1], align='center', alpha=0.5, ecolor='black', capsize=2)
 
-    ax.set_ylabel(f"Total runtime in in seconds")
+    ax.set_ylabel(f"Total runtime in seconds")
     ax.set_xticks(x_pos_10)
     ax.set_xticklabels(xticks_to_potencies_label(set_sizes_10))
+    # for i in range(1,len(client_means_10)):
+    #     print(client_means_10[i]/client_means_10[0])
+    # for i in range(1, len(client_means_12)):
+    #     print(client_means_12[i]/client_means_12[0])
     print(client_means_10)
     print(client_means_12)
     # ax.set_title(
@@ -153,8 +157,8 @@ def plot_total_data_stacked_combined(data10,data12):
     # client_r_stds = client_r_stds/1e9
     # client_s_stds = client_s_stds/1e9
 
-    print(client_r_means_10)
-    print(client_r_means_12)
+    print(client_r_means_10+client_s_means_10)
+    print(client_r_means_12+client_s_means_12)
     # Add a table at the bottom of the axes
     client_r_10 = ax.bar(x_pos_10-0.1, client_r_means_10, width=0.2,
                       color=tableau_c10[0], align='center', alpha=0.5)
@@ -517,9 +521,9 @@ def plot_psi_types_dt(data):
         data, "total_d_rs", rs='s', parameter='psi')
     client_means = client_means/1e3
     client_sd = client_sd/1e3
+    print(client_r_means[7]+client_s_means[7])
     client_r_means = client_r_means/1e6
     client_s_means = client_s_means/1e6
-
     x_pos = np.array(set_sizes)
     fig, ax1 = plt.subplots()
 
@@ -533,14 +537,14 @@ def plot_psi_types_dt(data):
     client_r = ax1.bar(x_pos-0.1, client_r_means,width=0.2, color=tableau_c10[0], align='center', alpha=0.5)
     client_s = ax1.bar(x_pos-0.1, client_s_means, width=0.2, color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means)
     ax2 = ax1.twinx()
-    ax2.set_ylabel('runtime (seconds)', color=tableau_c10[7])
+    ax2.set_ylabel('Runtime (seconds)', color=tableau_c10[7])
     ax2.tick_params(axis='y', labelcolor=tableau_c10[7])
     # Add a table at the bottom of the axes
     client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_sd, width=0.2, color=tableau_c10[7], align='center', alpha=0.5,
                        ecolor='black', capsize=2)
     ax1.legend((client_r[0], client_s[0], client_t[0]),
-               ('client received', 'client sent'))
-    ax2.legend(['runtime'], loc=9)
+               ('Client received', 'Client sent'))
+    ax2.legend(['Runtime'], loc=9)
 
     fig.autofmt_xdate()
     fig.tight_layout()
@@ -575,7 +579,7 @@ def table_psi_types_scaling_dt(data):
 
 
 def table_psi_types_phases_d(data):
-    table_data = [['Phase'],['OPRF'],['Polynomials'],['Circuit']]
+    table_data = [['Phase'],['OPRF'],['Polynomials'],['Circuit'],['Circuit (Online)']]
     for sn in [2**18,2**21]:
         for ft in [5, 7, 9]:
             for b in data:
@@ -584,15 +588,18 @@ def table_psi_types_phases_d(data):
                 else:
                     total_d = sum(b[0]['s_output']['total_d_rs'])
                     aby_d = sum(b[0]['s_output']['aby_total_d_rs'])
+                    aby_online_d = sum(b[0]['s_output']['aby_online_d_rs'])
                     oprf_d = sum(b[0]['s_output']['oprf_d_rs'])
                     poly_d = sum(b[0]['s_output']['poly_d_rs'])
                     aby_d_pct = float(aby_d/total_d)*100.0
                     oprf_d_pct = float(oprf_d/total_d)*100.0 
                     print("There is a bug for the oprf_d value for AB circuits. Manual fix: count the data twice for oprf_d")
                     poly_d_pct = float(poly_d/total_d)*100.0
-                    column_val = np.array([ft*1e6, oprf_d, poly_d, aby_d])
+                    aby_online_d_pct = float(aby_online_d/total_d)*100.0
+                    aby_online_aby_pct = float(aby_online_d/aby_d)*100.0
+                    column_val = np.array([ft*1e6, oprf_d, poly_d, aby_d, aby_online_d])
                     column_val = column_val/1e6
-                    column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct]
+                    column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct, aby_online_aby_pct]
                     for i in range(len(table_data)):
                         table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
                     

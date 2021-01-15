@@ -33,81 +33,93 @@ wan_network = {'type': 'WAN', 'delay': 29, 'loss': 0.1, 'rateDown':50,'rateUp':5
 lte_network = {'type': 'LTE', 'delay': 39, 'loss': 0.1, 'rateDown': 24, 'rateUp': 4}
 badlte_network = {'type': 'LTE', 'delay': 39, 'loss': 4, 'rateDown': 24, 'rateUp': 4}
 
-
-# batch_name = 'Circuits_Unbalanced10'
-batch_name = 'PsiTypes1019DA_1' # increase to 25 w/ start: 10
+batch_name = 'Circuits_Unbalanced10'
+# batch_name = 'network_test'
 batch = [
-
     # {
     #     'setup': 'desktop-app',
     #     'repeat': 20,
-    #     'start': 10,
+    #     'start': 5,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Analytics)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 10,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Threshold)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 10,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.Sum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadASumGT)
     # },
     #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 10,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
-    # },
-    #     {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 18,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASum)
-    # },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 10,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
-    # },
-    {
-        'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 18,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSum)
-    },
-    # {
-    #     'setup': 'desktop-app',
-    #     'repeat': 20,
-    #     'start': 10,
-    #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
-    # },
-    # {
     #     'setup': 'desktop-app',
     #     'repeat': 20,
     #     'start': 14,
     #     'reset': True,
-    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSum)
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadASumGT)
     # },
-    # {
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 19,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadASumGT)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 13,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadASumGT)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABSumGT)
+    # },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 11,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABSumGT)
+    # },
+    {
+        'setup': 'desktop-app',
+        'repeat': 20,
+        'start': 14,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABSumGT)
+    },
+        {
+        'setup': 'desktop-app',
+        'repeat': 20,
+        'start': 11,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABSumGT)
+    },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 5,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**18,psitype=Psi_type.PayloadABMulSumGT)
+    # },
+    #     {
     #     'setup': 'desktop-app',
     #     'repeat': 20,
     #     'start': 10,
     #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**19,psitype=Psi_type.PayloadABMulSumGT)
     # },
+        {
+        'setup': 'desktop-app',
+        'repeat': 20,
+        'start': 13,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABMulSumGT)
+    },
+        {
+        'setup': 'desktop-app',
+        'repeat': 20,
+        'start': 11,
+        'reset': True,
+        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
+    },
 ]
 
 

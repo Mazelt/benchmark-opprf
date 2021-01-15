@@ -36,14 +36,14 @@ def get_tp(data):
     tp_se = sem(tps)
     print(f"{len(tps)} tps: mean: {tp_mean}, sd: {tp_sd}, se {tp_se}.")
 
-def plot_total_time(datalan, datawan, datalte):
+def plot_total_time(datalan, datawan, datalte,server_n=2**19):
 
     set_sizes_lan, server_means_lan, server_stds_lan, client_means_lan, client_stds_lan = \
-        get_specific_s_c_mean_sd(datalan, 'total_t', server_neles=2**19, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
+        get_specific_s_c_mean_sd(datalan, 'total_t', server_neles=server_n, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     set_sizes_wan, server_means_wan, server_stds_wan, client_means_wan, client_stds_wan = \
-        get_specific_s_c_mean_sd(datawan, 'total_t', server_neles=2**19, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
+        get_specific_s_c_mean_sd(datawan, 'total_t', server_neles=server_n, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     set_sizes_lte, server_means_lte, server_stds_lte, client_means_lte, client_stds_lte = \
-        get_specific_s_c_mean_sd(datalte, 'total_t', server_neles=2**19 , parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
+        get_specific_s_c_mean_sd(datalte, 'total_t', server_neles=server_n , parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     x_pos = np.array(set_sizes_lan)
     labels = [Psi_type(i).name for i in set_sizes_lan]
     client_means_lan = client_means_lan/1e3
@@ -62,9 +62,9 @@ def plot_total_time(datalan, datawan, datalte):
     # print(f"LAN: {client_means_lan}")
     # print(f"WAN: {client_means_wan}")
     # print(f"LTE: {client_means_lte}")
-    # print(f"LAN: {client_means_lan/client_means_lan}")
-    # print(f"WAN: {client_means_wan/client_means_lan}")
-    # print(f"LTE: {client_means_lte/client_means_lan}")
+    print(f"LAN: {client_means_lan/client_means_lan}")
+    print(f"WAN: {client_means_wan/client_means_lan}")
+    print(f"LTE: {client_means_lte/client_means_lan}")
     print(f"WAN-LAN: {client_means_wan-client_means_lan}")
     print(f"LTE-LAN: {client_means_lte-client_means_lan}")
     ax.set_ylabel(f"Total runtime in seconds")
@@ -456,6 +456,7 @@ if __name__ == '__main__':
     ap.add_argument('--rtts', action='store_true')
     ap.add_argument('--tps', action='store_true')
     ap.add_argument('--time', action='store_true')
+    ap.add_argument('--time21', action='store_true')
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
     ap.add_argument('--phases_t', action='store_true')
@@ -477,8 +478,17 @@ if __name__ == '__main__':
         batch_10_LAN = load_batch('Network1019_LAN')
         batch_10_WAN = load_batch('Network1019_WAN')
         batch_10_LTE = load_batch('Network1019_LTE_wloss')
-        
+
         plot_total_time(batch_10_LAN, batch_10_WAN, batch_10_LTE)
+        # plot_total_data(batch_10_LAN,batch_10_WAN,batch_10_LTE)
+    elif args.time21:
+
+        # batch_10_LAN = load_batch('Network1019_LAN')
+        batch_10_LAN = load_batch('PsiTypes1021DA_1', important_parameters=['server_neles','fun_type'],sort_batches='fun_type')
+        batch_10_WAN = load_batch('Network1021_WAN', sort_batches='fun_type')
+        batch_10_LTE = load_batch('Network1021_LTE_wloss', sort_batches='fun_type')
+        
+        plot_total_time(batch_10_LAN, batch_10_WAN, batch_10_LTE,server_n=2**21)
         # plot_total_data(batch_10_LAN,batch_10_WAN,batch_10_LTE)
     else:
         print('nothing to do...')

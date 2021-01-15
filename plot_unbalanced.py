@@ -728,7 +728,7 @@ if __name__ == '__main__':
         if args.all or args.aby_t:
             plot_aby_time_absum(data)
     elif args.psi_types_dt:
-        data17 = load_batch("PsiTypes1017DA_1", sort_batches="fun_type")
+        # data17 = load_batch("PsiTypes1017DA_1", sort_batches="fun_type")
         data19 = load_batch("PsiTypes1019DA_1", sort_batches="fun_type")
         plot_psi_types_dt(data19)
     elif args.payload_bl:

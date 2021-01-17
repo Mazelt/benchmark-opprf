@@ -113,13 +113,13 @@ batch = [
     #     'reset': True,
     #     'parameters': Parameters(client_n=2**10,server_n=2**20,psitype=Psi_type.PayloadABMulSumGT)
     # },
-        {
-        'setup': 'desktop-app',
-        'repeat': 20,
-        'start': 18,
-        'reset': True,
-        'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
-    },
+    #     {
+    #     'setup': 'desktop-app',
+    #     'repeat': 20,
+    #     'start': 18,
+    #     'reset': True,
+    #     'parameters': Parameters(client_n=2**10,server_n=2**21,psitype=Psi_type.PayloadABMulSumGT)
+    # },
 ]
 
 
@@ -229,6 +229,13 @@ def run_experiment(driver, config, repeat=None):
                                 lambda: None, CLIENT)
             elif config['setup'] == 'desktop-app':
                 app_wrapper(driver, paras, client_q)
+            elif config['setup'] == 'desktop-manual':
+                server_thread.join()
+                server_output = server_q.get()
+                data = parser.parse_output(server_output)
+                logger.info("== Experiment done! ==================")
+                # todo: call battery stats.
+                return data
             else:
                 logger.error(f"Unknown setup in experiment {config['setup']}")
                 exit(2)
@@ -310,6 +317,35 @@ def desktop_wrapper(parameters, binary_path, out_queue, stop, role=SERVER):
                 logger.error(f'{srole}   {line.strip()}')
             break
     out_queue.put(output)
+
+def adb_wrapper(action, extra = None):
+    logger.info(f"ADB wrapper with action {action}")
+    if action == 'devices':
+        run_args = ['adb', 'devices']
+        ret = subprocess.run(run_args,capture_output=True)
+        if '4a1d7995' in str(ret.stdout):
+            logger.info(f"Device connected.")
+            return True
+        else:
+            logger.error(f"Device not connected.")
+            return False
+    elif action == 'reset':
+        run_args = ['adb', 'shell', 'dumpsys', 'batterystats', '--reset']
+        ret = subprocess.run(run_args,capture_output=True)
+        if 'Battery stats reset' in str(ret.stdout):
+            return True
+        else:
+            logger.error(f"Unable to reset battery stats")
+            return False
+    elif action == 'bugreport':
+        run_args = ['adb', 'bugreport', extra]
+        ret = subprocess.run(run_args,capture_output=True)
+        if ret.returncode != 0:
+            logger.error(str(ret.stderr))
+    else:
+        logger.error(f"Unknown actino {action}")
+        exit(3)
+    
 
 
 def reset_networks():
@@ -421,7 +457,7 @@ def save_data(data):
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description='Run opprf experiments.')
     ap.add_argument('-b', '--batch', dest='batch_run', action='store_true')
-
+    ap.add_argument('-e', '--energy', action='store_true')
     args = ap.parse_args()
 
     if args.batch_run:
@@ -430,6 +466,28 @@ if __name__ == '__main__':
         logger.info('This is a batch run')
         run_batch()
         exit(0)
+    elif args.energy:
+        energy_batch = "Debug"
+        path = f"/home/marce/repos/benchmark-opprf/batterystats/{energy_batch}/{date.today().isoformat()}"
+        filename = f"{date.today().isoformat()}.log"
+        setup_logger('./logs', filename)
+        input("Connect USB cable for batterystat reset. Press enter")
+        if not adb_wrapper('devices'):
+            exit(3)
+        if not adb_wrapper('reset'):
+            exit(3)
+        p = Parameters(client_n=2**10, server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
+        print(p)
+        input("Start up with matching parameters, USB cable disconnected. Start?")
+        conf = {
+            'setup': 'desktop-manual',
+            'parameters': p,
+        }
+        results = run_experiment(None,conf)
+        input("Done. Please RECONNECT USB and press ENTER.")
+        while not adb_wrapper('devices'):
+            input("Device not connected yet. try again!")
+        adb_wrapper('bugreport', extra = path)
     else:
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)

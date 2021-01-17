@@ -1,0 +1,2 @@
+2021-01-16 23:59:45,235 [run     -run_experime] [INFO ]  == New experiment! ===================
+2021-01-16 23:59:45,237 [run     -desktop_wrap] [INFO ]  Running desktop wrapper as server with args: ['-r', '0', '-n', '524288', '-o', '1573', '-b', '60', '-e', '1.27', '-a', '192.168.0.3', '-p', '7777', '-t', '1', '-c', '0', '-m', '1997', '-s', '1024', '-f', '3', '--payload_a_bitlen', '2', '--overlap', '25', '-y', 'SumIfGtThreshold']

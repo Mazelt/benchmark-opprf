@@ -1,0 +1,102 @@
+{
+    "0003": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3650,
+        'cpu_sys_t': 1030
+    },
+    "0006": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3700,
+        'cpu_sys_t': 1100
+    },
+    "0009": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3600,
+        'cpu_sys_t': 1110
+    },
+    "0012": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 2240,
+        'cpu_sys_t': 580
+    },
+    "0021": { 
+        'est_power_use_pct':  0.07,
+        'cpu_user_t': 3730,
+        'cpu_sys_t': 1010
+    },
+    "0024": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3730,
+        'cpu_sys_t': 1000
+    },
+    "0027": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3710,
+        'cpu_sys_t': 1040
+    },
+    "0031": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3750,
+        'cpu_sys_t': 1050
+    },
+    "0034": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3700,
+        'cpu_sys_t': 1010
+    },
+    "0037": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3610,
+        'cpu_sys_t': 1170
+    },
+    "0039": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3760,
+        'cpu_sys_t': 1060
+    },
+    "0042": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3730,
+        'cpu_sys_t': 1060
+    },
+    "0045": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3710,
+        'cpu_sys_t': 1030
+    },
+    "0047": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3690,
+        'cpu_sys_t': 1080
+    },
+    "0050": { 
+        'est_power_use_pct': 0.08,
+        'cpu_user_t': 3640,
+        'cpu_sys_t': 1150
+    },
+    "0053": { 
+        'est_power_use_pct': 0.08,
+        'cpu_user_t': 3610,
+        'cpu_sys_t': 1030
+    },
+    "0056": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3680,
+        'cpu_sys_t': 1190
+    },
+    "0059": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3690,
+        'cpu_sys_t': 1060
+    },
+    "0101": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3480,
+        'cpu_sys_t': 1070
+    },
+    "0104": { 
+        'est_power_use_pct': 0.07,
+        'cpu_user_t': 3800,
+        'cpu_sys_t': 1090
+    }
+}

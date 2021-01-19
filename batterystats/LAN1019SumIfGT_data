@@ -1,0 +1,102 @@
+{
+    "2203": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2810,
+        'cpu_sys_t': 680
+    },
+    "2206": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2830,
+        'cpu_sys_t': 740
+    },
+    "2208": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2790,
+        'cpu_sys_t': 750 
+    },
+    "2211": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2800,
+        'cpu_sys_t': 790
+    },
+    "2213": { 
+        'est_power_use_pct': 0.03 ,
+        'cpu_user_t': 2760,
+        'cpu_sys_t': 790
+    },
+    "2216": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2840,
+        'cpu_sys_t': 700
+    },
+    "2218": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2780,
+        'cpu_sys_t': 660
+    },
+    "2221": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2720,
+        'cpu_sys_t': 740 
+    },
+    "2223": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2810,
+        'cpu_sys_t': 660
+    },
+    "2226": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2820,
+        'cpu_sys_t': 680
+    },
+    "2228": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2780,
+        'cpu_sys_t': 690
+    },
+    "2235": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2810,
+        'cpu_sys_t': 720
+    },
+    "2237": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2870,
+        'cpu_sys_t': 650
+    },
+    "2239": { 
+        'est_power_use_pct': 0.04,
+        'cpu_user_t': 2900,
+        'cpu_sys_t': 600
+    },
+    "2241": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2780,
+        'cpu_sys_t': 680
+    },
+    "2244": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2920,
+        'cpu_sys_t': 730
+    },
+    "2247": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2840,
+        'cpu_sys_t': 630
+    },
+    "2249": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2720,
+        'cpu_sys_t': 730
+    },
+    "2253": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2760,
+        'cpu_sys_t': 750
+    },
+    "2253": { 
+        'est_power_use_pct': 0.03,
+        'cpu_user_t': 2780,
+        'cpu_sys_t': 650
+    }
+}

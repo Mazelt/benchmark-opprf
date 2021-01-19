@@ -68,6 +68,7 @@ def plot_total_time(data):
         f"Total time for Desktop-App with the basic analytics circuit.\nUnbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nMean over {len(data[0])-1} runs with std-error.")
     ax.yaxis.grid(True)
     ax.set_xlabel(f"Server set sizes")
+    # ax.set_yscale('log')
     # ax.legend((server[0], client[0]),('server', 'client'))
 
     plt.tight_layout()
@@ -193,6 +194,7 @@ def plot_total_data_stacked(data):
     set_sizes, server_s_means, server_s_stds, client_s_means, client_s_stds = get_s_c_mean_sd(
         data, "total_d_rs", rs='s')
     x_pos = np.arange(len(set_sizes))
+    # x_pos = set_sizes
     fig, ax = plt.subplots()
     client_r_means = client_r_means/1e6
     client_s_means = client_s_means/1e6
@@ -213,7 +215,8 @@ def plot_total_data_stacked(data):
     ax.set_title(
         f"Client: Total data received/sent for Desktop-App.\nBasic analytics circuit. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$")
     ax.yaxis.grid(True)
-
+    # ax.set_xscale('log')
+    # ax.set_yscale('log')
     ax.legend((client_r[0], client_s[0]), ('client received', 'client sent'))
 
     plt.tight_layout()
@@ -280,7 +283,7 @@ def plot_total_data(data):
     ax.set_title(
         "Client: Total data received/sent for Desktop-App for different set sizes.")
     ax.yaxis.grid(True)
-
+    # ax.set_yscale('log')
     ax.legend((client_r[0], client_s[0]), ('client received', 'client sent'))
 
     plt.tight_layout()
@@ -580,7 +583,7 @@ def table_psi_types_scaling_dt(data):
 
 def table_psi_types_phases_d(data):
     table_data = [['Phase'],['OPRF'],['Polynomials'],['Circuit'],['Circuit (Online)']]
-    for sn in [2**18,2**21]:
+    for sn in [2**19,2**21]:
         for ft in [5, 7, 9]:
             for b in data:
                 if b['parameters']['server_neles'] != sn or b['parameters']['fun_type'] != ft:
@@ -589,7 +592,10 @@ def table_psi_types_phases_d(data):
                     total_d = sum(b[0]['s_output']['total_d_rs'])
                     aby_d = sum(b[0]['s_output']['aby_total_d_rs'])
                     aby_online_d = sum(b[0]['s_output']['aby_online_d_rs'])
-                    oprf_d = sum(b[0]['s_output']['oprf_d_rs'])
+                    if b['parameters']['fun_type'] in [7,9]:
+                        oprf_d = 2*sum(b[0]['s_output']['oprf_d_rs'])
+                    else:
+                        oprf_d = sum(b[0]['s_output']['oprf_d_rs'])
                     poly_d = sum(b[0]['s_output']['poly_d_rs'])
                     aby_d_pct = float(aby_d/total_d)*100.0
                     oprf_d_pct = float(oprf_d/total_d)*100.0 
@@ -599,9 +605,11 @@ def table_psi_types_phases_d(data):
                     aby_online_aby_pct = float(aby_online_d/aby_d)*100.0
                     column_val = np.array([ft*1e6, oprf_d, poly_d, aby_d, aby_online_d])
                     column_val = column_val/1e6
-                    column_pct = [ft, oprf_d_pct, poly_d_pct, aby_d_pct, aby_online_aby_pct]
+                    column_pct = [ft, oprf_d_pct, poly_d_pct,
+                                  aby_d_pct, aby_online_d_pct]
                     for i in range(len(table_data)):
-                        table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
+                        # table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
+                        table_data[i].append(f"{column_pct[i]:.2f}\%")
                     
     print("comm")
     print(print_table(table_data))
@@ -691,6 +699,66 @@ def plot_payload_len_psi_types_dt(data):
     plt.show()
 
 
+def get_energy():
+    # 1019 SumIfGT
+    dirname = '/home/marcel/repos/benchmark-opprf/batterystats'
+    fname = 'LAN1019SumIfGT_data'
+    path = os.path.join(dirname,fname)
+    with open(path, 'r') as fp:
+        data3 = json.load(fp)
+    print(len(data3))
+    fname = 'LAN1019PayloadASumGT_data'
+    path = os.path.join(dirname, fname)
+    with open(path, 'r') as fp:
+        data5 = json.load(fp)
+    print(len(data5))
+    fname = 'LAN1019PayloadABSumGT_data'
+    path = os.path.join(dirname, fname)
+    with open(path, 'r') as fp:
+        data7 = json.load(fp)
+    print(len(data7))
+    fname = 'LAN1019PayloadABMulSumGT_data'
+    path = os.path.join(dirname, fname)
+    with open(path, 'r') as fp:
+        data9 = json.load(fp)
+    # energy avgs
+    energy_d3 = [data3[m]["est_power_use_pct"] for m in data3]
+    energy_d3_m = np.mean(energy_d3)
+    energy_d3_std = np.std(energy_d3)
+    print(f"D3: energy(%) {energy_d3_m:.4f} \pm {energy_d3_std:.5f}")
+    cpu_d3 = [data3[m]["cpu_user_t"]+data3[m]["cpu_sys_t"] for m in data3]
+    cpu_d3_m = np.mean(cpu_d3)
+    cpu_d3_std = np.std(cpu_d3)
+    print(f"D3: cpu(ms) {cpu_d3_m:.0f} \pm {cpu_d3_std:.0f}")
+
+    energy_d5 = [data5[m]["est_power_use_pct"] for m in data5]
+    energy_d5_m = np.mean(energy_d5)
+    energy_d5_std = np.std(energy_d5)
+    print(f"D5: energy(%) {energy_d5_m:.4f} \pm {energy_d5_std:.5f}")
+    cpu_d5 = [data5[m]["cpu_user_t"]+data5[m]["cpu_sys_t"] for m in data5]
+    cpu_d5_m = np.mean(cpu_d5)
+    cpu_d5_std = np.std(cpu_d5)
+    print(f"D5: cpu(ms) {cpu_d5_m:.0f} \pm {cpu_d5_std:.0f}")
+
+    energy_d7 = [data7[m]["est_power_use_pct"] for m in data7]
+    energy_d7_m = np.mean(energy_d7)
+    energy_d7_std = np.std(energy_d7)
+    print(f"D7: energy(%) {energy_d7_m:.4f} \pm {energy_d7_std:.5f}")
+    cpu_d7 = [data7[m]["cpu_user_t"]+data7[m]["cpu_sys_t"] for m in data7]
+    cpu_d7_m = np.mean(cpu_d7)
+    cpu_d7_std = np.std(cpu_d7)
+    print(f"D7: cpu(ms) {cpu_d7_m:.0f} \pm {cpu_d7_std:.0f}")
+
+    energy_d9 = [data9[m]["est_power_use_pct"] for m in data9]
+    energy_d9_m = np.mean(energy_d9)
+    energy_d9_std = np.std(energy_d9)
+    print(f"D9: energy(%) {energy_d9_m:.4f} \pm {energy_d9_std:.5f}")
+    cpu_d9 = [data9[m]["cpu_user_t"]+data9[m]["cpu_sys_t"] for m in data9]
+    cpu_d9_m = np.mean(cpu_d9)
+    cpu_d9_std = np.std(cpu_d9)
+    print(f"D9: cpu(ms) {cpu_d9_m:.0f} \pm {cpu_d9_std:.0f}")
+
+
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
@@ -711,6 +779,7 @@ if __name__ == '__main__':
     ap.add_argument('--pies_t', action='store_true')
     ap.add_argument('--psi_types_dt', action='store_true')
     ap.add_argument('--server_scaling_dt', action='store_true')
+    ap.add_argument('--energy',action='store_true')
     args = ap.parse_args()
     if args.both:
         data10 = load_batch("Unbalanced10AnalyticsDA_2")
@@ -747,6 +816,8 @@ if __name__ == '__main__':
         for b in data:
             print(f"b circ{b['parameters']['fun_type']} sn{b['parameters']['server_neles']}")
         table_psi_types_phases_d(data)
+    elif args.energy:
+        get_energy()
     else:
         if args.ten:
             batch_name = "Unbalanced10AnalyticsDA_2"

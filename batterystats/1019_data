@@ -1,0 +1,26 @@
+{
+    'SumIfGtThreshold': {
+        'repeats': 5,
+        'est_power_use_pct': 0.17,
+        'cpu_user_t': 19430,
+        'cpu_sys_t': 4870
+    },
+    'PayloadASumGT': {
+        'repeats': 5,
+        'est_power_use_pct': 0.18,
+        'cpu_user_t': 20470,
+        'cpu_sys_t': 4850
+    },
+    'PayloadABSumGT': {
+        'repeats': 5,
+        'est_power_use_pct': 0.37,
+        'cpu_user_t': 28480,
+        'cpu_sys_t': 7160
+    },
+    'PayloadABMulSumGT': {
+        'repeats': 5,
+        'est_power_use_pct': 1.06,
+        'cpu_user_t': 40500,
+        'cpu_sys_t': 10520
+    },
+}

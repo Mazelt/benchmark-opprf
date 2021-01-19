@@ -80,7 +80,7 @@ def plot_total_time(datalan, datawan, datalte,server_n=2**19):
     plt.tight_layout()
     plt.show()
 
-def table_time_phases(data):
+def table_time_phases(data, title=False):
     oprf_m = []
     poly_int_m = []
     poly_trans_m = []
@@ -95,6 +95,18 @@ def table_time_phases(data):
     circuit_std = []
     total_std = []
 
+    oprf_pct_m = []
+    poly_int_pct_m = []
+    poly_trans_pct_m = []
+    poly_eval_pct_m = []
+    circuit_pct_m = []
+
+    oprf_pct_std = []
+    poly_int_pct_std = []
+    poly_trans_pct_std = []
+    poly_eval_pct_std = []
+    circuit_pct_std = []
+
 # hashing+oprf+ (pint)+(s_ptrans)+polyt + aby_t
     c_total_t_means = [] 
     c_hashing_t_means = []
@@ -105,6 +117,8 @@ def table_time_phases(data):
     c_aby_bot_t_means = []
     c_aby_online_t_means = []
 
+    c_aby_online_t_pct_means = []
+
     c_total_t_std = []
     c_hashing_t_std = []
     c_oprf_t_std = []
@@ -112,6 +126,12 @@ def table_time_phases(data):
     c_poly_trans_t_std = []
     c_aby_t_std = []
     c_aby_bot_t_std = []
+    c_aby_online_t_std = []
+
+
+    c_aby_online_t_pct_std = []
+
+
 # hashing+oprf+ poly_t +ptrans+ (peval) + aby_t
     s_total_t_means = []  
     s_hashing_t_means = []
@@ -141,6 +161,12 @@ def table_time_phases(data):
                 circuit = [] 
                 total = []
 
+                oprf_pct = []
+                poly_int_pct = []
+                poly_trans_pct = []
+                poly_eval_pct = []
+                circuit_pct = []
+
                 c_total_t = []
                 c_hashing_t = []
                 c_oprf_t = []
@@ -150,6 +176,8 @@ def table_time_phases(data):
                 c_aby_bot_t = []
                 c_aby_online_t = []
 
+                c_aby_online_t_pct = []
+
                 s_total_t = []
                 s_hashing_t = []
                 s_oprf_t = []
@@ -157,6 +185,9 @@ def table_time_phases(data):
                 s_poly_trans_t = []
                 s_aby_t = []
                 s_aby_bot_t = []
+                
+                # get means for all repeats!
+                # get pct for all repeats!
                 for r in range(len(b)-1):
                     repeat_c = b[r]['c_output']
                     repeat_s = b[r]['s_output']
@@ -168,6 +199,13 @@ def table_time_phases(data):
                     circuit.append(repeat_c['aby_total_t']+repeat_c['aby_baseot_t'])
                     total.append(sum([oprf[r],poly_int[r],poly_trans[r],poly_eval[r],circuit[r]]))
                     
+                    oprf_pct.append(oprf[r]/total[r]*100.0)
+                    poly_int_pct.append(poly_int[r]/total[r]*100.0)
+                    poly_trans_pct.append(poly_trans[r]/total[r]*100.0)
+                    poly_eval_pct.append(poly_eval[r]/total[r]*100.0)
+                    circuit_pct.append(circuit[r]/total[r]*100.0)
+
+                    
                     c_total_t.append(repeat_c['total_t'])
                     c_hashing_t.append(repeat_c['hashing_t'])
                     c_oprf_t.append(repeat_c['oprf_t'])
@@ -176,6 +214,8 @@ def table_time_phases(data):
                     c_aby_t.append(repeat_c['aby_total_t'])
                     c_aby_bot_t.append(repeat_c['aby_baseot_t'])
                     c_aby_online_t.append(repeat_c['aby_online_t'])
+
+                    c_aby_online_t_pct.append(c_aby_online_t[r]/total[r]*100.0)
 
                     s_total_t.append(repeat_s['total_t'])
                     s_hashing_t.append(repeat_s['hashing_t'])
@@ -193,12 +233,25 @@ def table_time_phases(data):
                 circuit_m.append(np.mean(circuit)) 
                 total_m.append(np.mean(total))
 
-                oprf_std.append(round(np.std(oprf)))
-                poly_int_std.append(round(np.std(poly_int)))
-                poly_trans_std.append(round(np.std(poly_trans)))
-                poly_eval_std.append(round(np.std(poly_eval)))
-                circuit_std.append(round(np.std(circuit)))
-                total_std.append(round(np.std(total)))
+                oprf_pct_m.append(np.mean(oprf_pct))
+                poly_int_pct_m.append(np.mean(poly_int_pct))
+                poly_trans_pct_m.append(np.mean(poly_trans_pct))
+                poly_eval_pct_m.append(np.mean(poly_eval_pct))
+                circuit_pct_m.append(np.mean(circuit_pct))
+
+
+                oprf_std.append(np.std(oprf))
+                poly_int_std.append(np.std(poly_int))
+                poly_trans_std.append(np.std(poly_trans))
+                poly_eval_std.append(np.std(poly_eval))
+                circuit_std.append(np.std(circuit))
+                total_std.append(np.std(total))
+
+                oprf_pct_std.append(np.std(oprf_pct))
+                poly_int_pct_std.append(np.std(poly_int_pct))
+                poly_trans_pct_std.append(np.std(poly_trans_pct))
+                poly_eval_pct_std.append(np.std(poly_eval_pct))
+                circuit_pct_std.append(np.std(circuit_pct))
 
                 c_total_t_means.append(np.mean(c_total_t))
                 c_hashing_t_means.append(np.mean(c_hashing_t))
@@ -209,6 +262,8 @@ def table_time_phases(data):
                 c_aby_bot_t_means.append(np.mean(c_aby_bot_t))
                 c_aby_online_t_means.append(np.mean(c_aby_online_t))
 
+                c_aby_online_t_pct_means.append(np.mean(c_aby_online_t_pct))
+
                 c_total_t_std.append(np.std(c_total_t))
                 c_hashing_t_std.append(np.std(c_hashing_t))
                 c_oprf_t_std.append(np.std(c_oprf_t))
@@ -216,6 +271,10 @@ def table_time_phases(data):
                 c_poly_trans_t_std.append(np.std(c_poly_trans_t))
                 c_aby_t_std.append(np.std(c_aby_t))
                 c_aby_bot_t_std.append(np.std(c_aby_bot_t))
+                c_aby_online_t_std.append(np.std(c_aby_online_t))
+
+                c_aby_online_t_pct_std.append(np.std(c_aby_online_t_pct))
+
 
                 s_total_t_means.append(np.mean(s_total_t))
                 s_hashing_t_means.append(np.mean(s_hashing_t))
@@ -244,59 +303,83 @@ def table_time_phases(data):
                 # for i in range(len(table_data)):
                 # table_data[i].append(f"{column_val[i]:.1f}
                 # ({column_pct[i]:.2f}\%)")
-    # val_rows = [['Network'],["Func"],["Total"],["OPRF"],["PolyInt"],["PolyTransp"],["PolyEval"],["Circuit"]]
-    # pct_rows = [['Network'],["Func"],["Total"],["OPRF"],["PolyInt"],["PolyTransp"],["PolyEval"],["Circuit"]]
-    val_rows = [[''],[""],[""],[""],[""],[""],[""],[""]]
-    pct_rows = [[''],[""],[""],[""],[""],[""],[""],[""]]
+    if title:
+        pct_rows = [['Network'],["Func"],["Total"],["OPRF"],["PolyInt"],["PolyTransp"],["PolyEval"],["Circuit"],["OCircuit"]]
+        val_rows = [['Network'],["Func"],["Total"],["OPRF"],["PolyInt"],["PolyTransp"],["PolyEval"],["Circuit"],["OCircuit"]]
+    else:
+        val_rows = [[''],[""],[""],[""],[""],[""],[""],[""],[""]]
+        pct_rows = [[''], [""], [""], [""], [""], [""], [""], [""], [""]]
     for i in range(len(c_total_t_means)):
         # c_total= hashing+oprf+ (pint)+(s_ptrans)+polyt + aby_t
         oprf = oprf_m[i]
         poly_int = poly_int_m[i]
         poly_trans = poly_trans_m[i]
         poly_eval = poly_eval_m[i]
-        circuit = circuit_m[i] 
+        circuit = circuit_m[i]
+        o_circuit = c_aby_online_t_means[i]
         total = total_m[i]
+        
 
-        print(f"aby_online {c_aby_online_t_means[i]:.0f}  total%: {c_aby_online_t_means[i]/total*100.0:.0f}  aby%: {c_aby_online_t_means[i]/circuit*100.0:.0f}")
+        # print(f"aby_online {c_aby_online_t_means[i]:.0f}  total%: {c_aby_online_t_means[i]/total*100.0:.0f}  aby%: {c_aby_online_t_means[i]/circuit*100.0:.0f}")
 
-        oprf_pct = round(oprf/total*100.0)
-        poly_int_pct = round(poly_int/total*100.0)
-        poly_trans_pct = round(poly_trans/total*100.0)
-        poly_eval_pct = round(poly_eval/total*100.0)
-        circuit_pct = round(circuit/total*100.0)
+        oprf_pct = oprf_pct_m[i]
+        poly_int_pct = poly_int_pct_m[i]
+        poly_trans_pct = poly_trans_pct_m[i]
+        poly_eval_pct = poly_eval_pct_m[i]
+        circuit_pct = circuit_pct_m[i]
+        o_circuit_pct = c_aby_online_t_pct_means[i]
 
         std_oprf = oprf_std[i]
         std_poly_int = poly_int_std[i]
         std_poly_trans = poly_trans_std[i]
         std_poly_eval = poly_eval_std[i]
         std_circuit = circuit_std[i]
+        std_o_circuit = c_aby_online_t_std[i]
         std_total = total_std[i]
 
-        std_oprf_pct = round(std_oprf/total*100.0)
-        std_poly_int_pct = round(std_poly_int/total*100.0)
-        std_poly_trans_pct = round(std_poly_trans/total*100.0)
-        std_poly_eval_pct = round(std_poly_eval/total*100.0)
-        std_circuit_pct = round(std_circuit/total*100.0)
+        std_oprf_pct = oprf_pct_std[i]
+        std_poly_int_pct = poly_int_pct_std[i]
+        std_poly_trans_pct = poly_trans_pct_std[i]
+        std_poly_eval_pct = poly_eval_pct_std[i]
+        std_circuit_pct = circuit_pct_std[i]
+        std_o_circuit_pct = c_aby_online_t_pct_std[i]
 
-        print(f"Hashing C:{c_hashing_t_means[i]} S:{s_hashing_t_means[i]}")
-        print(f"{list([5,7,9])[i]}")
-        print(
-            f"Total: {total:.0f}\%({std_total:.0f}) = OPRF {oprf:.0f}({std_oprf:.0f}) + PolyInt {poly_int:.0f}({std_poly_int:.0f}) + PolyTransp {poly_trans:.0f}({std_poly_trans:.0f}) + PolyEval {poly_eval:.0f}({std_poly_eval:.0f}) + Circuit {circuit:.0f}({std_circuit:.0f})")
-        print(
-            f"Percent: 100% = OPRF {oprf_pct:.0f}({std_oprf_pct:.0f}) + PolyInt {poly_int_pct:.0f}({std_poly_int_pct:.0f}) + PolyTransp {poly_trans_pct:.0f}({std_poly_trans_pct:.0f}) + PolyEval {poly_eval_pct:.0f}({std_poly_eval_pct:.0f}) + Circuit {circuit_pct:.0f}({std_circuit_pct:.0f})")
+
+        # print(f"Hashing C:{c_hashing_t_means[i]} S:{s_hashing_t_means[i]}")
+        # print(f"{list([5,7,9])[i]}")
+        # print(
+        #     f"Total: {total:.0f}\%({std_total:.0f}) = OPRF {oprf:.0f}({std_oprf:.0f}) + PolyInt {poly_int:.0f}({std_poly_int:.0f}) + PolyTransp {poly_trans:.0f}({std_poly_trans:.0f}) + PolyEval {poly_eval:.0f}({std_poly_eval:.0f}) + Circuit {circuit:.0f}({std_circuit:.0f})")
+        # print(
+        #     f"Percent: 100% = OPRF {oprf_pct:.0f}({std_oprf_pct:.0f}) + PolyInt {poly_int_pct:.0f}({std_poly_int_pct:.0f}) + PolyTransp {poly_trans_pct:.0f}({std_poly_trans_pct:.0f}) + PolyEval {poly_eval_pct:.0f}({std_poly_eval_pct:.0f}) + Circuit {circuit_pct:.0f}({std_circuit_pct:.0f})")
             
-        c = ["?", f"{list([5,7,9])[i]}", f"{total:.0f}({std_total:.0f})", f"{oprf:.0f}({std_oprf:.0f})", f"{poly_int:.0f}({std_poly_int:.0f})", f"{poly_trans:.0f}({std_poly_trans:.0f})", f"{poly_eval:.0f}({std_poly_eval:.0f})", f"{circuit:.0f}({std_circuit:.0f})"]
+        c = ["?",
+                f"{list([5,7,9])[i]}",
+                f"{total:.0f}({std_total:.0f})", 
+                f"{oprf:.0f}({std_oprf:.0f})", 
+                f"{poly_int:.0f}({std_poly_int:.0f})", 
+                f"{poly_trans:.0f}({std_poly_trans:.0f})", 
+                f"{poly_eval:.0f}({std_poly_eval:.0f})", 
+                f"{circuit:.0f}({std_circuit:.0f})",
+                f"{o_circuit:.0f}({std_o_circuit:.0f})"
+             ]
         for e,row in enumerate(val_rows):
             row.append(c[e])
-        c_pct = ["?", f"{list([5,7,9])[i]}", "100\%", f"{oprf_pct:.0f}\%({std_oprf_pct:.0f})", f"{poly_int_pct:.0f}\%({std_poly_int_pct:.0f})", f"{poly_trans_pct:.0f}\%({std_poly_trans_pct:.0f})", f"{poly_eval_pct:.0f}\%({std_poly_eval_pct:.0f})", f"{circuit_pct:.0f}\%({std_circuit_pct:.0f})"]
+        c_pct = ["?", f"{list([5,7,9])[i]}", "100\%",
+         f"{oprf_pct:.1f} \pm {std_oprf_pct:.1f} \%",
+         f"{poly_int_pct:.1f} \pm {std_poly_int_pct:.1f} \%",
+         f"{poly_trans_pct:.1f} \pm {std_poly_trans_pct:.1f} \%",
+         f"{poly_eval_pct:.1f} \pm {std_poly_eval_pct:.1f} \%",
+         f"{circuit_pct:.1f} \pm {std_circuit_pct:.1f} \%",
+         f"{o_circuit_pct:.1f} \pm {std_o_circuit_pct:.1f} \%"]
         for e, row in enumerate(pct_rows):
             row.append(c_pct[e])
-    print(pct_rows)
+    # print(pct_rows)
     print(print_table(pct_rows,ending=True))
 
         # print(f"client:+ {c_oprf_t_means[i]} (pint) (s_ptrans) {c_poly_t_means[i]} + {c_aby_t_means[i]+c_aby_bot_t_means[i]}")
         # print(
-        #     f"{c_total_t_means[i]}, all = {c_total_t_means[i]-(c_hashing_t_means[i] + c_oprf_t_means[i]+s_poly_t_means[i]+s_poly_trans_t_means[i]+ c_poly_t_means[i] + c_aby_t_means[i]+c_aby_bot_t_means[i])}")
+        #     f"{c_total_t_means[i]},
+        #  all = {c_total_t_means[i]-(c_hashing_t_means[i] + c_oprf_t_means[i]+s_poly_t_means[i]+s_poly_trans_t_means[i]+ c_poly_t_means[i] + c_aby_t_means[i]+c_aby_bot_t_means[i])}")
 
         # print(
         #     f"{s_hashing_t_means[i]} + {s_oprf_t_means[i]} + {s_poly_t_means[i]}  +{s_poly_trans_t_means[i]}+ (peval{c_poly_t_means[i]})+ {s_aby_t_means[i]+s_aby_bot_t_means[i]}")
@@ -468,10 +551,12 @@ if __name__ == '__main__':
     elif args.tps:
         batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
         get_tp(batch)
-    elif args.phases_t:
+    elif args.phases_t: 
         batch_10_LAN = load_batch('Network1019_LAN')
         batch_10_WAN = load_batch('Network1019_WAN')
         batch_10_LTE = load_batch('Network1019_LTE_wloss')
+        table_time_phases(batch_10_LAN,title=True)
+        table_time_phases(batch_10_WAN)
         table_time_phases(batch_10_LTE)
     elif args.time:
 

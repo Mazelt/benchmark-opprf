@@ -1,102 +1,102 @@
 {
     "2314": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2800,
-        'cpu_sys_t': 730
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2800,
+        "cpu_sys_t": 730
     },
     "2318": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2610,
-        'cpu_sys_t': 700
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2610,
+        "cpu_sys_t": 700
     },
     "2320": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2750,
-        'cpu_sys_t': 760
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2750,
+        "cpu_sys_t": 760
     },
     "2322": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2710,
-        'cpu_sys_t': 700
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2710,
+        "cpu_sys_t": 700
     },
     "2325": { 
-        'est_power_use_pct':  0.03,
-        'cpu_user_t': 2790,
-        'cpu_sys_t': 640
+        "est_power_use_pct":  0.03,
+        "cpu_user_t": 2790,
+        "cpu_sys_t": 640
     },
     "2327": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2840,
-        'cpu_sys_t': 650
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2840,
+        "cpu_sys_t": 650
     },
     "2329": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2920,
-        'cpu_sys_t': 660
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2920,
+        "cpu_sys_t": 660
     },
     "2332": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2790,
-        'cpu_sys_t': 710
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2790,
+        "cpu_sys_t": 710
     },
     "2334": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2650,
-        'cpu_sys_t': 710
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2650,
+        "cpu_sys_t": 710
     },
     "2337": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2730,
-        'cpu_sys_t': 670
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2730,
+        "cpu_sys_t": 670
     },
     "2339": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2920,
-        'cpu_sys_t': 660
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2920,
+        "cpu_sys_t": 660
     },
     "2341": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2780,
-        'cpu_sys_t': 800
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2780,
+        "cpu_sys_t": 800
     },
     "2343": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2670,
-        'cpu_sys_t': 630
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2670,
+        "cpu_sys_t": 630
     },
     "2345": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2710,
-        'cpu_sys_t': 680
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2710,
+        "cpu_sys_t": 680
     },
     "2347": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2720,
-        'cpu_sys_t': 650
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2720,
+        "cpu_sys_t": 650
     },
     "2351": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2870,
-        'cpu_sys_t': 580
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2870,
+        "cpu_sys_t": 580
     },
     "2353": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2710,
-        'cpu_sys_t': 720
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2710,
+        "cpu_sys_t": 720
     },
     "2355": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2690,
-        'cpu_sys_t': 660
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2690,
+        "cpu_sys_t": 660
     },
     "2357": { 
-        'est_power_use_pct': 0.03,
-        'cpu_user_t': 2610,
-        'cpu_sys_t': 690
+        "est_power_use_pct": 0.03,
+        "cpu_user_t": 2610,
+        "cpu_sys_t": 690
     },
     "0000": { 
-        'est_power_use_pct': 0.04,
-        'cpu_user_t': 2770,
-        'cpu_sys_t': 790
+        "est_power_use_pct": 0.04,
+        "cpu_user_t": 2770,
+        "cpu_sys_t": 790
     }
 }

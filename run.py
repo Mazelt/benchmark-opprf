@@ -467,8 +467,10 @@ if __name__ == '__main__':
         run_batch()
         exit(0)
     elif args.energy:
-        energy_batch = "Debug"
-        path = f"/home/marce/repos/benchmark-opprf/batterystats/{energy_batch}/{date.today().isoformat()}"
+        energy_batch = "LAN1019PayloadABSumGT"
+        dirname = f"/home/marcel/repos/benchmark-opprf/batterystats/{energy_batch}"
+        os.makedirs(dirname,exist_ok=True)
+        path = os.path.join(dirname,datetime.now().isoformat())
         filename = f"{date.today().isoformat()}.log"
         setup_logger('./logs', filename)
         input("Connect USB cable for batterystat reset. Press enter")
@@ -476,7 +478,7 @@ if __name__ == '__main__':
             exit(3)
         if not adb_wrapper('reset'):
             exit(3)
-        p = Parameters(client_n=2**10, server_n=2**19,psitype=Psi_type.SumIfGtThreshold)
+        p = Parameters(client_n=2**10, server_n=2**19,psitype=Psi_type.PayloadABSumGT)
         print(p)
         input("Start up with matching parameters, USB cable disconnected. Start?")
         conf = {

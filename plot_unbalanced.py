@@ -571,8 +571,8 @@ def table_psi_types_scaling_dt(data):
         row_1  = []
         row_2  = []
         for i in range(len(client_means)):
-            row_1.append(f"{client_means[i]:.3f}$\pm${client_sd[i]:.2f}")
-            row_2.append(f"{client_d_means[i]:.3f}")
+            row_1.append(f"{round(client_means[i],2):.2f}$\pm${round(client_sd[i],2):.2f}")
+            row_2.append(f"{round(client_d_means[i],1):.1f}")
         table_data_1.append(row_1)
         table_data_2.append(row_2)
     print("runtime")
@@ -592,14 +592,15 @@ def table_psi_types_phases_d(data):
                     total_d = sum(b[0]['s_output']['total_d_rs'])
                     aby_d = sum(b[0]['s_output']['aby_total_d_rs'])
                     aby_online_d = sum(b[0]['s_output']['aby_online_d_rs'])
-                    if b['parameters']['fun_type'] in [7,9]:
-                        oprf_d = 2*sum(b[0]['s_output']['oprf_d_rs'])
-                    else:
-                        oprf_d = sum(b[0]['s_output']['oprf_d_rs'])
+                    # if b['parameters']['fun_type'] in [7,9]:
+                    #     oprf_d = 2*sum(b[0]['s_output']['oprf_d_rs'])
+                    #     total_d = total_d + sum(b[0]['s_output']['oprf_d_rs'])
+                    # else:
+                    oprf_d = sum(b[0]['s_output']['oprf_d_rs'])
                     poly_d = sum(b[0]['s_output']['poly_d_rs'])
                     aby_d_pct = float(aby_d/total_d)*100.0
                     oprf_d_pct = float(oprf_d/total_d)*100.0 
-                    print("There is a bug for the oprf_d value for AB circuits. Manual fix: count the data twice for oprf_d")
+                    # print("There is a bug for the oprf_d value for AB circuits. Manual fix: count the data twice for oprf_d")
                     poly_d_pct = float(poly_d/total_d)*100.0
                     aby_online_d_pct = float(aby_online_d/total_d)*100.0
                     aby_online_aby_pct = float(aby_online_d/aby_d)*100.0
@@ -609,7 +610,7 @@ def table_psi_types_phases_d(data):
                                   aby_d_pct, aby_online_d_pct]
                     for i in range(len(table_data)):
                         # table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
-                        table_data[i].append(f"{column_pct[i]:.2f}\%")
+                        table_data[i].append(f"{round(column_pct[i],2):.2f}\%")
                     
     print("comm")
     print(print_table(table_data))
@@ -813,8 +814,8 @@ if __name__ == '__main__':
     elif args.phases_d:
         data = load_batch("Circuits_Unbalanced10", important_parameters=[
                           'server_neles', 'fun_type'])
-        for b in data:
-            print(f"b circ{b['parameters']['fun_type']} sn{b['parameters']['server_neles']}")
+        # for b in data:
+            # print(f"b circ{b['parameters']['fun_type']} sn{b['parameters']['server_neles']}")
         table_psi_types_phases_d(data)
     elif args.energy:
         get_energy()

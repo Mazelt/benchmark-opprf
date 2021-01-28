@@ -18,8 +18,8 @@ def load_batch(pattern, silent=True, important_parameters=['server_neles','clien
     if silent:
         print(f"using pattern: {pattern}")
     else:
-        for i,e in enumerate(files):
-            print(f"{i}:\t {e}")
+        # for i,e in enumerate(files):
+            # print(f"{i}:\t {e}")
         all_right = input('Take all? Press any key to continue')
     batches = []
     for f in files:
@@ -40,7 +40,18 @@ def load_batch(pattern, silent=True, important_parameters=['server_neles','clien
     if sort_batches:
         batches = sorted(batches, key=lambda k: k['parameters'][sort_batches])
     for b in batches:
-        print(f"{b['parameters']}: {b.keys()}")
+        if b['parameters']['fun_type'] in [6,7,8,9]:
+            for repeat in range(len(b)-1):
+                s_oprf_d_rs = b[repeat]['s_output']['oprf_d_rs']
+                c_oprf_d_rs = b[repeat]['c_output']['oprf_d_rs']
+                b[repeat]['s_output']['oprf_d_rs'] = {2*s_oprf_d_rs[0], 2*s_oprf_d_rs[1] }
+                b[repeat]['c_output']['oprf_d_rs'] = {2*c_oprf_d_rs[0], 2*c_oprf_d_rs[1] }
+                b[repeat]['s_output']['total_d_rs'][0] += s_oprf_d_rs[0]
+                b[repeat]['s_output']['total_d_rs'][1] += s_oprf_d_rs[1]
+                b[repeat]['c_output']['total_d_rs'][0] += c_oprf_d_rs[0]
+                b[repeat]['c_output']['total_d_rs'][1] += c_oprf_d_rs[1]
+
+        # print(f"{b['parameters']}: {b.keys()}")
     return batches
 # rs is either None, 'r' or 's'
 

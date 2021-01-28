@@ -124,7 +124,7 @@ def plot_total_time_absum(data):
     fig, ax = plt.subplots()
     client = ax.bar(x_pos, client_means, yerr=client_stds, color=tableau_c10[1], align='center', alpha=0.5,
                     ecolor='black', capsize=5)
-    ax.set_ylabel(f"Total time in in seconds")
+    ax.set_ylabel(f"Total time in seconds")
     ax.set_xticks(x_pos)
     ax.set_xticklabels(xticks_to_potencies_label(set_sizes))
     ax.set_title(
@@ -158,8 +158,8 @@ def plot_total_data_stacked_combined(data10,data12):
     # client_r_stds = client_r_stds/1e9
     # client_s_stds = client_s_stds/1e9
 
-    print(client_r_means_10+client_s_means_10)
-    print(client_r_means_12+client_s_means_12)
+    # print(client_r_means_10+client_s_means_10)
+    # print(client_r_means_12+client_s_means_12)
     # Add a table at the bottom of the axes
     client_r_10 = ax.bar(x_pos_10-0.1, client_r_means_10, width=0.2,
                       color=tableau_c10[0], align='center', alpha=0.5)
@@ -170,7 +170,7 @@ def plot_total_data_stacked_combined(data10,data12):
                          color=tableau_c10[0], align='center', alpha=0.5)
     client_s_12 = ax.bar(x_pos_12+0.1+2, client_s_means_12, width=0.2, color=tableau_c10[1], hatch='///',
                          align='center', alpha=0.5, bottom=client_r_means_12)
-    ax.set_ylabel(f"Total data in in MegaBytes")
+    ax.set_ylabel(f"Total data in MegaBytes")
 
     ax.set_xticks(x_pos_10)
     potencies = [int(np.log2(x)) for x in set_sizes_10]

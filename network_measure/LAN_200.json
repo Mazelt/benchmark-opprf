@@ -1,0 +1,26 @@
+{
+	"start":	"None",
+	"intervals":	[{
+			"streams": "None",
+			"sum":	{
+				"seconds":	1.0000760555267334,
+				"bytes":	72457120,
+				"bits_per_second":	579612877.2373203
+			}
+		}, {
+			"streams": "None",
+			"sum":	{
+				"seconds":	0.99999302625656128,
+				"bytes":	77476960,
+				"bits_per_second":	619820002.46567535
+			}
+		}, {
+			"streams": "None",
+			"sum":	{
+				"seconds":	0.74805599451065063,
+				"bytes":	59568176,
+				"bits_per_second":	637045102.90267456
+			}
+		}],
+	"end":	"None"
+}

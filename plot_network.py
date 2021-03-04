@@ -12,6 +12,10 @@ from plot_utils import load_batch, get_s_c_mean_sd, get_specific_s_c_mean_sd, xt
 def get_rtt(data):
     b = data[0]
     rtts = []
+    # lan
+    # rtts= [2.4205, 2.757, 2.518, 2.45363, 2.57025, 2.41744, 2.29819, 2.35794, 2.32744, 2.31425, 2.132, 2.37244, 2.92756, 2.752, 2.50294, 2.4095, 2.40994, 2.47906, 2.81631, 2.61075]
+
+
     # rtts = [2.4205, 2.757, 2.518, 2.45363, 2.57025, 2.41744, 2.29819, 2.35794, 2.32744, 2.31425, 2.132, 2.37244, 2.92756, 2.752, 2.50294, 2.4095, 2.40994, 2.47906, 2.81631, 2.61075, 2.4955, 2.43962, 2.45887, 2.43662, 2.68319,
     #         2.62794, 2.46756, 2.38719, 2.23781, 2.49313, 2.32925, 2.5685, 2.32725, 2.63925, 2.8215, 2.372, 2.40856, 2.37625, 2.28494, 2.50756, 2.60763, 2.44612, 2.81256, 2.26719, 2.54137, 2.19531, 2.7655, 2.438, 2.41919, 2.38944]
     # print(b)
@@ -26,11 +30,11 @@ def get_rtt(data):
 def get_tp(data):
     b = data[0]
     tps = []
-    # tps = [2.4205, 2.757, 2.518, 2.45363, 2.57025, 2.41744, 2.29819, 2.35794, 2.32744, 2.31425, 2.132, 2.37244, 2.92756, 2.752, 2.50294, 2.4095, 2.40994, 2.47906, 2.81631, 2.61075, 2.4955, 2.43962, 2.45887, 2.43662, 2.68319,
-    #         2.62794, 2.46756, 2.38719, 2.23781, 2.49313, 2.32925, 2.5685, 2.32725, 2.63925, 2.8215, 2.372, 2.40856, 2.37625, 2.28494, 2.50756, 2.60763, 2.44612, 2.81256, 2.26719, 2.54137, 2.19531, 2.7655, 2.438, 2.41919, 2.38944]
-    # print(b)
-    for i in range(len(b)-1):
-        tps.append(b[i]['s_output']['throughput'])
+    # lan
+    tps_mib =  np.array([50.6769, 49.4415, 49.736, 51.1666, 51.3463, 53.2502, 52.9333, 50.2363, 54.4685, 49.9449, 52.0884, 52.6941, 50.59, 51.8982, 50.9679, 53.1292, 52.361, 53.7314, 52.6111, 53.1763]) 
+    tps = tps_mib*8.38861
+    # for i in range(len(b)-1):
+    #     tps.append(b[i]['s_output']['throughput'])
     tp_mean = np.mean(tps)
     tp_sd = np.std(tps)
     tp_se = sem(tps)
@@ -59,9 +63,9 @@ def plot_total_time(datalan, datawan, datalte,server_n=2**19):
                         ecolor='black', capsize=2)
     client_lte = ax.bar(x_pos+0.4, client_means_lte, yerr=client_stds_lte, color=tableau_c10[2], align='center', alpha=0.5, width=0.3,
            ecolor='black', capsize=2)
-    # print(f"LAN: {client_means_lan}")
-    # print(f"WAN: {client_means_wan}")
-    # print(f"LTE: {client_means_lte}")
+    print(f"LAN: {client_means_lan}")
+    print(f"WAN: {client_means_wan}")
+    print(f"LTE: {client_means_lte}")
     print(f"LAN: {client_means_lan/client_means_lan}")
     print(f"WAN: {client_means_wan/client_means_lan}")
     print(f"LTE: {client_means_lte/client_means_lan}")
@@ -80,7 +84,7 @@ def plot_total_time(datalan, datawan, datalte,server_n=2**19):
     plt.tight_layout()
     plt.show()
 
-def table_time_phases(data, title=False):
+def table_time_phases(data, title=False, sneles=2**19):
     oprf_m = []
     poly_int_m = []
     poly_trans_m = []
@@ -151,7 +155,7 @@ def table_time_phases(data, title=False):
     
     for ft in [5,7,9]:  # , 7, 9
         for b in data:
-            if b['parameters']['server_neles'] != 2**19 or b['parameters']['fun_type'] != ft:
+            if b['parameters']['server_neles'] != sneles or b['parameters']['fun_type'] != ft:
                 continue
             else:
                 oprf = []
@@ -319,7 +323,9 @@ def table_time_phases(data, title=False):
         o_circuit = c_aby_online_t_means[i]
         total = total_m[i]
         
-
+        print((total*10-poly_int*10*0.6-(circuit-o_circuit)*10)/2/1000/60)
+        # print((total*14-poly_int*14*0.6-(circuit-o_circuit)*14)/2/1000/60)
+        # print((total*10-poly_int*10*0.6)/2/1000/60)
         # print(f"aby_online {c_aby_online_t_means[i]:.0f}  total%: {c_aby_online_t_means[i]/total*100.0:.0f}  aby%: {c_aby_online_t_means[i]/circuit*100.0:.0f}")
 
         oprf_pct = oprf_pct_m[i]
@@ -354,7 +360,7 @@ def table_time_phases(data, title=False):
             
         c = ["?",
                 f"{list([5,7,9])[i]}",
-                f"{total:.0f}({std_total:.0f})", 
+                f"{round(total/1000):.0f}({round(std_total/1000,1):.1f})", 
                 f"{oprf:.0f}({std_oprf:.0f})", 
                 f"{poly_int:.0f}({std_poly_int:.0f})", 
                 f"{poly_trans:.0f}({std_poly_trans:.0f})", 
@@ -374,7 +380,11 @@ def table_time_phases(data, title=False):
         for e, row in enumerate(pct_rows):
             row.append(c_pct[e])
     # print(pct_rows)
-    print(print_table(pct_rows,ending=True))
+    # print(print_table(pct_rows,ending=True))
+    # print(print_table(val_rows,ending=True))
+    # for pint in poly_int_m:
+    #     print(pint*10*0.6/1000/60)
+
 
         # print(f"client:+ {c_oprf_t_means[i]} (pint) (s_ptrans) {c_poly_t_means[i]} + {c_aby_t_means[i]+c_aby_bot_t_means[i]}")
         # print(
@@ -543,10 +553,11 @@ if __name__ == '__main__':
     ap.add_argument('--aby_t', action='store_true')
     ap.add_argument('--pies_t', action='store_true')
     ap.add_argument('--phases_t', action='store_true')
+    ap.add_argument('--phases_t21', action='store_true')
     args = ap.parse_args()
     
     if args.rtts:
-        batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
+        batch = load_batch('NetworkBenchmarkingLTE')
         get_rtt(batch)
     elif args.tps:
         batch = load_batch('NetworkDebugging_NewRTTs_WAN6')
@@ -558,6 +569,14 @@ if __name__ == '__main__':
         table_time_phases(batch_10_LAN,title=True)
         table_time_phases(batch_10_WAN)
         table_time_phases(batch_10_LTE)
+
+    elif args.phases_t21:
+        batch_10_LAN = load_batch('PsiTypes1021DA_1', important_parameters=['server_neles','fun_type'],sort_batches='fun_type')
+        batch_10_WAN = load_batch('Network1021_WAN', sort_batches='fun_type')
+        batch_10_LTE = load_batch('Network1021_LTE_wloss', sort_batches='fun_type')
+        table_time_phases(batch_10_LAN, title=True, sneles=2**21)
+        table_time_phases(batch_10_WAN, sneles=2**21)
+        table_time_phases(batch_10_LTE, sneles=2**21)
     elif args.time:
 
         batch_10_LAN = load_batch('Network1019_LAN')

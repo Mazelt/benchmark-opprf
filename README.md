@@ -1,139 +1,82 @@
-# Quick start
-install requirements
-download appium-linux client.
-run appimage
-connect phone.
-configure in psi.py.
+# Quick Start
+1. Install python requirements
+2. Download appium-linux client.
+3. Run appium appimage
+4. Connect phone via USB with debugging enabled.
+5. Configure in psi.py, prepare apk and server binary
+6. Run python run.py [-b, -e]
 
-# General Remarks
+# Source Code and Directories
+## Main scripts
+|`run.py`| Execute a batch, single or energy experiment. 
+|`plot*`| Scripts to create plots and tables. 
+|`psi.py`| Configuration and parameters for opprf_psi.
+|`parsing.py`| Script to parse log files for result data.
+|`maxbin.py`| Script for calculating psi parameters.
 
-## Flakyness
-The gtest suite shows some flakyness.
-results are not always matching the expected result. 
-The tests are running SUM on 2_20.
+## Directories
+|`batchlogs`| Logs and parsed data related to batch runs.
+|`batterystats`| Battery historian data dumps and analysis.
+|`logs`| Logs and parsed data related to single experiment runs.
+|`network_measure`| Iperf3 json dumps and parsing for network throughput
+measurements.
+|`plots`| Plots of different experiments.
 
-## Timings
-hashing_t: client does cuckoo, server simple.
+# Experiments and Batch Experiments
+Experiments can be run once or batches can be run which consist of a list of
+batch run configurations. Each configuration configures the type of setup,
+number of repeats, start iteration, reset behavior, opprf_psi parameters and
+network environment.
 
-oprf_t: server seems to have a bit more to do
+An experiment can either be desktop-desktop (only local binaries are used),
+desktop-app, or desktop-manual (with app but no appium automation).
+The experiment is repeated a configured number of times beginning at `start`.
+The parameters objects holds all necessary opprf_psi parameters which are
+automatically generated from given element numbers. The network setting is a
+configuration for netem.
 
-poly_t means:
+Normal experiment logs and parsed data is put in `logs` and batch runs are
+stored in `batchlogs` under the directory with the batchname.
 
-for client -> evaluation of polynomials
-for server -> generation of values and interpolation
+## Energy Consumption
+Before the app started adb is used to reset its battery stats. An experiment as
+run and a bugreport dump is executed which outputs a zip. This process is partly
+manual since appium cannot be used when the USB cable is disconnected for
+energy tests (wifi adb debugging was not investigated). The -e option of
+`run.py` was used to automate the other process.
+The battery historian tool is run with docker and the bugreports have been
+analysed for the energy consumption of the app and CPU usage statistics. Results
+were manually put in `*_data` files.
 
-poly_trans_t on client side is not meaningful since it counts in the time the
-client waits for the server to complete polynomial creation. 
-Only count in poly_trans_t of the server.
-remove polytrans from client time or use server's value for both.
-
-aby_online, _setup.  its synced and same for both.
-
-total_t
-
-other = waiting time, coordination.
 
 # Experiments
 
-## Desktop-APP
-### Set-up
+## Set-up
 Server: Lenovo t480s
 Client: OnePlus 5 (Android 9)
 
 Wifi router with wired connection to server.
-5GHz. 
+Client connected per 5GHz WiFi. 
 
-### Batches
-Topics to cover:
-* Scaling of element numbers (not so important)
-* Sweet-spot for low amount of elements and performance (bei tage-aufbrechen.)
+## Batches
+Topics covered:
+* Unbalanced set protocol behavior
+* Balanced scaling behavior
 * Differences between PSI types
-* Unbalanced set performances !!
-* Variation of extra arguments: Megabins, epsilon, hashfun (security)
-* monitoring of network speeds (network em (later))
-* monitoring of energy/cpu/memory usage on phone.
+* Payload bitlength impact
+* Network impacts and characteristic measurements
+* Energy/cpu/memory usage on phone.
 
-Future possible topics:
-* Differences in ABY ciruit types. (not extensive analysis, DD)
-* Enable SSE?
-* Use newer NTL version? (only on server side)
-* threading? on server side?
-
-
-*Scaling of element numbers* 
-Start low. 
-Scale other parameters accordingly.
-
-What are the metrics to test:
-
-* Breaks: yes,no
-* Running time
-* Communication amount (beware of setup and online time.)
-* Polynomial size
-
-K=3, epsilon=1.27 (means Beta=1.27n), opprf output length:
-2^8: 49, 2^12: 53, 2^16: 57, 2^20: 61
-megabins for K=3 from table 2 of pinkas paper, polysize is related to max_b.
-n   : #mbins : polys
-2^12:  16    : 975
-2^16:  248   : 1021
-2^20:  4002  : 1024
-
-this wasn't easy. computation is in test.py.
-One has to use the formula from Pinkas et al for mega bins.
-And at some point you have to increase maxb=1024 when the megabins are more then
-half the bins.
-For the unbalanced scenario this is a bit different. since we cant increase
-megabins above half of Beta (bins on client side.)
-So then the polysize is increasing. This gets computational expensive on the
-server side pretty fast. Communication-wise this isn't a problem. since
-polynomials are not that heavy.
-
-*Sweet-spot for low amount of elements and performance*
-What is a typical amount of keys for a day and the daily increment on the server
-for each past day?
-
-when the difference between client set and server set is too high. the
-polynomials get too big! Also the setup time for aby might be too much.
-
-Sweetspot important! when a client has just 2^10 elems but the server has 2^22
-how much can we/should we increase the number of bins to decrease the polynomial
-size? plot the functions?
-
-*Differences between PSI types*
-Choose 3 or 4 parameter sets to test for.
-Run multiple runs for each psi type.
-
-* Breaks: yes,no
-* Running time
-* Communication amount (beware of setup and online time.)
-
-
-*Variation of extra arguments: Megabins, polysize,...*
-Mostly megabin and polysize changes can bring value.
-if not set, only one megabin is used and a really big polynomial has to be
-interpolated. And.. i think the opprf is batched more efficiently with megabins.
-
-*network sim*
+# Netem
 using netem simulator which is part of iproute2.
 https://wiki.linuxfoundation.org/networking/netem#rate_control
 https://man7.org/linux/man-pages/man8/tc-netem.8.html
 
-LAN setup:
-using ping and iperf3:
-
-server -> phone rtt min/avg/max/mdev = 2.6,135,218,68 ms
-phone -> server rtt min/avg/max/mdev = 2,12,21,9 ms
-phone -> server 500 mbit/s
-server -> phone 540 mbit/s
-
-
-LTE WAN: 80ms RTT, 24Mbits down,4Mbits up. (based on Kales et al. 2019)
 outbound
 tc qdisc add dev $ENP root netem
-* delay 40ms 5ms 25%
-* loss 0.1% 25%
-* rate 24Mbits
+* delay Xms 5ms 25%
+* loss random X% 
+* rate Xmbit
 
 inbound
 modprobe ifb
@@ -141,50 +84,5 @@ ip link set dev ifb0 up
 tc qdisc add dev $ENP ingress
 tc filter add dev $ENP parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0 
 tc qdisc add dev ifb0 root netem
-* delay 40ms 5ms 25%
-* rate 4Mbits
-
-using ping and iperf3:
-
-server -> phone rtt min/avg/max/mdev = 81,199,303,69 ms
-phone -> server rtt min/avg/max/mdev = 81,100,113,8 ms
-phone -> server 500 mbit/s = 3.7mbits
-server -> phone 540 mbit/s = 21 mbits
-
-
-## Desktop-App-WAN
-TODO: get psi binary to run on remote linux vm
-TODO: add wrapper script to remotely run server binary and download data.
-
-## Desktop-Desktop
-Add network delay to simulate LAN and not localhost speed.
-
-
-#notes
-Network traces, use network emulator to use traces.
-net em (linux) -> dealy, packet loss.
-
-15-20min each key. 
-
-client-'multi-threading'= 'parallele' per-day ausführungen
-
-
-log-scale for gbit.
-
-pak fehlerbalken
-
-energie/auslastung messen.
-
-aby-compile auf performance?
-aby-production.
-
-messen wie lange gewartet wird.
-
-limit ausrechnen für collision bei skalierung der serve elemente.
-
-Wieviele runs?
-In den titel!
-
-erst perfektes setting
-
-wsl
+* delay Xms 5ms 25%
+* rate XMbits

@@ -610,7 +610,8 @@ def table_psi_types_phases_d(data):
                                   aby_d_pct, aby_online_d_pct]
                     for i in range(len(table_data)):
                         # table_data[i].append(f"{column_val[i]:.1f} ({column_pct[i]:.2f}\%)")
-                        table_data[i].append(f"{round(column_pct[i],2):.2f}\%")
+                        # table_data[i].append(f"{round(column_pct[i],2):.2f}\%")
+                        table_data[i].append(f"{round(column_val[i],2):.2f}")
                     
     print("comm")
     print(print_table(table_data))

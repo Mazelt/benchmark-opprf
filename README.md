@@ -1,10 +1,16 @@
-# Quick Start
-1. Install python requirements
+# Quick Start (Experiments)
+1. Install python3 requirements
 2. Download appium-linux client.
 3. Run appium appimage
 4. Connect phone via USB with debugging enabled.
 5. Configure in psi.py, prepare apk and server binary
 6. Run python run.py [-b, -e]
+
+# Quick Start (Plots)
+1. Install python3 requirements (virtualenv + requirements.txt)
+2. Go through the plot_(network|unbalanced).py files
+3. Run the plot scripts with the desired parameters
+
 
 # Source Code and Directories
 ## Main scripts
@@ -86,3 +92,37 @@ tc filter add dev $ENP parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 act
 tc qdisc add dev ifb0 root netem
 * delay Xms 5ms 25%
 * rate XMbits
+
+
+# Plots
+For plotting the experiment data is parsed. This data was saved in the form of json files that hold the parameters and parsed results from a given run. All related json files (all runs from a batch experiment) are grouped in
+ `batchlogs/experiments`. To use those results for a plot, just use the directory name as `batchname`.
+
+`plot.py` is a legacy script which was used before the unbalanced and network scripts were introduced.
+
+`plot_unbalanced.py` focuses on plots that handle different server set sizes (and 2 different client sets).
+
+`plot_network.py` shows different plots for the different network environments.
+
+`plot_utils.py` consists of utility functions that are used by the other plotting scripts.
+
+## Usage
+For each of the main plotting scripts, scroll down to the main function from which the different plots can be produced using different script parameter. The code does not use matplotlib to directly generate images, but opens the plot window where the save button can be used after the dimensions have been corrected.
+
+### Examples
+
+Figure 5.1:
+In `plot_unbalanced.py` you can plot the communication data plot for different server sets and both client sets with `python plot_unbalanced.py --both --total_d_stacked` 
+It loads the _Unbalanced10AnalyticsDA\_2_ and _Unbalanced12AnalyticsDA\_1_ experiments, uses `plot_total_data_stacked_combined()` for plotting.
+
+Figure 5.2:
+With `python plot_unbalanced.py --both --total_t` the running time for the same experiments of Figure 5.1 can be plotted. (with `--all` both plots would be generated)
+
+Figure 5.3
+`python plot_unbalanced.py --psi_types_dt` uses the PsiTypes1019DA_1 experiments.
+
+Figure 5.4
+Is the first network plot with _plot\_network.py_
+`python plot_network.py --time` parses the _Network1019_* experiments for LAN, WAN and LTE_wloss.
+
+The tables are also generated with these scripts. These methods are prefixed with _table_ and output almost correct latex tables.

@@ -9,15 +9,15 @@ BIN_PATH = '/home/marcel/repos/original-opprf/buildassociated/bin/psi_analytics_
 
 class Psi_type(enum.IntEnum):
     Analytics = 0
-    Threshold = 1
+    T = 1
     Sum = 2
-    SumIfGtThreshold = 3
-    PayloadASum = 4
-    PayloadASumGT = 5
-    PayloadABSum = 6
-    PayloadABSumGT = 7
-    PayloadABMulSum = 8
-    PayloadABMulSumGT = 9
+    ST = 3
+    AS = 4
+    AST = 5
+    ABS = 6
+    ABST = 7
+    ABM = 8
+    ABMT = 9
 
 
 class Parameters(dict):

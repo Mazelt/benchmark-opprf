@@ -7,7 +7,7 @@ import argparse
 from psi import Psi_type, CLIENT, SERVER
 from plot_utils import load_batch, get_s_c_mean_sd, get_s_c_mean_se, xticks_to_potencies_label, \
 tableau_c10, get_specific_s_c_mean_sd, print_table
-
+import seaborn as sns; sns.set(style="white")
 
 
 
@@ -528,31 +528,48 @@ def plot_psi_types_dt(data):
     client_r_means = client_r_means/1e6
     client_s_means = client_s_means/1e6
     x_pos = np.array(set_sizes)
+
     fig, ax1 = plt.subplots()
 
     ax1.set_ylabel('Total data in MB')
     ax1.set_xlabel('PSI Functionalities')
-    ax1.set_xticks(x_pos)
     # ax1.set_title(
     #     f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
     labels = [Psi_type(i).name for i in set_sizes]
+    print(x_pos)
+    print(client_r_means)
+    print(labels)
+    
+    labels= labels[:1] + labels[3+1 :]
+    client_r_means = np.delete(client_r_means, [1,2,3])
+    client_s_means = np.delete(client_s_means, [1,2,3])
+    client_sd = np.delete(client_sd, [1,2,3])
+    client_means = np.delete(client_means, [1,2,3])
+    x_pos= x_pos[:-3]
+
+    print(x_pos)
+    print(client_r_means)
+    print(labels)
+    ax1.set_xticks(x_pos)
+
+
     ax1.set_xticklabels(labels)
-    client_r = ax1.bar(x_pos-0.1, client_r_means,width=0.2, color=tableau_c10[0], align='center', alpha=0.5)
-    client_s = ax1.bar(x_pos-0.1, client_s_means, width=0.2, color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means)
+    client_r = ax1.bar(x_pos-0.1, client_r_means,width=0.2, color="#3182BD", align='center', alpha=0.9,  hatch="")
+    client_s = ax1.bar(x_pos-0.1, client_s_means, width=0.2, color="#74C476", align='center', alpha=0.9, bottom=client_r_means,  hatch="//////", edgecolor='#31A354', lw=1.)
     ax2 = ax1.twinx()
-    ax2.set_ylabel('Runtime (seconds)', color=tableau_c10[7])
-    ax2.tick_params(axis='y', labelcolor=tableau_c10[7])
+    ax2.set_ylabel('Runtime (seconds)', color='#E6550D')
+    ax2.tick_params(axis='y', labelcolor='#E6550D')
     # Add a table at the bottom of the axes
-    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_sd, width=0.2, color=tableau_c10[7], align='center', alpha=0.5,
-                       ecolor='black', capsize=2)
+    client_t = ax2.bar(x_pos+0.1, client_means, yerr=client_sd, width=0.2, color="#FD8D3C", align='center', alpha=0.9,
+                       ecolor='black', capsize=2,  edgecolor='#E6550D',hatch="....", lw=1.)
     ax1.legend((client_r[0], client_s[0], client_t[0]),
-               ('Client received', 'Client sent'))
-    ax2.legend(['Runtime'], loc=9)
+               ('Client received', 'Client sent', 'Runtime'))
+    #ax2.legend(['Runtime'], loc=10)
 
     fig.autofmt_xdate()
     fig.tight_layout()
+    plt.savefig("paper_plots/plot_psi_types_dt.svg", format='svg')
     plt.show()
-
 
 def table_psi_types_scaling_dt(data):
     table_data_1 = []
@@ -626,41 +643,84 @@ def plot_payload_len_psi_types_dt(data):
         data, "total_d_rs", rs='r', parameter='fun_type',pfilter={'payload_bl':[2]})
     set_sizes_2, server_s_means_2, server_s_stds_2, client_s_means_2, client_s_stds_2 = get_specific_s_c_mean_sd(
         data, "total_d_rs", rs='s', parameter='fun_type',pfilter={'payload_bl':[2]})
+    
+    set_sizes_2 = np.delete(set_sizes_2, [0,1])
+    client_r_means_2 = np.delete(client_r_means_2,  [0,1])
+    client_s_means_2 = np.delete(client_s_means_2,  [0,1])
+    server_means_2 = np.delete(server_means_2,  [0,1])    
+    
     set_sizes_3, server_means_3, server_stds_3, client_means_3, client_sd_3 = get_specific_s_c_mean_sd(
         data, "total_t", parameter='fun_type',pfilter={'payload_bl':[3]})
     set_sizes_3, server_r_means_3, server_r_stds_3, client_r_means_3, client_r_stds_3 = get_specific_s_c_mean_sd(
         data, "total_d_rs", rs='r', parameter='fun_type',pfilter={'payload_bl':[3]})
     set_sizes_3, server_s_means_3, server_s_stds_3, client_s_means_3, client_s_stds_3 = get_specific_s_c_mean_sd(
         data, "total_d_rs", rs='s', parameter='fun_type',pfilter={'payload_bl':[3]})
+        
+    set_sizes_3 = np.delete(set_sizes_3, [0,1])
+    client_r_means_3 = np.delete(client_r_means_3,  [0,1])
+    client_s_means_3 = np.delete(client_s_means_3,  [0,1])
+    server_means_3 = np.delete(server_means_3,  [0,1])
+    
     set_sizes_4, server_means_4, server_stds_4, client_means_4, client_sd_4 = get_specific_s_c_mean_sd(
         data, "total_t", parameter='fun_type',pfilter={'payload_bl':[4]})
     set_sizes_4, server_r_means_4, server_r_stds_4, client_r_means_4, client_r_stds_4 = get_specific_s_c_mean_sd(
         data, "total_d_rs", rs='r', parameter='fun_type',pfilter={'payload_bl':[4]})
     set_sizes_4, server_s_means_4, server_s_stds_4, client_s_means_4, client_s_stds_4 = get_specific_s_c_mean_sd(
         data, "total_d_rs", rs='s', parameter='fun_type',pfilter={'payload_bl':[4]})
-    client_means_2 = client_means_2/1e3
-    client_sd_2 = client_sd_2/1e3
-    client_r_means_2 = client_r_means_2/1e6
-    client_s_means_2 = client_s_means_2/1e6
-    client_means_3 = client_means_3/1e3
-    client_sd_3 = client_sd_3/1e3
-    client_r_means_3 = client_r_means_3/1e6
-    client_s_means_3 = client_s_means_3/1e6
-    client_means_4 = client_means_4/1e3
-    client_sd_4 = client_sd_4/1e3
-    client_r_means_4 = client_r_means_4/1e6
-    client_s_means_4 = client_s_means_4/1e6
-    client_r_means_3 = client_r_means_3 - client_r_means_2
-    client_s_means_3 = client_s_means_3 - client_s_means_2
-    client_r_means_4 = client_r_means_4 - client_r_means_2
-    client_s_means_4 = client_s_means_4 - client_s_means_2
-    client_means_3 = client_means_3-client_means_2
-    client_means_4 = client_means_4-client_means_2
+    
+    
+    set_sizes_4 = np.delete(set_sizes_4, [0,1])
+    client_r_means_4 = np.delete(client_r_means_4,  [0,1])
+    client_s_means_4 = np.delete(client_s_means_4,  [0,1])
+    server_means_4 = np.delete(server_means_4,  [0,1])
+    
+    
+    #client_means_2 = client_means_2/1e3
+    #client_sd_2 = client_sd_2/1e3
+    #client_r_means_2 = client_r_means_2/1e6
+    #client_s_means_2 = client_s_means_2/1e6
+    #client_means_3 = client_means_3/1e3
+   # client_sd_3 = client_sd_3/1e3
+    #client_r_means_3 = client_r_means_3/1e6
+    #client_s_means_3 = client_s_means_3/1e6
+    #client_means_4 = client_means_4/1e3
+    #client_sd_4 = client_sd_4/1e3
+    #client_r_means_4 = client_r_means_4/1e6
+    #client_s_means_4 = client_s_means_4/1e6
+    #client_r_means_3 = client_r_means_3 - client_r_means_2
+    #client_s_means_3 = client_s_means_3 - client_s_means_2
+    #client_r_means_4 = client_r_means_4 - client_r_means_2
+    #client_s_means_4 = client_s_means_4 - client_s_means_2
+   # client_means_3 = client_means_3-client_means_2
+    #client_means_4 = client_means_4-client_means_2
     # client_sd_3 = client_sd_3-client_sd_2
     # client_sd_4 = client_sd_4-client_sd_2
-    print(client_means_3)
-    print(client_means_4)
-    print(client_r_means_3+client_s_means_3)
+    cr2=client_r_means_2[0]/1e3 #kB
+    cs2=client_s_means_2[0]/1e3
+    c2=client_means_2[2]/1e3
+    cr3=client_r_means_3[0]/1e3
+    cs3=client_s_means_3[0]/1e3
+    c3=client_means_3[2]/1e3
+    cr4=client_r_means_4[0]/1e3
+    cs4=client_s_means_4[0]/1e3
+    c4=client_means_4[2]/1e3
+
+    
+    pr_23=(cr3-cr2)
+    pr_24=(cr4-cr2)
+
+    ps_23=(cs3-cs2)
+    ps_24=(cs4-cs2)
+
+    p_23=(c3-c2)
+    p_24=(c4-c2)
+    
+    
+    print(f"client_r_means {cr2}, {cr3} ({pr_23}), {cr4} ({pr_24})")
+    print(f"client_s_means {cs2}, {cs3} ({ps_23}), {cs4} ({ps_24})")
+    print(f"client_means {c2}, {c3} ({p_23}), {c4} ({p_24})")
+
+
 
     x_pos = np.array(set_sizes_2)
     fig, ax1 = plt.subplots()
@@ -671,31 +731,30 @@ def plot_payload_len_psi_types_dt(data):
     #     f"Client: Time and data for Desktop-App for different circuits. Unbalanced sets with client set size $2^{{{int(np.log2(data[0]['parameters']['client_neles']))}}}$\nTimes are the mean over {len(data[0])-1} runs with std-error.")
     labels = [Psi_type(i).name for i in set_sizes_2]
     ax1.set_xticklabels(labels)
-    # client_r_2 = ax1.bar(x_pos-0.1-0.3 , client_r_means_2, width=0.1,
-    #                    color=tableau_c10[0], align='center', alpha=0.5)
-    # client_s_2 = ax1.bar(x_pos-0.1-0.3, client_s_means_2, width=0.1,
-    #                    color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_2)
-    client_r_3 = ax1.bar(x_pos-0.1-0.3 , client_r_means_3, width=0.1,
+    
+    client_r_2 = ax1.bar(x_pos-0.2 , client_r_means_2, width=0.1,
+                        color=tableau_c10[0], align='center', alpha=0.9)
+    client_s_2 = ax1.bar(x_pos-0.2, client_s_means_2, width=0.1,
+                        color=tableau_c10[4], align='center', alpha=0.9, bottom=client_r_means_2)
+    client_r_3 = ax1.bar(x_pos-0.1 , client_r_means_3, width=0.1,
                        color=tableau_c10[0], align='center', alpha=0.5)
-    client_s_3 = ax1.bar(x_pos-0.1-0.3, client_s_means_3, width=0.1,
+    client_s_3 = ax1.bar(x_pos-0.1, client_s_means_3, width=0.1,
                        color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_3)
-    client_r_3 = ax1.bar(x_pos-0.1+0.3, client_r_means_3, width=0.1,
+    client_r_4 = ax1.bar(x_pos, client_r_means_4, width=0.1,
                          color=tableau_c10[0], align='center', alpha=0.5)
-    client_s_3 = ax1.bar(x_pos-0.1+0.3, client_s_means_3, width=0.1,
-                         color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_3)
+    client_s_4 = ax1.bar(x_pos, client_s_means_4, width=0.1,
+                         color=tableau_c10[4], align='center', alpha=0.5, bottom=client_r_means_4)
     ax2 = ax1.twinx()
     ax2.set_ylabel('runtime (seconds)', color=tableau_c10[7])
     ax2.tick_params(axis='y', labelcolor=tableau_c10[7])
     # Add a table at the bottom of the axes
     # client_t_2 = ax2.bar(x_pos+0.1-0.3, client_means_2, yerr=client_sd_2, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
     #                    ecolor='black', capsize=2)
-    client_t_3 = ax2.bar(x_pos+0.1-0.3, client_means_3, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
-                       ecolor='black', capsize=2)
-    client_t_4 = ax2.bar(x_pos+0.1+0.3, client_means_4, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,
-                       ecolor='black', capsize=2)
-    ax1.legend((client_r_3[0], client_s_3[0], client_t_3[0]),
-               ('client received', 'client sent'))
-    ax2.legend(['runtime'], loc=9)
+   # client_t_2 = ax2.bar(x_pos+0.1, client_means_2, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,ecolor='black', capsize=2)
+    #client_t_3 = ax2.bar(x_pos+0.1, client_means_3, width=0.1, color=tableau_c10[7], align='center', alpha=0.5,ecolor='black', capsize=2)
+    #client_t_4 = ax2.bar(x_pos+0.1, client_means_4, width=0.1, color=tableau_c10[7], align='center', alpha=0.5, ecolor='black', capsize=2)
+    ax1.legend((client_r_3[0], client_s_3[0]),#, client_t_3[0]),
+               ('Client received', 'Client sent'))#, 'Runtime'))
     fig.tight_layout()
     fig.autofmt_xdate()
     plt.show()

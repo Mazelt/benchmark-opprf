@@ -48,6 +48,25 @@ def plot_total_time(datalan, datawan, datalte,server_n=2**19):
         get_specific_s_c_mean_sd(datawan, 'total_t', server_neles=server_n, parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
     set_sizes_lte, server_means_lte, server_stds_lte, client_means_lte, client_stds_lte = \
         get_specific_s_c_mean_sd(datalte, 'total_t', server_neles=server_n , parameter='fun_type', pfilter={'fun_type':[3,5,7,9]})
+    
+    set_sizes_lan=set_sizes_lan[1:]
+    set_sizes_wan=set_sizes_wan[1:]
+    set_sizes_lte=set_sizes_lte[1:]
+    server_means_lan = np.delete(server_means_lan, 0)
+    server_stds_lan = np.delete(server_stds_lan, 0)
+    client_means_lan = np.delete(client_means_lan, 0)
+    client_stds_lan = np.delete(client_stds_lan, 0)
+
+    server_means_wan = np.delete(server_means_wan, 0)
+    server_stds_wan = np.delete(server_stds_wan, 0)
+    client_means_wan = np.delete(client_means_wan, 0)
+    client_stds_wan = np.delete(client_stds_wan, 0)
+    
+    server_stds_lte = np.delete(server_stds_lte, 0)
+    server_means_lte = np.delete(server_means_lte, 0)
+    client_means_lte = np.delete(client_means_lte, 0)
+    client_stds_lte = np.delete(client_stds_lte, 0)
+    
     x_pos = np.array(set_sizes_lan)
     labels = [Psi_type(i).name for i in set_sizes_lan]
     client_means_lan = client_means_lan/1e3
@@ -57,12 +76,10 @@ def plot_total_time(datalan, datawan, datalte,server_n=2**19):
     client_means_lte = client_means_lte/1e3
     client_stds_lte = client_stds_lte/1e3
     fig, ax = plt.subplots()
-    client_lan = ax.bar(x_pos-0.4, client_means_lan, yerr=client_stds_lan, color=tableau_c10[1], align='center', alpha=0.5, width=0.3,
+    client_lan = ax.bar(x_pos-0.4, client_means_lan, yerr=client_stds_lan, color="#3182BD", align='center', alpha=0.9, width=0.3,
            ecolor='black', capsize=2)
-    client_wan = ax.bar(x_pos, client_means_wan, yerr=client_stds_wan, color=tableau_c10[0], align='center', alpha=0.5, width=0.3,
-                        ecolor='black', capsize=2)
-    client_lte = ax.bar(x_pos+0.4, client_means_lte, yerr=client_stds_lte, color=tableau_c10[2], align='center', alpha=0.5, width=0.3,
-           ecolor='black', capsize=2)
+    client_wan = ax.bar(x_pos, client_means_wan, yerr=client_stds_wan, color="#74C476", align='center', alpha=0.9, width=0.3, ecolor='black', capsize=2, hatch="//////", edgecolor='#31A354', lw=1.)
+    client_lte = ax.bar(x_pos+0.4, client_means_lte, yerr=client_stds_lte, color="#FD8D3C", align='center', alpha=0.9, width=0.3, ecolor='black', capsize=2, edgecolor='#E6550D',hatch="....", lw=1.)
     print(f"LAN: {client_means_lan}")
     print(f"WAN: {client_means_wan}")
     print(f"LTE: {client_means_lte}")
@@ -82,7 +99,9 @@ def plot_total_time(datalan, datawan, datalte,server_n=2**19):
 
     fig.autofmt_xdate()
     plt.tight_layout()
+    plt.savefig("paper_plots/plot_total_time.svg", format="svg")
     plt.show()
+
 
 def table_time_phases(data, title=False, sneles=2**19):
     oprf_m = []
@@ -455,6 +474,8 @@ def plot_total_data(datalan, datawan, datalte):
 def plot_total_time_absum(data):
     set_sizes, server_means, server_stds, client_means, client_stds = get_s_c_mean_sd(
         data, "total_t")
+    
+    
     x_pos = np.arange(len(set_sizes))
     client_means = client_means/1e3
     client_stds = client_stds/1e3

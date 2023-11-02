@@ -1,3 +1,6 @@
+# Benchmark OPPRF
+This is the test and benchmark project to test the performance as part of [Circuit-based PSI for Covid-19 Risk Scoring](https://www.computer.org/csdl/proceedings-article/ipccc/2021/09679360/1AjTpCJji6c) by Reichert, Pazelt and Scheuermann [PDF](https://eprint.iacr.org/2021/1475).
+
 # Quick Start (Experiments)
 1. Install python3 requirements
 2. Download appium-linux client.
@@ -10,7 +13,6 @@
 1. Install python3 requirements (virtualenv + requirements.txt)
 2. Go through the plot_(network|unbalanced).py files
 3. Run the plot scripts with the desired parameters
-
 
 # Source Code and Directories
 ## Main scripts
